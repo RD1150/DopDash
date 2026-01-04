@@ -2,7 +2,7 @@ import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Theme, useStore } from '@/lib/store';
-import { ChevronLeft, Moon, Palette, Volume2 } from 'lucide-react';
+import { ChevronLeft, Moon, Palette, Volume2, Bell, Download } from 'lucide-react';
 import { useLocation } from 'wouter';
 import { cn } from '@/lib/utils';
 
@@ -11,6 +11,36 @@ export default function SettingsPage() {
   const flavor = useStore((state) => state.flavor);
   const currentTheme = useStore((state) => state.theme);
   const setTheme = useStore((state) => state.setTheme);
+  const notificationsEnabled = useStore((state) => state.notificationsEnabled);
+  const setNotificationsEnabled = useStore((state) => state.setNotificationsEnabled);
+
+  const handleNotificationToggle = async (checked: boolean) => {
+    if (checked) {
+      if (!('Notification' in window)) {
+        alert('This browser does not support desktop notification');
+        return;
+      }
+      
+      if (Notification.permission === 'granted') {
+        setNotificationsEnabled(true);
+        new Notification('Notifications Enabled', {
+          body: 'We will gently remind you to dash!',
+          icon: '/pwa-192x192.png'
+        });
+      } else if (Notification.permission !== 'denied') {
+        const permission = await Notification.requestPermission();
+        if (permission === 'granted') {
+          setNotificationsEnabled(true);
+          new Notification('Notifications Enabled', {
+            body: 'We will gently remind you to dash!',
+            icon: '/pwa-192x192.png'
+          });
+        }
+      }
+    } else {
+      setNotificationsEnabled(false);
+    }
+  };
 
   return (
     <Layout>
@@ -77,14 +107,17 @@ export default function SettingsPage() {
               <div className="p-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-primary/10 rounded-lg text-primary">
-                    <Volume2 className="w-5 h-5" />
+                    <Bell className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="font-medium">Gentle Nudges</p>
-                    <p className="text-sm text-muted-foreground">Reminders to start</p>
+                    <p className="font-medium">Daily Reminders</p>
+                    <p className="text-sm text-muted-foreground">Get gentle nudges to start</p>
                   </div>
                 </div>
-                <Switch defaultChecked />
+                <Switch 
+                  checked={notificationsEnabled}
+                  onCheckedChange={handleNotificationToggle}
+                />
               </div>
 
               <div className="p-4 flex items-center justify-between">
@@ -98,6 +131,44 @@ export default function SettingsPage() {
                   </div>
                 </div>
                 <Switch defaultChecked />
+              </div>
+            </div>
+          </section>
+
+          {/* Data Management */}
+          <section className="space-y-4">
+            <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Data</h2>
+            <div className="bg-card rounded-xl border border-border divide-y divide-border">
+              <div 
+                onClick={() => {
+                  const state = useStore.getState();
+                  const data = {
+                    history: state.history,
+                    badges: state.badges,
+                    streak: state.streak,
+                    flavor: state.flavor,
+                    theme: state.theme
+                  };
+                  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = `dopamine-dasher-data-${new Date().toISOString().split('T')[0]}.json`;
+                  a.click();
+                  URL.revokeObjectURL(url);
+                }}
+                className="p-4 flex items-center justify-between cursor-pointer hover:bg-muted/50 transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-primary/10 rounded-lg text-primary">
+                    <Download className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="font-medium">Export Data</p>
+                    <p className="text-sm text-muted-foreground">Download your history</p>
+                  </div>
+                </div>
+                <ChevronLeft className="w-5 h-5 rotate-180 text-muted-foreground" />
               </div>
             </div>
           </section>

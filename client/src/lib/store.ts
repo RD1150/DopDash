@@ -30,6 +30,14 @@ interface AppState {
   history: string[]; // Array of ISO date strings (YYYY-MM-DD)
   hasSeenTutorial: boolean;
   badges: Badge[];
+  notificationsEnabled: boolean;
+  coins: number;
+  inventory: string[]; // IDs of owned items
+  equippedItems: {
+    hat?: string;
+    glasses?: string;
+    accessory?: string;
+  };
   
   // Actions
   startApp: () => void;
@@ -41,6 +49,9 @@ interface AppState {
   checkStreak: () => void;
   updateActionText: (id: string, text: string) => void;
   checkBadges: () => void;
+  setNotificationsEnabled: (enabled: boolean) => void;
+  purchaseItem: (itemId: string, cost: number) => boolean;
+  equipItem: (slot: 'hat' | 'glasses' | 'accessory', itemId: string | undefined) => void;
 }
 
 const BADGES_LIBRARY: Badge[] = [
@@ -79,6 +90,10 @@ export const useStore = create<AppState>()(
       history: [],
       hasSeenTutorial: false,
       badges: BADGES_LIBRARY,
+      notificationsEnabled: false,
+      coins: 0,
+      inventory: [],
+      equippedItems: {},
 
       startApp: () => set({ hasStarted: true }),
       completeTutorial: () => set({ hasSeenTutorial: true }),
@@ -87,7 +102,10 @@ export const useStore = create<AppState>()(
       setTheme: (theme: Theme) => set({ theme }),
 
       toggleAction: (id: string) => {
-        const { todaysActions, lastCompletedDate, streak } = get();
+        const { todaysActions, lastCompletedDate, streak, coins } = get();
+        const action = todaysActions.find((a) => a.id === id);
+        const isCompleting = action && !action.completed;
+
         const newActions = todaysActions.map((a: MicroAction) =>
           a.id === id ? { ...a, completed: !a.completed } : a
         );
@@ -114,7 +132,8 @@ export const useStore = create<AppState>()(
           todaysActions: newActions,
           streak: newStreak,
           lastCompletedDate: newLastCompletedDate,
-          history: newHistory
+          history: newHistory,
+          coins: isCompleting ? coins + 1 : coins
         });
         
         // Check badges after state update
@@ -133,6 +152,29 @@ export const useStore = create<AppState>()(
           todaysActions: state.todaysActions.map((a) =>
             a.id === id ? { ...a, text } : a
           ),
+        }));
+      },
+
+      setNotificationsEnabled: (enabled: boolean) => set({ notificationsEnabled: enabled }),
+
+      purchaseItem: (itemId: string, cost: number) => {
+        const { coins, inventory } = get();
+        if (coins >= cost && !inventory.includes(itemId)) {
+          set({
+            coins: coins - cost,
+            inventory: [...inventory, itemId]
+          });
+          return true;
+        }
+        return false;
+      },
+
+      equipItem: (slot, itemId) => {
+        set((state) => ({
+          equippedItems: {
+            ...state.equippedItems,
+            [slot]: itemId
+          }
         }));
       },
 

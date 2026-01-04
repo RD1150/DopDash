@@ -6,11 +6,14 @@ import { useStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
 import canvasConfetti from 'canvas-confetti';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Check, Pencil } from 'lucide-react';
+import { Check, Pencil, Settings, Sparkles } from 'lucide-react';
 import { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'wouter';
 import TutorialOverlay from '@/components/TutorialOverlay';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import FocusMode from '@/components/FocusMode';
+import { Timer } from 'lucide-react';
 
 export default function Dash() {
   const [, setLocation] = useLocation();
@@ -18,8 +21,11 @@ export default function Dash() {
   const toggleAction = useStore((state) => state.toggleAction);
   const resetDay = useStore((state) => state.resetDay);
   const updateActionText = useStore((state) => state.updateActionText);
+  const coins = useStore((state) => state.coins);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState('');
+  const [magicMode, setMagicMode] = useState(false);
+  const [focusTask, setFocusTask] = useState<{id: string, text: string} | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   
   // Ensure we have actions if page is loaded directly
@@ -80,6 +86,28 @@ export default function Dash() {
     }
   };
 
+  const handleMagicButton = () => {
+    const incomplete = actions.filter(a => !a.completed);
+    if (incomplete.length === 0) return;
+    
+    setMagicMode(true);
+    soundManager.playPop();
+    
+    // Simulate "thinking"
+    setTimeout(() => {
+      const random = incomplete[Math.floor(Math.random() * incomplete.length)];
+      // Hide others visually via CSS class or state
+      // For now, we'll just highlight the chosen one
+      const el = document.getElementById(`action-${random.id}`);
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el?.focus();
+      haptics.success();
+      
+      // Reset magic mode after a bit
+      setTimeout(() => setMagicMode(false), 2000);
+    }, 1000);
+  };
+
   const completedCount = actions.filter(a => a.completed).length;
   const progress = Math.round((completedCount / 3) * 100);
 
@@ -98,7 +126,12 @@ export default function Dash() {
           <div className="flex justify-between items-start">
             <div>
               <h1 className="text-3xl font-bold text-primary">Today’s Dash</h1>
-              <p className="text-muted-foreground">Just start. That’s enough.</p>
+              <div className="flex items-center gap-3 mt-1">
+                <p className="text-muted-foreground">Just start. That’s enough.</p>
+                <div className="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 px-3 py-0.5 rounded-full text-sm font-bold flex items-center gap-1">
+                  <span>⭐</span> {coins}
+                </div>
+              </div>
             </div>
             
             {/* Mascot & Progress */}
@@ -201,13 +234,26 @@ export default function Dash() {
                           {action.text}
                         </p>
                         {!action.completed && (
-                          <button
-                            onClick={(e) => startEditing(e, action.id, action.text)}
-                            className="opacity-0 group-hover:opacity-100 transition-opacity p-2 text-muted-foreground hover:text-primary"
-                            aria-label="Edit action"
-                          >
-                            <Pencil className="w-4 h-4" />
-                          </button>
+                          <div className="flex opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setFocusTask({ id: action.id, text: action.text });
+                              }}
+                              className="p-2 text-muted-foreground hover:text-primary"
+                              aria-label="Focus mode"
+                              title="Start Focus Mode"
+                            >
+                              <Timer className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={(e) => startEditing(e, action.id, action.text)}
+                              className="p-2 text-muted-foreground hover:text-primary"
+                              aria-label="Edit action"
+                            >
+                              <Pencil className="w-4 h-4" />
+                            </button>
+                          </div>
                         )}
                       </div>
                     )}
@@ -229,10 +275,33 @@ export default function Dash() {
           </AnimatePresence>
         </div>
 
-        {/* Footer Hint */}
-        <div className="py-8 text-center">
+        {focusTask && (
+          <FocusMode 
+            isOpen={!!focusTask}
+            onClose={() => setFocusTask(null)}
+            taskName={focusTask.text}
+            onComplete={() => {
+              handleToggle(focusTask.id);
+              setFocusTask(null);
+            }}
+          />
+        )}
+
+        {/* Magic Button */}
+        <div className="py-8 flex flex-col items-center gap-4">
+          <Button
+            onClick={handleMagicButton}
+            disabled={actions.every(a => a.completed) || magicMode}
+            className={cn(
+              "rounded-full px-6 py-6 h-auto text-lg gap-2 shadow-lg transition-all hover:scale-105 active:scale-95",
+              magicMode ? "animate-pulse bg-purple-500 hover:bg-purple-600" : "bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600"
+            )}
+          >
+            <Sparkles className={cn("w-6 h-6", magicMode && "animate-spin")} />
+            {magicMode ? "Picking for you..." : "Pick for me"}
+          </Button>
           <p className="text-sm text-muted-foreground/40">
-            No editing. No choosing. Just start.
+            Can't decide? Let the magic button choose.
           </p>
         </div>
       </div>

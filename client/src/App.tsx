@@ -6,9 +6,10 @@ import { useEffect } from "react";
 import Dash from "@/pages/Dash";
 import FlavorSelector from "@/pages/FlavorSelector";
 import Reward from "@/pages/Reward";
-import SettingsPage from "@/pages/Settings";
-import Streak from "@/pages/Streak";
-import Welcome from "@/pages/Welcome";
+import SettingsPage from "./pages/Settings";
+import Streak from "./pages/Streak";
+import Welcome from "./pages/Welcome";
+import Shop from "./pages/Shop";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
@@ -20,8 +21,11 @@ function Router() {
       <Route path="/flavor" component={FlavorSelector} />
       <Route path="/dash" component={Dash} />
       <Route path="/reward" component={Reward} />
-      <Route path="/streak" component={Streak} />
-      <Route path="/settings" component={SettingsPage} />
+      <Route path={"/streak"} component={Streak} />
+      <Route path={"/shop"} component={Shop} />
+      <Route path={"/settings"} component={SettingsPage} />
+      <Route path={"/404"} component={NotFound} />
+      {/* Final fallback route */}
       <Route component={NotFound} />
     </Switch>
   );
