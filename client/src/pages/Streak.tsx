@@ -2,8 +2,9 @@ import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { useStore } from '@/lib/store';
 import { motion } from 'framer-motion';
-import { Calendar as CalendarIcon, Settings, Share2 } from 'lucide-react';
+import { Calendar as CalendarIcon, Settings, Share2, Trophy } from 'lucide-react';
 import { useLocation } from 'wouter';
+import { cn } from '@/lib/utils';
 import { DayPicker } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
 import { toPng } from 'html-to-image';
@@ -15,6 +16,7 @@ export default function Streak() {
   const [, setLocation] = useLocation();
   const streak = useStore((state) => state.streak);
   const history = useStore((state) => state.history) || [];
+  const badges = useStore((state) => state.badges) || [];
   const shareRef = useRef<HTMLDivElement>(null);
 
   // Convert history strings to Date objects
@@ -138,6 +140,33 @@ export default function Streak() {
                 nav_button: { color: 'var(--foreground)' },
               }}
             />
+          </div>
+        </div>
+
+        {/* Badges */}
+        <div className="bg-card rounded-3xl p-6 shadow-sm border border-border max-w-sm mx-auto">
+          <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+            <Trophy className="w-5 h-5 text-primary" />
+            Badges
+          </h2>
+          <div className="grid grid-cols-3 gap-4">
+            {badges.map((badge) => (
+              <div 
+                key={badge.id} 
+                className={cn(
+                  "flex flex-col items-center text-center p-3 rounded-xl transition-all",
+                  badge.unlocked ? "bg-primary/10" : "bg-muted/20 opacity-50 grayscale"
+                )}
+              >
+                <div className="text-3xl mb-2">{badge.icon}</div>
+                <div className="text-xs font-bold leading-tight mb-1">{badge.name}</div>
+                {badge.unlocked && (
+                  <div className="text-[10px] text-muted-foreground">
+                    {new Date(badge.unlockedDate!).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         </div>
 

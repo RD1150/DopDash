@@ -11,6 +11,15 @@ export type MicroAction = {
   completed: boolean;
 };
 
+export type Badge = {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  unlocked: boolean;
+  unlockedDate?: string;
+};
+
 interface AppState {
   hasStarted: boolean;
   flavor: Flavor;
@@ -20,6 +29,7 @@ interface AppState {
   lastCompletedDate: string | null;
   history: string[]; // Array of ISO date strings (YYYY-MM-DD)
   hasSeenTutorial: boolean;
+  badges: Badge[];
   
   // Actions
   startApp: () => void;
@@ -30,7 +40,17 @@ interface AppState {
   resetDay: () => void;
   checkStreak: () => void;
   updateActionText: (id: string, text: string) => void;
+  checkBadges: () => void;
 }
+
+const BADGES_LIBRARY: Badge[] = [
+  { id: 'first_step', name: 'First Step', description: 'Completed your first dash', icon: '🌱', unlocked: false },
+  { id: 'streak_3', name: 'Momentum', description: 'Reached a 3-day streak', icon: '🔥', unlocked: false },
+  { id: 'streak_7', name: 'Unstoppable', description: 'Reached a 7-day streak', icon: '🚀', unlocked: false },
+  { id: 'early_bird', name: 'Early Bird', description: 'Completed a dash before noon', icon: '☀️', unlocked: false },
+  { id: 'night_owl', name: 'Night Owl', description: 'Completed a dash after 8 PM', icon: '🌙', unlocked: false },
+  { id: 'weekend_warrior', name: 'Weekend Warrior', description: 'Completed a dash on a weekend', icon: '🎉', unlocked: false },
+];
 
 const ACTION_LIBRARY: Omit<MicroAction, 'completed'>[] = [
   // Focus
@@ -58,6 +78,7 @@ export const useStore = create<AppState>()(
       lastCompletedDate: null,
       history: [],
       hasSeenTutorial: false,
+      badges: BADGES_LIBRARY,
 
       startApp: () => set({ hasStarted: true }),
       completeTutorial: () => set({ hasSeenTutorial: true }),
@@ -95,6 +116,9 @@ export const useStore = create<AppState>()(
           lastCompletedDate: newLastCompletedDate,
           history: newHistory
         });
+        
+        // Check badges after state update
+        get().checkBadges();
       },
 
       resetDay: () => {
@@ -110,6 +134,41 @@ export const useStore = create<AppState>()(
             a.id === id ? { ...a, text } : a
           ),
         }));
+      },
+
+      checkBadges: () => {
+        const { badges, history, streak, todaysActions } = get();
+        const now = new Date();
+        const hour = now.getHours();
+        const day = now.getDay(); // 0 = Sunday, 6 = Saturday
+        const allCompleted = todaysActions.every(a => a.completed) && todaysActions.length > 0;
+        
+        let newBadges = [...badges];
+        let badgeEarned = false;
+
+        const unlock = (id: string) => {
+          const badgeIndex = newBadges.findIndex(b => b.id === id);
+          if (badgeIndex !== -1 && !newBadges[badgeIndex].unlocked) {
+            newBadges[badgeIndex] = { ...newBadges[badgeIndex], unlocked: true, unlockedDate: new Date().toISOString() };
+            badgeEarned = true;
+          }
+        };
+
+        if (history.length >= 1) unlock('first_step');
+        if (streak >= 3) unlock('streak_3');
+        if (streak >= 7) unlock('streak_7');
+        
+        if (allCompleted) {
+          if (hour < 12) unlock('early_bird');
+          if (hour >= 20) unlock('night_owl');
+          if (day === 0 || day === 6) unlock('weekend_warrior');
+        }
+
+        if (badgeEarned) {
+          set({ badges: newBadges });
+          // Could trigger a toast or sound here if we had access to those functions, 
+          // but store is pure logic. Components can listen to changes.
+        }
       },
 
       checkStreak: () => {
