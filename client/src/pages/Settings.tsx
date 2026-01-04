@@ -258,6 +258,35 @@ export default function SettingsPage() {
                 />
               </div>
 
+              {/* Data Export */}
+              <div 
+                onClick={() => {
+                  const history = useStore.getState().history;
+                  const csvContent = "data:text/csv;charset=utf-8," 
+                    + "Date\n"
+                    + history.join("\n");
+                  const encodedUri = encodeURI(csvContent);
+                  const link = document.createElement("a");
+                  link.setAttribute("href", encodedUri);
+                  link.setAttribute("download", "dopamine_dasher_history.csv");
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                }}
+                className="p-4 flex items-center justify-between cursor-pointer hover:bg-muted/50 transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-primary/10 rounded-lg text-primary">
+                    <Download className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="font-medium">Export Data</p>
+                    <p className="text-sm text-muted-foreground">Download your history as CSV</p>
+                  </div>
+                </div>
+                <ChevronLeft className="w-5 h-5 rotate-180 text-muted-foreground" />
+              </div>
+
               <div className="p-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-primary/10 rounded-lg text-primary">
