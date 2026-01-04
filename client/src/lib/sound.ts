@@ -4,7 +4,8 @@
 class SoundManager {
   private ctx: AudioContext | null = null;
   private ambientNodes: { [key: string]: AudioNode[] } = {};
-  private currentAmbient: string | null = null;
+  private activeAmbients: Set<string> = new Set();
+  private ambientGains: { [key: string]: GainNode } = {};
 
   constructor() {
     if (typeof window !== 'undefined') {
@@ -215,36 +216,52 @@ class SoundManager {
     });
   }
 
-  stopAmbient() {
-    if (!this.ctx || !this.currentAmbient) return;
-    
-    const nodes = this.ambientNodes[this.currentAmbient];
-    if (nodes) {
-      nodes.forEach(node => {
-        try {
-          if (node instanceof AudioScheduledSourceNode) {
-            node.stop();
+  stopAmbient(type?: string) {
+    if (!this.ctx) return;
+
+    const stopSpecific = (t: string) => {
+      const nodes = this.ambientNodes[t];
+      if (nodes) {
+        nodes.forEach(node => {
+          try {
+            if (node instanceof AudioScheduledSourceNode) {
+              node.stop();
+            }
+            node.disconnect();
+          } catch (e) {
+            // Ignore errors if already stopped
           }
-          node.disconnect();
-        } catch (e) {
-          // Ignore errors if already stopped
-        }
-      });
+        });
+      }
+      delete this.ambientNodes[t];
+      delete this.ambientGains[t];
+      this.activeAmbients.delete(t);
+    };
+
+    if (type) {
+      stopSpecific(type);
+    } else {
+      // Stop all
+      Array.from(this.activeAmbients).forEach(stopSpecific);
     }
-    
-    delete this.ambientNodes[this.currentAmbient];
-    this.currentAmbient = null;
   }
 
-  playAmbient(type: 'white_noise' | 'rain' | 'forest') {
+  setAmbientVolume(type: string, volume: number) {
+    if (this.ambientGains[type]) {
+      this.ambientGains[type].gain.setValueAtTime(volume, this.ctx!.currentTime);
+    }
+  }
+
+  playAmbient(type: 'white_noise' | 'rain' | 'forest' | 'cafe', volume: number = 0.5) {
     if (!this.ctx) return;
     
-    // Stop current if any
-    if (this.currentAmbient) {
-      this.stopAmbient();
+    // If already playing, just update volume
+    if (this.activeAmbients.has(type)) {
+      this.setAmbientVolume(type, volume);
+      return;
     }
     
-    this.currentAmbient = type;
+    this.activeAmbients.add(type);
     const nodes: AudioNode[] = [];
     
     try {
@@ -261,13 +278,14 @@ class SoundManager {
         noise.loop = true;
         
         const gain = this.ctx.createGain();
-        gain.gain.value = 0.05;
+        gain.gain.value = volume * 0.1; // Base volume adjustment
         
         noise.connect(gain);
         gain.connect(this.ctx.destination);
         noise.start();
         
         nodes.push(noise, gain);
+        this.ambientGains[type] = gain;
       } 
       else if (type === 'rain') {
         // Pink noise approximation for rain
@@ -295,7 +313,7 @@ class SoundManager {
         noise.loop = true;
         
         const gain = this.ctx.createGain();
-        gain.gain.value = 0.15;
+        gain.gain.value = volume * 0.3; // Base volume adjustment
         
         // Lowpass filter to make it sound more like heavy rain
         const filter = this.ctx.createBiquadFilter();
@@ -308,6 +326,7 @@ class SoundManager {
         noise.start();
         
         nodes.push(noise, filter, gain);
+        this.ambientGains[type] = gain;
       }
       else if (type === 'forest') {
         // Wind (filtered noise)
@@ -327,7 +346,7 @@ class SoundManager {
         filter.frequency.value = 400;
         
         const gain = this.ctx.createGain();
-        gain.gain.value = 0.08;
+        gain.gain.value = volume * 0.15; // Base volume adjustment
         
         // Modulate gain for wind effect
         const lfo = this.ctx.createOscillator();
@@ -347,6 +366,50 @@ class SoundManager {
         lfo.start();
         
         nodes.push(noise, filter, gain, lfo, lfoGain);
+        this.ambientGains[type] = gain;
+      }
+      else if (type === 'cafe') {
+        // Simulated cafe noise (filtered pink noise + random clicks)
+        const bufferSize = 2 * this.ctx.sampleRate;
+        const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+        const output = buffer.getChannelData(0);
+        
+        // Pink noise base
+        let b0, b1, b2, b3, b4, b5, b6;
+        b0 = b1 = b2 = b3 = b4 = b5 = b6 = 0.0;
+        
+        for (let i = 0; i < bufferSize; i++) {
+          const white = Math.random() * 2 - 1;
+          b0 = 0.99886 * b0 + white * 0.0555179;
+          b1 = 0.99332 * b1 + white * 0.0750759;
+          b2 = 0.96900 * b2 + white * 0.1538520;
+          b3 = 0.86650 * b3 + white * 0.3104856;
+          b4 = 0.55000 * b4 + white * 0.5329522;
+          b5 = -0.7616 * b5 - white * 0.0168980;
+          output[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
+          output[i] *= 0.11;
+        }
+
+        const noise = this.ctx.createBufferSource();
+        noise.buffer = buffer;
+        noise.loop = true;
+        
+        // Bandpass to simulate room tone
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.value = 500;
+        filter.Q.value = 0.5;
+
+        const gain = this.ctx.createGain();
+        gain.gain.value = volume * 0.2;
+
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(this.ctx.destination);
+        noise.start();
+
+        nodes.push(noise, filter, gain);
+        this.ambientGains[type] = gain;
       }
       
       this.ambientNodes[type] = nodes;

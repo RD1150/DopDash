@@ -1,21 +1,24 @@
 {
   "name": "Dopamine Dasher",
   "short_name": "Dasher",
-  "description": "ADHD-friendly micro-task manager",
+  "description": "The ADHD-friendly productivity companion",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#F5F1E8",
-  "theme_color": "#A8B5A0",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "orientation": "portrait",
   "icons": [
     {
-      "src": "/pwa-192x192.png",
+      "src": "/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
-      "src": "/pwa-512x512.png",
+      "src": "/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ],
   "shortcuts": [
@@ -24,14 +27,7 @@
       "short_name": "Dash",
       "description": "Start a new micro-task dash",
       "url": "/dash",
-      "icons": [{ "src": "/pwa-192x192.png", "sizes": "192x192" }]
-    },
-    {
-      "name": "Focus Mode",
-      "short_name": "Focus",
-      "description": "Enter focus timer mode",
-      "url": "/focus",
-      "icons": [{ "src": "/pwa-192x192.png", "sizes": "192x192" }]
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     }
   ]
 }

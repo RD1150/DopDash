@@ -57,6 +57,8 @@ interface AppState {
   savedTasks: Omit<MicroAction, 'completed' | 'id'>[];
   emergencyMode: boolean;
   brainDump: string;
+  activeQuest: string | null;
+  questProgress: number;
 
   // Actions
   startApp: () => void;
@@ -88,6 +90,9 @@ interface AppState {
   removeSavedTask: (text: string) => void;
   setEmergencyMode: (enabled: boolean) => void;
   setBrainDump: (text: string) => void;
+  startQuest: (questId: string) => void;
+  advanceQuest: () => void;
+  quitQuest: () => void;
 }
 
 const BADGES_LIBRARY: Badge[] = [
@@ -168,6 +173,8 @@ export const useStore = create<AppState>()(
       savedTasks: [],
       emergencyMode: false,
       brainDump: '',
+      activeQuest: null,
+      questProgress: 0,
 
       startApp: () => set({ hasStarted: true }),
       completeTutorial: () => set({ hasSeenTutorial: true }),
@@ -432,7 +439,10 @@ export const useStore = create<AppState>()(
           set({ emergencyMode: false, todaysActions: selected });
         }
       },
-      setBrainDump: (text) => set({ brainDump: text })
+      setBrainDump: (text) => set({ brainDump: text }),
+      startQuest: (questId) => set({ activeQuest: questId, questProgress: 0 }),
+      advanceQuest: () => set((state) => ({ questProgress: state.questProgress + 1 })),
+      quitQuest: () => set({ activeQuest: null, questProgress: 0 })
     }),
     {
       name: 'dopamine-dasher-storage',

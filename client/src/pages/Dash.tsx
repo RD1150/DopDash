@@ -20,7 +20,9 @@ import AffirmationOverlay from '@/components/AffirmationOverlay';
 import BubblePop from '@/components/BubblePop';
 import WeeklyReview from '@/components/WeeklyReview';
 import BrainDump from '@/components/BrainDump';
-import { Timer, CircleDashed, StickyNote } from 'lucide-react';
+import SoundMixer from '@/components/SoundMixer';
+import Questlines from '@/components/Questlines';
+import { Timer, CircleDashed, StickyNote, Volume2, Map } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -56,6 +58,8 @@ export default function Dash() {
   const [showBossBattle, setShowBossBattle] = useState(false);
   const [showBubblePop, setShowBubblePop] = useState(false);
   const [showBrainDump, setShowBrainDump] = useState(false);
+  const [showSoundMixer, setShowSoundMixer] = useState(false);
+  const [showQuestlines, setShowQuestlines] = useState(false);
   const [isAddingTask, setIsAddingTask] = useState(false);
   const [newTaskText, setNewTaskText] = useState('');
   const [newTaskCategory, setNewTaskCategory] = useState<'focus' | 'energy' | 'momentum'>('focus');
@@ -337,6 +341,8 @@ export default function Dash() {
       </AnimatePresence>
       <WeeklyReview />
       <BrainDump isOpen={showBrainDump} onClose={() => setShowBrainDump(false)} />
+      <SoundMixer isOpen={showSoundMixer} onClose={() => setShowSoundMixer(false)} />
+      <Questlines isOpen={showQuestlines} onClose={() => setShowQuestlines(false)} />
       <BodyDouble />
       <div className="flex flex-col h-full">
         {/* Header */}
@@ -773,6 +779,24 @@ export default function Dash() {
             >
               <StickyNote className="w-4 h-4" />
               Brain Dump
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="gap-2 text-muted-foreground hover:text-primary"
+              onClick={() => setShowSoundMixer(!showSoundMixer)}
+            >
+              <Volume2 className="w-4 h-4" />
+              Focus Sounds
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="gap-2 text-muted-foreground hover:text-primary"
+              onClick={() => setShowQuestlines(true)}
+            >
+              <Map className="w-4 h-4" />
+              Quests
             </Button>
           </div>
         </div>
