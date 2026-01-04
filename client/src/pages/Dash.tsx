@@ -450,6 +450,46 @@ export default function Dash() {
                 )}
               </motion.div>
             ))}
+
+            {/* Add Custom Task Button */}
+            {isAddingTask ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="bg-card rounded-2xl p-6 shadow-sm border-2 border-dashed border-primary/30"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-8 h-8 rounded-full border-2 border-dashed border-muted-foreground/30 flex items-center justify-center">
+                    <div className="w-2 h-2 bg-muted-foreground/30 rounded-full" />
+                  </div>
+                  <Input
+                    ref={newTaskInputRef}
+                    value={newTaskText}
+                    onChange={(e) => setNewTaskText(e.target.value)}
+                    onKeyDown={handleNewTaskKeyDown}
+                    onBlur={() => {
+                      if (!newTaskText.trim()) setIsAddingTask(false);
+                    }}
+                    placeholder="What's one small step?"
+                    className="h-8 text-lg font-medium bg-transparent border-none p-0 focus-visible:ring-0 placeholder:text-muted-foreground/50"
+                    autoFocus
+                  />
+                  <Button size="sm" onClick={handleAddTask} disabled={!newTaskText.trim()}>
+                    Add
+                  </Button>
+                </div>
+              </motion.div>
+            ) : (
+              <motion.button
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                onClick={() => setIsAddingTask(true)}
+                className="w-full py-4 rounded-2xl border-2 border-dashed border-muted-foreground/20 hover:border-primary/40 hover:bg-accent/50 transition-all flex items-center justify-center gap-2 text-muted-foreground hover:text-primary group"
+              >
+                <Plus className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                <span className="font-medium">Add your own task</span>
+              </motion.button>
+            )}
           </AnimatePresence>
         </div>
 

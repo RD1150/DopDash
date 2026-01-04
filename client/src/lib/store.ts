@@ -80,6 +80,7 @@ interface AppState {
   setVacationMode: (days: number) => void;
   cancelVacationMode: () => void;
   setLastAffirmationDate: (date: string) => void;
+  addAction: (text: string) => void;
 }
 
 const BADGES_LIBRARY: Badge[] = [
@@ -376,7 +377,17 @@ export const useStore = create<AppState>()(
 
       setVacationMode: (days: number) => set({ vacationMode: true, vacationDaysRemaining: days }),
       cancelVacationMode: () => set({ vacationMode: false, vacationDaysRemaining: 0 }),
-      setLastAffirmationDate: (date: string) => set({ lastAffirmationDate: date })
+      setLastAffirmationDate: (date: string) => set({ lastAffirmationDate: date }),
+      addAction: (text: string) => {
+        const { todaysActions } = get();
+        const newAction: MicroAction = {
+          id: `custom-${Date.now()}`,
+          text,
+          category: 'focus', // Default category for custom tasks
+          completed: false
+        };
+        set({ todaysActions: [...todaysActions, newAction] });
+      }
     }),
     {
       name: 'dopamine-dasher-storage',
