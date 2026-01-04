@@ -1,6 +1,8 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { useStore } from "@/lib/store";
 import NotFound from "@/pages/NotFound";
+import { useEffect } from "react";
 import Dash from "@/pages/Dash";
 import FlavorSelector from "@/pages/FlavorSelector";
 import Reward from "@/pages/Reward";
@@ -31,6 +33,17 @@ function Router() {
 // - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
 
 function App() {
+  const theme = useStore((state) => state.theme);
+
+  useEffect(() => {
+    // Remove all theme classes
+    document.body.classList.remove('theme-ocean', 'theme-sunset', 'theme-lavender');
+    // Add current theme class if not default
+    if (theme !== 'default') {
+      document.body.classList.add(`theme-${theme}`);
+    }
+  }, [theme]);
+
   return (
     <ErrorBoundary>
       <ThemeProvider

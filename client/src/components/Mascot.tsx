@@ -1,3 +1,4 @@
+import { haptics } from '@/lib/haptics';
 import { soundManager } from '@/lib/sound';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
@@ -55,6 +56,7 @@ export default function Mascot({ pose, className, animate = true }: MascotProps)
 
   const handleTap = () => {
     soundManager.playSquish();
+    haptics.medium();
   };
 
   return (

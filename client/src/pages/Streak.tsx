@@ -2,12 +2,18 @@ import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { useStore } from '@/lib/store';
 import { motion } from 'framer-motion';
-import { Settings } from 'lucide-react';
+import { Calendar as CalendarIcon, Settings } from 'lucide-react';
 import { useLocation } from 'wouter';
+import { DayPicker } from 'react-day-picker';
+import 'react-day-picker/dist/style.css';
 
 export default function Streak() {
   const [, setLocation] = useLocation();
   const streak = useStore((state) => state.streak);
+  const history = useStore((state) => state.history) || [];
+
+  // Convert history strings to Date objects
+  const completedDays = history.map(dateStr => new Date(dateStr));
 
   return (
     <Layout className="justify-center items-center text-center">
@@ -64,6 +70,36 @@ export default function Streak() {
           <p className="text-muted-foreground max-w-xs mx-auto">
             You’re building a habit of starting. That’s the hardest part.
           </p>
+        </div>
+
+        {/* Calendar */}
+        <div className="bg-card rounded-3xl p-4 border border-border shadow-sm max-w-sm mx-auto">
+          <div className="flex items-center gap-2 mb-4 px-2">
+            <CalendarIcon className="w-5 h-5 text-primary" />
+            <h2 className="font-semibold">History</h2>
+          </div>
+          <div className="flex justify-center">
+            <DayPicker
+              mode="multiple"
+              selected={completedDays}
+              modifiers={{
+                completed: completedDays
+              }}
+              modifiersStyles={{
+                completed: { 
+                  backgroundColor: 'var(--primary)', 
+                  color: 'var(--primary-foreground)',
+                  borderRadius: '50%'
+                }
+              }}
+              styles={{
+                caption: { color: 'var(--foreground)' },
+                head_cell: { color: 'var(--muted-foreground)' },
+                cell: { color: 'var(--foreground)' },
+                nav_button: { color: 'var(--foreground)' },
+              }}
+            />
+          </div>
         </div>
 
         <div className="pt-8">

@@ -1,13 +1,16 @@
 import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
-import { useStore } from '@/lib/store';
-import { ChevronLeft, Moon, Volume2 } from 'lucide-react';
+import { Theme, useStore } from '@/lib/store';
+import { ChevronLeft, Moon, Palette, Volume2 } from 'lucide-react';
 import { useLocation } from 'wouter';
+import { cn } from '@/lib/utils';
 
 export default function SettingsPage() {
   const [, setLocation] = useLocation();
   const flavor = useStore((state) => state.flavor);
+  const currentTheme = useStore((state) => state.theme);
+  const setTheme = useStore((state) => state.setTheme);
 
   return (
     <Layout>
@@ -43,6 +46,34 @@ export default function SettingsPage() {
             <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Preferences</h2>
             
             <div className="bg-card rounded-xl border border-border divide-y divide-border">
+              {/* Theme Selector */}
+              <div className="p-4 space-y-3">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="p-2 bg-primary/10 rounded-lg text-primary">
+                    <Palette className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="font-medium">Color Theme</p>
+                    <p className="text-sm text-muted-foreground">Customize your vibe</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  {(['default', 'ocean', 'sunset', 'lavender'] as Theme[]).map((t) => (
+                    <button
+                      key={t}
+                      onClick={() => setTheme(t)}
+                      className={cn(
+                        "p-3 rounded-xl text-sm font-medium transition-all border-2",
+                        currentTheme === t 
+                          ? "border-primary bg-primary/5 text-primary" 
+                          : "border-transparent bg-secondary/50 hover:bg-secondary text-muted-foreground"
+                      )}
+                    >
+                      {t.charAt(0).toUpperCase() + t.slice(1)}
+                    </button>
+                  ))}
+                </div>
+              </div>
               <div className="p-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-primary/10 rounded-lg text-primary">

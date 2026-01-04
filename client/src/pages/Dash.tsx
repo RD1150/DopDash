@@ -1,5 +1,6 @@
 import Layout from '@/components/Layout';
 import Mascot, { MascotPose } from '@/components/Mascot';
+import { haptics } from '@/lib/haptics';
 import { soundManager } from '@/lib/sound';
 import { useStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
@@ -26,6 +27,7 @@ export default function Dash() {
   useEffect(() => {
     if (actions.length > 0 && actions.every(a => a.completed)) {
       soundManager.playSuccess();
+      haptics.celebrate();
       canvasConfetti({
         particleCount: 100,
         spread: 70,
@@ -44,6 +46,7 @@ export default function Dash() {
     const action = actions.find(a => a.id === id);
     if (!action?.completed) {
       soundManager.playPop();
+      haptics.light();
     }
     toggleAction(id);
   };

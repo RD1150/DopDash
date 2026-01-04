@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 export type Flavor = 'calm' | 'playful' | 'matter-of-fact' | 'celebratory';
+export type Theme = 'default' | 'ocean' | 'sunset' | 'lavender';
 
 export type MicroAction = {
   id: string;
@@ -13,13 +14,16 @@ export type MicroAction = {
 interface AppState {
   hasStarted: boolean;
   flavor: Flavor;
+  theme: Theme;
   todaysActions: MicroAction[];
   streak: number;
   lastCompletedDate: string | null;
+  history: string[]; // Array of ISO date strings (YYYY-MM-DD)
   
   // Actions
   startApp: () => void;
   setFlavor: (flavor: Flavor) => void;
+  setTheme: (theme: Theme) => void;
   toggleAction: (id: string) => void;
   resetDay: () => void;
   checkStreak: () => void;
@@ -45,13 +49,16 @@ export const useStore = create<AppState>()(
     (set, get) => ({
       hasStarted: false,
       flavor: 'calm',
+      theme: 'default',
       todaysActions: [],
       streak: 0,
       lastCompletedDate: null,
+      history: [],
 
       startApp: () => set({ hasStarted: true }),
 
       setFlavor: (flavor: Flavor) => set({ flavor }),
+      setTheme: (theme: Theme) => set({ theme }),
 
       toggleAction: (id: string) => {
         const { todaysActions, lastCompletedDate, streak } = get();
@@ -65,15 +72,23 @@ export const useStore = create<AppState>()(
         let newStreak = streak;
         let newLastCompletedDate = lastCompletedDate;
 
+        let newHistory = get().history || [];
+
         if (allCompleted && lastCompletedDate !== today) {
           newStreak += 1;
           newLastCompletedDate = today;
+          // Add today to history if not already there
+          const todayISO = new Date().toISOString().split('T')[0];
+          if (!newHistory.includes(todayISO)) {
+            newHistory = [...newHistory, todayISO];
+          }
         }
 
         set({ 
           todaysActions: newActions,
           streak: newStreak,
-          lastCompletedDate: newLastCompletedDate
+          lastCompletedDate: newLastCompletedDate,
+          history: newHistory
         });
       },
 
