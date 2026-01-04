@@ -3,6 +3,7 @@ import { soundManager } from '@/lib/sound';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
+import { useStore } from '@/lib/store';
 
 export type MascotPose = 
   | 'hero' 
@@ -27,6 +28,9 @@ interface MascotProps {
 export default function Mascot({ pose, className, animate = true }: MascotProps) {
   const [dialogue, setDialogue] = useState<string | null>(null);
   const [showDialogue, setShowDialogue] = useState(false);
+  const { customAccessories, equippedCustomAccessory } = useStore();
+  
+  const equippedAccessory = customAccessories.find(a => a.id === equippedCustomAccessory);
 
   const DIALOGUES = [
     "You're doing great!",
@@ -118,6 +122,50 @@ export default function Mascot({ pose, className, animate = true }: MascotProps)
         onMouseDown={handleTap}
         onMouseEnter={handleInteraction}
       />
+
+      {/* Custom Accessory Layer */}
+      {equippedAccessory && (
+        <motion.div
+          className="absolute top-[-20px] left-1/2 -translate-x-1/2 w-24 h-24 flex items-center justify-center pointer-events-none z-10"
+          animate={animate ? {
+            y: [0, 2, 0],
+            scaleY: [1, 0.95, 1],
+            scaleX: [1, 1.05, 1],
+          } : undefined}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        >
+          <div 
+            className="w-16 h-16 flex items-center justify-center transition-colors duration-300 relative"
+            style={{ 
+              backgroundColor: equippedAccessory.base === 'orb' ? 'transparent' : 
+                (equippedAccessory.color === 'sage' ? '#A8B5A0' : 
+                 equippedAccessory.color === 'periwinkle' ? '#B4C5E4' : 
+                 equippedAccessory.color === 'sand' ? '#D4C5B0' : '#FFD700'),
+              borderRadius: equippedAccessory.base === 'cap' ? '20px 20px 0 0' : '50%',
+              clipPath: equippedAccessory.base === 'badge' ? 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)' : undefined,
+              boxShadow: equippedAccessory.base === 'orb' ? `0 0 20px ${
+                 equippedAccessory.color === 'sage' ? '#A8B5A0' : 
+                 equippedAccessory.color === 'periwinkle' ? '#B4C5E4' : 
+                 equippedAccessory.color === 'sand' ? '#D4C5B0' : '#FFD700'
+              }` : '0 4px 6px rgba(0,0,0,0.1)',
+              border: equippedAccessory.base === 'orb' ? `4px solid ${
+                 equippedAccessory.color === 'sage' ? '#A8B5A0' : 
+                 equippedAccessory.color === 'periwinkle' ? '#B4C5E4' : 
+                 equippedAccessory.color === 'sand' ? '#D4C5B0' : '#FFD700'
+              }` : undefined
+            }}
+          >
+            <span className="text-2xl filter drop-shadow-md">
+              {equippedAccessory.symbol === 'star' ? '⭐' : 
+               equippedAccessory.symbol === 'heart' ? '❤️' : '⚡'}
+            </span>
+          </div>
+        </motion.div>
+      )}
     </div>
   );
 }

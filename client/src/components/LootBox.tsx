@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { useStore } from '@/lib/store';
 import { soundManager } from '@/lib/sound';
 import canvasConfetti from 'canvas-confetti';
+import DesignStudio from './DesignStudio';
 
 interface LootBoxProps {
   onClose: () => void;
@@ -12,8 +13,9 @@ interface LootBoxProps {
 
 export default function LootBox({ onClose }: LootBoxProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [reward, setReward] = useState<{ type: 'coins' | 'item', value: number | string, name: string } | null>(null);
+  const [reward, setReward] = useState<{ type: 'coins' | 'item' | 'blueprint', value: number | string, name: string } | null>(null);
   const addCoins = useStore(state => state.addCoins);
+  const [showDesignStudio, setShowDesignStudio] = useState(false);
 
   const openBox = () => {
     setIsOpen(true);
@@ -23,13 +25,16 @@ export default function LootBox({ onClose }: LootBoxProps) {
     const rand = Math.random();
     let rewardData;
     
-    if (rand < 0.7) {
-      // 70% chance of coins
+    if (rand < 0.05) {
+      // 5% chance of Golden Blueprint
+      rewardData = { type: 'blueprint', value: 'design_studio', name: 'Golden Blueprint!' };
+    } else if (rand < 0.7) {
+      // 65% chance of coins
       const amount = Math.floor(Math.random() * 20) + 10; // 10-30 coins
       rewardData = { type: 'coins', value: amount, name: `${amount} Star Coins` };
       addCoins(amount);
     } else {
-      // 30% chance of big coins (simulating item for now since we don't have many items)
+      // 30% chance of big coins
       const amount = Math.floor(Math.random() * 50) + 50; // 50-100 coins
       rewardData = { type: 'coins', value: amount, name: `JACKPOT! ${amount} Star Coins` };
       addCoins(amount);
@@ -46,6 +51,10 @@ export default function LootBox({ onClose }: LootBoxProps) {
       colors: ['#FFD700', '#FFA500', '#FF4500']
     });
   };
+
+  if (showDesignStudio) {
+    return <DesignStudio onClose={onClose} />;
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
@@ -116,9 +125,15 @@ export default function LootBox({ onClose }: LootBoxProps) {
             <Button 
               size="lg" 
               className="w-full"
-              onClick={onClose}
+              onClick={() => {
+                if (reward?.type === 'blueprint') {
+                  setShowDesignStudio(true);
+                } else {
+                  onClose();
+                }
+              }}
             >
-              Awesome!
+              {reward?.type === 'blueprint' ? 'Enter Design Studio' : 'Awesome!'}
             </Button>
           </div>
         )}

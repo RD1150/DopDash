@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { CustomAccessory } from '@/components/DesignStudio';
 
 export type Flavor = 'calm' | 'playful' | 'matter-of-fact' | 'celebratory';
 export type Theme = 'default' | 'ocean' | 'sunset' | 'lavender';
@@ -33,6 +34,8 @@ interface AppState {
   notificationsEnabled: boolean;
   coins: number;
   inventory: string[]; // IDs of owned items
+  customAccessories: CustomAccessory[];
+  equippedCustomAccessory: string | null; // ID of equipped custom accessory
   equippedItems: {
     hat?: string;
     glasses?: string;
@@ -53,6 +56,8 @@ interface AppState {
   purchaseItem: (itemId: string, cost: number) => boolean;
   equipItem: (slot: 'hat' | 'glasses' | 'accessory', itemId: string | undefined) => void;
   addCoins: (amount: number) => void;
+  setCustomAccessory: (accessory: CustomAccessory) => void;
+  equipCustomAccessory: (id: string | null) => void;
 }
 
 const BADGES_LIBRARY: Badge[] = [
@@ -94,6 +99,8 @@ export const useStore = create<AppState>()(
       notificationsEnabled: false,
       coins: 0,
       inventory: [],
+      customAccessories: [],
+      equippedCustomAccessory: null,
       equippedItems: {},
 
       startApp: () => set({ hasStarted: true }),
@@ -179,6 +186,17 @@ export const useStore = create<AppState>()(
             [slot]: itemId
           }
         }));
+      },
+
+      setCustomAccessory: (accessory) => {
+        set((state) => ({
+          customAccessories: [...state.customAccessories, accessory],
+          equippedCustomAccessory: accessory.id // Auto-equip new creation
+        }));
+      },
+
+      equipCustomAccessory: (id) => {
+        set({ equippedCustomAccessory: id });
       },
 
       checkBadges: () => {

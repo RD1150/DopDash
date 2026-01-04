@@ -32,6 +32,7 @@ export default function Shop() {
   const equippedItems = useStore((state) => state.equippedItems);
   const purchaseItem = useStore((state) => state.purchaseItem);
   const equipItem = useStore((state) => state.equipItem);
+  const { customAccessories, equippedCustomAccessory, equipCustomAccessory } = useStore();
 
   const handleItemClick = (item: ShopItem) => {
     const isOwned = inventory.includes(item.id);
@@ -102,7 +103,51 @@ export default function Shop() {
           </div>
         </div>
 
+        {/* Custom Accessories Section */}
+        {customAccessories.length > 0 && (
+          <div className="mb-8">
+            <h2 className="text-lg font-bold mb-4">My Designs</h2>
+            <div className="grid grid-cols-2 gap-4">
+              {customAccessories.map((acc) => {
+                const isEquipped = equippedCustomAccessory === acc.id;
+                return (
+                  <button
+                    key={acc.id}
+                    onClick={() => equipCustomAccessory(isEquipped ? null : acc.id)}
+                    className={cn(
+                      "relative p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2",
+                      isEquipped 
+                        ? "border-primary bg-primary/5" 
+                        : "border-muted bg-card hover:border-primary/30"
+                    )}
+                  >
+                    <div 
+                      className="w-12 h-12 flex items-center justify-center rounded-full mb-1"
+                      style={{ 
+                        backgroundColor: acc.color === 'sage' ? '#A8B5A0' : 
+                                       acc.color === 'periwinkle' ? '#B4C5E4' : 
+                                       acc.color === 'sand' ? '#D4C5B0' : '#FFD700'
+                      }}
+                    >
+                      <span className="text-2xl">
+                        {acc.symbol === 'star' ? '⭐' : acc.symbol === 'heart' ? '❤️' : '⚡'}
+                      </span>
+                    </div>
+                    <div className="text-center">
+                      <div className="font-medium text-sm">{acc.name}</div>
+                      <div className="text-xs font-bold mt-1 text-primary">
+                        {isEquipped ? 'Equipped' : 'Wear'}
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {/* Shop Grid */}
+        <h2 className="text-lg font-bold mb-4">Shop</h2>
         <div className="grid grid-cols-2 gap-4 pb-8">
           {SHOP_ITEMS.map((item) => {
             const isOwned = inventory.includes(item.id);
