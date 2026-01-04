@@ -198,6 +198,9 @@ export default function Dash() {
   if (completedCount === 1) mascotPose = 'happy';
   if (completedCount === 2) mascotPose = 'proud';
   if (completedCount === 3) mascotPose = 'hero';
+  
+  // Override with jumping pose if on a combo streak
+  if (comboCount > 3) mascotPose = 'jumping';
 
   return (
     <Layout>

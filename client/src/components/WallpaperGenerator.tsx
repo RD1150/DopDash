@@ -90,7 +90,7 @@ export default function WallpaperGenerator({ onClose }: WallpaperGeneratorProps)
             {/* Middle Section: Mascot & Streak */}
             <div className="flex flex-col items-center gap-6 mt-20">
               <div className="relative w-48 h-48">
-                <Mascot pose="hero" className="w-full h-full" />
+                <Mascot pose={streak > 3 ? "jumping" : "hero"} className="w-full h-full" />
               </div>
               
               <div className="bg-white/50 dark:bg-black/20 backdrop-blur-sm px-6 py-3 rounded-2xl border border-primary/10">

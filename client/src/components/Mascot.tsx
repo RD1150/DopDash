@@ -17,7 +17,8 @@ export type MascotPose =
   | 'angel' 
   | 'shy' 
   | 'stars' 
-  | 'down';
+  | 'down'
+  | 'jumping';
 
 interface MascotProps {
   pose: MascotPose;
@@ -71,6 +72,16 @@ export default function Mascot({ pose, className, animate = true }: MascotProps)
         ease: "easeInOut" as const
       }
     },
+    jumping: {
+      y: [0, -40, 0],
+      scaleY: [0.9, 1.1, 0.9],
+      rotate: [-5, 5, -5],
+      transition: {
+        duration: 0.6,
+        repeat: Infinity,
+        ease: "easeInOut" as const
+      }
+    },
     bounce: {
       y: [0, -20, 0],
       scaleY: [1, 0.9, 1.1, 1],
@@ -111,17 +122,47 @@ export default function Mascot({ pose, className, animate = true }: MascotProps)
         )}
       </AnimatePresence>
 
+      {/* Flame Effect for Jumping Pose */}
+      {pose === 'jumping' && (
+        <motion.div
+          className="absolute -top-8 left-1/2 -translate-x-1/2 text-4xl z-0"
+          animate={{ 
+            scale: [1, 1.2, 1],
+            opacity: [0.8, 1, 0.8],
+            y: [0, -5, 0]
+          }}
+          transition={{ duration: 0.5, repeat: Infinity }}
+        >
+          🔥
+        </motion.div>
+      )}
+
       <motion.img
-        src={`/images/mascot/${pose}.png`}
+        src={pose === 'jumping' ? '/images/mascot/hero.png' : `/images/mascot/${pose}.png`}
         alt={`Mascot ${pose}`}
-        className="w-full h-full object-contain drop-shadow-lg cursor-pointer"
+        className={cn(
+          "w-full h-full object-contain drop-shadow-lg cursor-pointer relative z-10",
+          pose === 'jumping' && "mb-4" // Lift up slightly
+        )}
         variants={squishVariants}
-        animate={animate ? "idle" : undefined}
+        animate={animate ? (pose === 'jumping' ? 'jumping' : "idle") : undefined}
         initial="pop"
         whileTap={{ scale: 0.9, rotate: -5 }}
         onMouseDown={handleTap}
         onMouseEnter={handleInteraction}
       />
+
+      {/* Detached Shadow for Jumping Pose */}
+      {pose === 'jumping' && (
+        <motion.div
+          className="absolute bottom-0 left-1/2 -translate-x-1/2 w-16 h-4 bg-black/20 rounded-full blur-sm"
+          animate={{ 
+            scale: [1, 0.6, 1],
+            opacity: [0.3, 0.1, 0.3]
+          }}
+          transition={{ duration: 0.6, repeat: Infinity, ease: "easeInOut" }}
+        />
+      )}
 
       {/* Custom Accessory Layer */}
       {equippedAccessory && (
