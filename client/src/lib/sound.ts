@@ -51,6 +51,34 @@ class SoundManager {
     osc.stop(this.ctx.currentTime + 0.15);
   }
 
+  playCombo(count: number) {
+    if (!this.ctx) return;
+    const now = this.ctx.currentTime;
+    
+    // Pentatonic scale: C4, D4, E4, G4, A4, C5...
+    const baseFreqs = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25];
+    // Clamp to available notes
+    const noteIndex = Math.min(count - 1, baseFreqs.length - 1);
+    const freq = baseFreqs[noteIndex];
+
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+    
+    osc.type = 'triangle'; // Brighter sound for combos
+    osc.frequency.setValueAtTime(freq, now);
+    osc.frequency.linearRampToValueAtTime(freq * 1.5, now + 0.1); // Slide up slightly
+    
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(0.3, now + 0.05);
+    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+    
+    osc.start(now);
+    osc.stop(now + 0.3);
+  }
+
   playSuccess() {
     if (!this.ctx) return;
     const now = this.ctx.currentTime;

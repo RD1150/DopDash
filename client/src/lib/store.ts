@@ -52,6 +52,7 @@ interface AppState {
   setNotificationsEnabled: (enabled: boolean) => void;
   purchaseItem: (itemId: string, cost: number) => boolean;
   equipItem: (slot: 'hat' | 'glasses' | 'accessory', itemId: string | undefined) => void;
+  addCoins: (amount: number) => void;
 }
 
 const BADGES_LIBRARY: Badge[] = [
@@ -156,6 +157,8 @@ export const useStore = create<AppState>()(
       },
 
       setNotificationsEnabled: (enabled: boolean) => set({ notificationsEnabled: enabled }),
+
+      addCoins: (amount: number) => set((state) => ({ coins: state.coins + amount })),
 
       purchaseItem: (itemId: string, cost: number) => {
         const { coins, inventory } = get();

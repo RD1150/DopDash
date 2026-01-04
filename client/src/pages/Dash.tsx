@@ -10,6 +10,7 @@ import { Check, Pencil, Settings, Sparkles, BrainCircuit, Zap } from 'lucide-rea
 import { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'wouter';
 import TutorialOverlay from '@/components/TutorialOverlay';
+import LootBox from '@/components/LootBox';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import FocusMode from '@/components/FocusMode';
@@ -22,6 +23,7 @@ export default function Dash() {
   const resetDay = useStore((state) => state.resetDay);
   const updateActionText = useStore((state) => state.updateActionText);
   const coins = useStore((state) => state.coins);
+  const addCoins = useStore((state) => state.addCoins);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState('');
   const [magicMode, setMagicMode] = useState(false);
@@ -29,6 +31,9 @@ export default function Dash() {
   const [showBrainDump, setShowBrainDump] = useState(false);
   const [challengeMode, setChallengeMode] = useState(false);
   const [challengeTime, setChallengeTime] = useState<number | null>(null);
+  const [comboCount, setComboCount] = useState(0);
+  const [lastActionTime, setLastActionTime] = useState(0);
+  const [showLootBox, setShowLootBox] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   
   // Ensure we have actions if page is loaded directly
@@ -64,10 +69,15 @@ export default function Dash() {
         }, 500);
       }
       
-      const timer = setTimeout(() => {
-        setLocation('/reward');
-      }, 1500); // Longer delay to enjoy confetti
-      return () => clearTimeout(timer);
+      // 20% chance for Loot Box
+      if (Math.random() < 0.2) {
+        setTimeout(() => setShowLootBox(true), 1000);
+      } else {
+        const timer = setTimeout(() => {
+          setLocation('/reward');
+        }, 1500); // Longer delay to enjoy confetti
+        return () => clearTimeout(timer);
+      }
     }
   }, [actions, setLocation, challengeMode, challengeTime]);
 
@@ -101,10 +111,38 @@ export default function Dash() {
   const handleToggle = (id: string) => {
     if (editingId === id) return; // Don't toggle while editing
     const action = actions.find(a => a.id === id);
-    if (!action?.completed) {
-      soundManager.playPop();
-      haptics.light();
+    
+    if (action && !action.completed) {
+      // Combo Logic
+      const now = Date.now();
+      const timeDiff = now - lastActionTime;
+      let newCombo = 1;
+      
+      if (timeDiff < 5000) { // 5 second window for combo
+        newCombo = comboCount + 1;
+        setComboCount(newCombo);
+        soundManager.playCombo(newCombo);
+        
+        // Visual shake effect
+        const container = document.getElementById('dash-container');
+        if (container) {
+          container.animate([
+            { transform: 'translateX(0)' },
+            { transform: 'translateX(-5px)' },
+            { transform: 'translateX(5px)' },
+            { transform: 'translateX(0)' }
+          ], { duration: 200 });
+        }
+      } else {
+        setComboCount(1);
+        soundManager.playPop();
+      }
+      
+      setLastActionTime(now);
+      haptics.success();
+      addCoins(1); // Earn 1 coin per task
     }
+    
     toggleAction(id);
   };
 
@@ -164,6 +202,12 @@ export default function Dash() {
   return (
     <Layout>
       <TutorialOverlay />
+      <AnimatePresence>
+        {showLootBox && <LootBox onClose={() => {
+          setShowLootBox(false);
+          setLocation('/reward');
+        }} />}
+      </AnimatePresence>
       <div className="flex flex-col h-full">
         {/* Header */}
         <header className="pt-8 pb-12 space-y-2">
@@ -175,6 +219,11 @@ export default function Dash() {
                 <div className="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 px-3 py-0.5 rounded-full text-sm font-bold flex items-center gap-1">
                   <span>⭐</span> {coins}
                 </div>
+                {comboCount > 1 && (
+                  <div className="animate-bounce bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 px-3 py-0.5 rounded-full text-sm font-bold flex items-center gap-1">
+                    <span>🔥</span> {comboCount}x COMBO!
+                  </div>
+                )}
                 <button 
                   onClick={() => setShowBrainDump(true)}
                   className="p-1 text-muted-foreground hover:text-foreground transition-colors"
