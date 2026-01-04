@@ -4,6 +4,7 @@ import { CustomAccessory } from '@/components/DesignStudio';
 
 export type Flavor = 'calm' | 'playful' | 'matter-of-fact' | 'celebratory';
 export type Theme = 'default' | 'ocean' | 'sunset' | 'lavender' | 'cottagecore' | 'cyberpunk';
+export type Context = 'nest' | 'grind' | 'self';
 
 export type MicroAction = {
   id: string;
@@ -25,6 +26,7 @@ interface AppState {
   hasStarted: boolean;
   flavor: Flavor;
   theme: Theme;
+  context: Context;
   zenMode: boolean;
   soundTheme: 'default' | 'arcade' | 'nature';
   todaysActions: MicroAction[];
@@ -58,6 +60,7 @@ interface AppState {
   completeTutorial: () => void;
   setFlavor: (flavor: Flavor) => void;
   setTheme: (theme: Theme) => void;
+  setContext: (context: Context) => void;
   setZenMode: (enabled: boolean) => void;
   setSoundTheme: (theme: 'default' | 'arcade' | 'nature') => void;
   toggleAction: (id: string) => void;
@@ -88,20 +91,34 @@ const BADGES_LIBRARY: Badge[] = [
   { id: 'weekend_warrior', name: 'Weekend Warrior', description: 'Completed a dash on a weekend', icon: '🎉', unlocked: false },
 ];
 
-const ACTION_LIBRARY: Omit<MicroAction, 'completed'>[] = [
-  // Focus
-  { id: 'f1', text: 'Open the thing you’ve been avoiding', category: 'focus' },
-  { id: 'f2', text: 'Read one paragraph', category: 'focus' },
-  { id: 'f3', text: 'Write one sentence', category: 'focus' },
-  // Energy
-  { id: 'e1', text: 'Drink a glass of water', category: 'energy' },
-  { id: 'e2', text: 'Stand up and stretch', category: 'energy' },
-  { id: 'e3', text: 'Take three slow breaths', category: 'energy' },
-  // Momentum
-  { id: 'm1', text: 'Send one message', category: 'momentum' },
-  { id: 'm2', text: 'Clear one small surface', category: 'momentum' },
-  { id: 'm3', text: 'Rename one file', category: 'momentum' },
-];
+const TASK_PACKS: Record<Context, Omit<MicroAction, 'completed'>[]> = {
+  nest: [
+    { id: 'n1', text: 'Put away one dish', category: 'momentum' },
+    { id: 'n2', text: 'Pick up one item from the floor', category: 'momentum' },
+    { id: 'n3', text: 'Wipe one surface', category: 'momentum' },
+    { id: 'n4', text: 'Open a window', category: 'energy' },
+    { id: 'n5', text: 'Water one plant', category: 'energy' },
+    { id: 'n6', text: 'Sort one piece of mail', category: 'focus' },
+  ],
+  grind: [
+    { id: 'g1', text: 'Open the document', category: 'focus' },
+    { id: 'g2', text: 'Write one sentence', category: 'focus' },
+    { id: 'g3', text: 'Read one email', category: 'focus' },
+    { id: 'g4', text: 'Close one tab', category: 'momentum' },
+    { id: 'g5', text: 'Rename one file', category: 'momentum' },
+    { id: 'g6', text: 'Stand up and stretch', category: 'energy' },
+  ],
+  self: [
+    { id: 's1', text: 'Drink a glass of water', category: 'energy' },
+    { id: 's2', text: 'Take three deep breaths', category: 'energy' },
+    { id: 's3', text: 'Step outside for a moment', category: 'energy' },
+    { id: 's4', text: 'Put on comfortable clothes', category: 'momentum' },
+    { id: 's5', text: 'Wash your face', category: 'momentum' },
+    { id: 's6', text: 'Listen to one song', category: 'focus' },
+  ]
+};
+
+const DEFAULT_ACTIONS = TASK_PACKS.self;
 
 export const useStore = create<AppState>()(
   persist(
@@ -109,6 +126,7 @@ export const useStore = create<AppState>()(
       hasStarted: false,
       flavor: 'calm',
       theme: 'default',
+      context: 'self',
       zenMode: false,
       soundTheme: 'default',
       todaysActions: [],
@@ -137,6 +155,13 @@ export const useStore = create<AppState>()(
 
       setFlavor: (flavor: Flavor) => set({ flavor }),
       setTheme: (theme: Theme) => set({ theme }),
+      setContext: (context: Context) => {
+        // When context changes, refresh actions immediately
+        const pack = TASK_PACKS[context];
+        const shuffled = [...pack].sort(() => 0.5 - Math.random());
+        const selected = shuffled.slice(0, 3).map(a => ({ ...a, completed: false }));
+        set({ context, todaysActions: selected });
+      },
       setZenMode: (zenMode: boolean) => set({ zenMode }),
       setSoundTheme: (soundTheme: 'default' | 'arcade' | 'nature') => set({ soundTheme }),
 
@@ -190,8 +215,9 @@ export const useStore = create<AppState>()(
       },
 
       resetDay: () => {
-        // Pick 3 random actions, one from each category if possible, or just random
-        const shuffled = [...ACTION_LIBRARY].sort(() => 0.5 - Math.random());
+        const { context } = get();
+        const pack = TASK_PACKS[context] || TASK_PACKS.self;
+        const shuffled = [...pack].sort(() => 0.5 - Math.random());
         const selected = shuffled.slice(0, 3).map(a => ({ ...a, completed: false }));
         set({ todaysActions: selected });
       },
@@ -241,10 +267,12 @@ export const useStore = create<AppState>()(
       },
 
       swapAction: (id) => {
-        const { todaysActions } = get();
+        const { todaysActions, context } = get();
+        const pack = TASK_PACKS[context] || TASK_PACKS.self;
+        
         // Find a new random action that isn't currently in the list
         const currentIds = todaysActions.map(a => a.id);
-        const available = ACTION_LIBRARY.filter(a => !currentIds.includes(a.id));
+        const available = pack.filter(a => !currentIds.includes(a.id));
         
         if (available.length === 0) return; // No more unique actions
         

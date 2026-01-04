@@ -1,20 +1,26 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useStore, Flavor, Theme } from '@/lib/store';
+import { useStore, Flavor, Theme, Context } from '@/lib/store';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { Brain, Zap, Battery, Palette, Moon, Sun, Leaf, Cpu } from 'lucide-react';
+import { Brain, Zap, Battery, Palette, Moon, Sun, Leaf, Cpu, Home, Briefcase, User } from 'lucide-react';
 import { useLocation } from 'wouter';
 
 export default function Onboarding() {
   const [, setLocation] = useLocation();
-  const [step, setStep] = useState<'intro' | 'enemy' | 'vibe'>('intro');
+  const [step, setStep] = useState<'intro' | 'enemy' | 'context' | 'vibe'>('intro');
   const setFlavor = useStore((state) => state.setFlavor);
   const setTheme = useStore((state) => state.setTheme);
+  const setContext = useStore((state) => state.setContext);
   const startApp = useStore((state) => state.startApp);
 
   const handleEnemySelect = (flavor: Flavor) => {
     setFlavor(flavor);
+    setStep('context');
+  };
+
+  const handleContextSelect = (context: Context) => {
+    setContext(context);
     setStep('vibe');
   };
 
@@ -106,6 +112,62 @@ export default function Onboarding() {
                 <div>
                   <h3 className="font-bold text-lg">The Blahs</h3>
                   <p className="text-sm text-muted-foreground">Low energy. Need a boost.</p>
+                </div>
+              </button>
+            </div>
+          </motion.div>
+        )}
+
+        {step === 'context' && (
+          <motion.div
+            key="context"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            className="space-y-6"
+          >
+            <div className="text-center space-y-2">
+              <h2 className="text-2xl font-bold">What are we tackling?</h2>
+              <p className="text-muted-foreground">We'll load the right tools.</p>
+            </div>
+
+            <div className="grid gap-4">
+              <button
+                onClick={() => handleContextSelect('nest')}
+                className="bg-card hover:bg-accent p-6 rounded-2xl border-2 border-transparent hover:border-primary transition-all text-left flex items-center gap-4 group"
+              >
+                <div className="p-3 bg-green-100 dark:bg-green-900/30 text-green-600 rounded-xl group-hover:scale-110 transition-transform">
+                  <Home className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-lg">The Nest</h3>
+                  <p className="text-sm text-muted-foreground">Chores, cleaning, life admin.</p>
+                </div>
+              </button>
+
+              <button
+                onClick={() => handleContextSelect('grind')}
+                className="bg-card hover:bg-accent p-6 rounded-2xl border-2 border-transparent hover:border-primary transition-all text-left flex items-center gap-4 group"
+              >
+                <div className="p-3 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-xl group-hover:scale-110 transition-transform">
+                  <Briefcase className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-lg">The Grind</h3>
+                  <p className="text-sm text-muted-foreground">Work, study, emails.</p>
+                </div>
+              </button>
+
+              <button
+                onClick={() => handleContextSelect('self')}
+                className="bg-card hover:bg-accent p-6 rounded-2xl border-2 border-transparent hover:border-primary transition-all text-left flex items-center gap-4 group"
+              >
+                <div className="p-3 bg-pink-100 dark:bg-pink-900/30 text-pink-600 rounded-xl group-hover:scale-110 transition-transform">
+                  <User className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-lg">The Self</h3>
+                  <p className="text-sm text-muted-foreground">Hygiene, health, routine.</p>
                 </div>
               </button>
             </div>
