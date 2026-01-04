@@ -1,15 +1,16 @@
 import Layout from '@/components/Layout';
+import Mascot, { MascotPose } from '@/components/Mascot';
 import { Button } from '@/components/ui/button';
 import { Flavor, useStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { useLocation } from 'wouter';
 
-const FLAVORS: { id: Flavor; label: string; desc: string; color: string }[] = [
-  { id: 'calm', label: 'Calm encouragement', desc: 'Gentle and soothing', color: 'bg-emerald-100 text-emerald-900' },
-  { id: 'playful', label: 'Playful', desc: 'Fun and lighthearted', color: 'bg-blue-100 text-blue-900' },
-  { id: 'matter-of-fact', label: 'Matter-of-fact', desc: 'Direct and simple', color: 'bg-stone-100 text-stone-900' },
-  { id: 'celebratory', label: 'Celebratory', desc: 'Subtle cheers', color: 'bg-amber-100 text-amber-900' },
+const FLAVORS: { id: Flavor; label: string; desc: string; color: string; pose: MascotPose }[] = [
+  { id: 'calm', label: 'Calm encouragement', desc: 'Gentle and soothing', color: 'bg-emerald-100 text-emerald-900', pose: 'zen' },
+  { id: 'playful', label: 'Playful', desc: 'Fun and lighthearted', color: 'bg-blue-100 text-blue-900', pose: 'happy' },
+  { id: 'matter-of-fact', label: 'Matter-of-fact', desc: 'Direct and simple', color: 'bg-stone-100 text-stone-900', pose: 'waiting' },
+  { id: 'celebratory', label: 'Celebratory', desc: 'Subtle cheers', color: 'bg-amber-100 text-amber-900', pose: 'proud' },
 ];
 
 export default function FlavorSelector() {
@@ -58,7 +59,9 @@ export default function FlavorSelector() {
                   <h3 className="font-medium text-lg">{flavor.label}</h3>
                   <p className="text-sm text-muted-foreground">{flavor.desc}</p>
                 </div>
-                <div className={cn("w-4 h-4 rounded-full", flavor.color.split(' ')[0])} />
+                <div className="w-12 h-12 -mr-2">
+                  <Mascot pose={flavor.pose} className="w-full h-full" animate={false} />
+                </div>
               </div>
             </motion.button>
           ))}

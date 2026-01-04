@@ -1,4 +1,5 @@
 import Layout from '@/components/Layout';
+import Mascot from '@/components/Mascot';
 import { Button } from '@/components/ui/button';
 import { useStore } from '@/lib/store';
 import { motion } from 'framer-motion';
@@ -36,14 +37,7 @@ export default function Reward() {
              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
              className="absolute inset-0 bg-primary/30 rounded-full blur-[60px]"
            />
-           <motion.img 
-             src="/images/reward-glow.png" 
-             alt="Reward" 
-             className="relative z-10 w-full h-full object-contain"
-             initial={{ y: 10 }}
-             animate={{ y: -10 }}
-             transition={{ duration: 3, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
-           />
+           <Mascot pose="hero" className="w-full h-full relative z-10" />
         </div>
 
         <div className="space-y-4">
