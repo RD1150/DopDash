@@ -51,6 +51,7 @@ interface AppState {
   level: number;
   vacationMode: boolean;
   vacationDaysRemaining: number;
+  lastAffirmationDate: string | null;
 
   // Actions
   startApp: () => void;
@@ -75,6 +76,7 @@ interface AppState {
   stopBodyDouble: () => void;
   setVacationMode: (days: number) => void;
   cancelVacationMode: () => void;
+  setLastAffirmationDate: (date: string) => void;
 }
 
 const BADGES_LIBRARY: Badge[] = [
@@ -128,6 +130,7 @@ export const useStore = create<AppState>()(
       level: 1,
       vacationMode: false,
       vacationDaysRemaining: 0,
+      lastAffirmationDate: null,
 
       startApp: () => set({ hasStarted: true }),
       completeTutorial: () => set({ hasSeenTutorial: true }),
@@ -344,7 +347,8 @@ export const useStore = create<AppState>()(
       },
 
       setVacationMode: (days: number) => set({ vacationMode: true, vacationDaysRemaining: days }),
-      cancelVacationMode: () => set({ vacationMode: false, vacationDaysRemaining: 0 })
+      cancelVacationMode: () => set({ vacationMode: false, vacationDaysRemaining: 0 }),
+      setLastAffirmationDate: (date: string) => set({ lastAffirmationDate: date })
     }),
     {
       name: 'dopamine-dasher-storage',

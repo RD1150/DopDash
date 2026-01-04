@@ -16,6 +16,7 @@ import { Button } from '@/components/ui/button';
 import FocusMode from '@/components/FocusMode';
 import BossBattle from '@/components/BossBattle';
 import BodyDouble from '@/components/BodyDouble';
+import AffirmationOverlay from '@/components/AffirmationOverlay';
 import { Timer } from 'lucide-react';
 import {
   DropdownMenu,
@@ -227,6 +228,7 @@ export default function Dash() {
 
   return (
     <Layout>
+      <AffirmationOverlay />
       <TutorialOverlay />
       <AnimatePresence>
         {showLootBox && <LootBox onClose={() => {
