@@ -2,7 +2,7 @@ import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Theme, useStore } from '@/lib/store';
-import { ChevronLeft, Moon, Palette, Volume2, Bell, Download, Smartphone } from 'lucide-react';
+import { ChevronLeft, Moon, Palette, Volume2, Bell, Download, Smartphone, Sparkles } from 'lucide-react';
 import { useLocation } from 'wouter';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
@@ -16,6 +16,10 @@ export default function SettingsPage() {
   const setTheme = useStore((state) => state.setTheme);
   const notificationsEnabled = useStore((state) => state.notificationsEnabled);
   const setNotificationsEnabled = useStore((state) => state.setNotificationsEnabled);
+  const zenMode = useStore((state) => state.zenMode);
+  const setZenMode = useStore((state) => state.setZenMode);
+  const soundTheme = useStore((state) => state.soundTheme);
+  const setSoundTheme = useStore((state) => state.setSoundTheme);
   const [showWallpaperGen, setShowWallpaperGen] = useState(false);
 
   const handleNotificationToggle = async (checked: boolean) => {
@@ -105,6 +109,52 @@ export default function SettingsPage() {
             <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Preferences</h2>
             
             <div className="bg-card rounded-xl border border-border divide-y divide-border">
+              {/* Zen Mode */}
+              <div className="p-4 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-primary/10 rounded-lg text-primary">
+                    <Sparkles className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="font-medium">Zen Mode</p>
+                    <p className="text-sm text-muted-foreground">Hide coins, streaks, and gamification</p>
+                  </div>
+                </div>
+                <Switch 
+                  checked={zenMode}
+                  onCheckedChange={setZenMode}
+                />
+              </div>
+
+              {/* Sound Theme */}
+              <div className="p-4 space-y-3">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="p-2 bg-primary/10 rounded-lg text-primary">
+                    <Volume2 className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="font-medium">Sound Theme</p>
+                    <p className="text-sm text-muted-foreground">Choose your audio vibe</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  {(['default', 'arcade', 'nature'] as const).map((t) => (
+                    <button
+                      key={t}
+                      onClick={() => setSoundTheme(t)}
+                      className={cn(
+                        "p-3 rounded-xl text-sm font-medium transition-all border-2 capitalize",
+                        soundTheme === t 
+                          ? "border-primary bg-primary/5 text-primary" 
+                          : "border-transparent bg-secondary/50 hover:bg-secondary text-muted-foreground"
+                      )}
+                    >
+                      {t}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               {/* Theme Selector */}
               <div className="p-4 space-y-3">
                 <div className="flex items-center gap-3 mb-2">

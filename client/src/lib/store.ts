@@ -25,6 +25,8 @@ interface AppState {
   hasStarted: boolean;
   flavor: Flavor;
   theme: Theme;
+  zenMode: boolean;
+  soundTheme: 'default' | 'arcade' | 'nature';
   todaysActions: MicroAction[];
   streak: number;
   lastCompletedDate: string | null;
@@ -47,6 +49,8 @@ interface AppState {
   completeTutorial: () => void;
   setFlavor: (flavor: Flavor) => void;
   setTheme: (theme: Theme) => void;
+  setZenMode: (enabled: boolean) => void;
+  setSoundTheme: (theme: 'default' | 'arcade' | 'nature') => void;
   toggleAction: (id: string) => void;
   resetDay: () => void;
   checkStreak: () => void;
@@ -90,6 +94,8 @@ export const useStore = create<AppState>()(
       hasStarted: false,
       flavor: 'calm',
       theme: 'default',
+      zenMode: false,
+      soundTheme: 'default',
       todaysActions: [],
       streak: 0,
       lastCompletedDate: null,
@@ -108,6 +114,8 @@ export const useStore = create<AppState>()(
 
       setFlavor: (flavor: Flavor) => set({ flavor }),
       setTheme: (theme: Theme) => set({ theme }),
+      setZenMode: (zenMode: boolean) => set({ zenMode }),
+      setSoundTheme: (soundTheme: 'default' | 'arcade' | 'nature') => set({ soundTheme }),
 
       toggleAction: (id: string) => {
         const { todaysActions, lastCompletedDate, streak, coins } = get();

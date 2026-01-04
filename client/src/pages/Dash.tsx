@@ -6,7 +6,7 @@ import { useStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
 import canvasConfetti from 'canvas-confetti';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Check, Pencil, Settings, Sparkles, BrainCircuit, Zap } from 'lucide-react';
+import { Check, Pencil, Settings, Sparkles, BrainCircuit, Zap, Sword } from 'lucide-react';
 import { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'wouter';
 import TutorialOverlay from '@/components/TutorialOverlay';
@@ -14,6 +14,7 @@ import LootBox from '@/components/LootBox';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import FocusMode from '@/components/FocusMode';
+import BossBattle from '@/components/BossBattle';
 import { Timer } from 'lucide-react';
 
 export default function Dash() {
@@ -24,6 +25,7 @@ export default function Dash() {
   const updateActionText = useStore((state) => state.updateActionText);
   const coins = useStore((state) => state.coins);
   const addCoins = useStore((state) => state.addCoins);
+  const zenMode = useStore((state) => state.zenMode);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState('');
   const [magicMode, setMagicMode] = useState(false);
@@ -34,6 +36,7 @@ export default function Dash() {
   const [comboCount, setComboCount] = useState(0);
   const [lastActionTime, setLastActionTime] = useState(0);
   const [showLootBox, setShowLootBox] = useState(false);
+  const [showBossBattle, setShowBossBattle] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   
   // Ensure we have actions if page is loaded directly
@@ -210,6 +213,7 @@ export default function Dash() {
           setShowLootBox(false);
           setLocation('/reward');
         }} />}
+        {showBossBattle && <BossBattle onClose={() => setShowBossBattle(false)} />}
       </AnimatePresence>
       <div className="flex flex-col h-full">
         {/* Header */}
@@ -219,13 +223,17 @@ export default function Dash() {
               <h1 className="text-3xl font-bold text-primary">Today’s Dash</h1>
               <div className="flex items-center gap-3 mt-1">
                 <p className="text-muted-foreground">Just start. That’s enough.</p>
-                <div className="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 px-3 py-0.5 rounded-full text-sm font-bold flex items-center gap-1">
-                  <span>⭐</span> {coins}
-                </div>
-                {comboCount > 1 && (
-                  <div className="animate-bounce bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 px-3 py-0.5 rounded-full text-sm font-bold flex items-center gap-1">
-                    <span>🔥</span> {comboCount}x COMBO!
-                  </div>
+                {!zenMode && (
+                  <>
+                    <div className="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 px-3 py-0.5 rounded-full text-sm font-bold flex items-center gap-1">
+                      <span>⭐</span> {coins}
+                    </div>
+                    {comboCount > 1 && (
+                      <div className="animate-bounce bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 px-3 py-0.5 rounded-full text-sm font-bold flex items-center gap-1">
+                        <span>🔥</span> {comboCount}x COMBO!
+                      </div>
+                    )}
+                  </>
                 )}
                 <button 
                   onClick={() => setShowBrainDump(true)}
@@ -233,6 +241,13 @@ export default function Dash() {
                   title="Brain Dump"
                 >
                   <BrainCircuit className="w-5 h-5" />
+                </button>
+                <button 
+                  onClick={() => setShowBossBattle(true)}
+                  className="p-1 text-muted-foreground hover:text-red-500 transition-colors"
+                  title="Boss Battle"
+                >
+                  <Sword className="w-5 h-5" />
                 </button>
               </div>
             </div>

@@ -14,19 +14,52 @@ class SoundManager {
 
   playPop() {
     if (!this.ctx) return;
+    const theme = localStorage.getItem('dopamine-dasher-storage') 
+      ? JSON.parse(localStorage.getItem('dopamine-dasher-storage')!).state.soundTheme 
+      : 'default';
+
+    if (theme === 'nature') {
+      // Wood block sound
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(800, this.ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(100, this.ctx.currentTime + 0.05);
+      gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.05);
+      osc.start();
+      osc.stop(this.ctx.currentTime + 0.05);
+      return;
+    }
+
+    if (theme === 'arcade') {
+      // 8-bit jump
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(150, this.ctx.currentTime);
+      osc.frequency.linearRampToValueAtTime(300, this.ctx.currentTime + 0.1);
+      gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+      gain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 0.1);
+      osc.start();
+      osc.stop(this.ctx.currentTime + 0.1);
+      return;
+    }
+
+    // Default Pop
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
-    
     osc.connect(gain);
     gain.connect(this.ctx.destination);
-    
     osc.type = 'sine';
     osc.frequency.setValueAtTime(800, this.ctx.currentTime);
     osc.frequency.exponentialRampToValueAtTime(100, this.ctx.currentTime + 0.1);
-    
     gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.1);
-    
     osc.start();
     osc.stop(this.ctx.currentTime + 0.1);
   }
@@ -82,8 +115,56 @@ class SoundManager {
   playSuccess() {
     if (!this.ctx) return;
     const now = this.ctx.currentTime;
+    const theme = localStorage.getItem('dopamine-dasher-storage') 
+      ? JSON.parse(localStorage.getItem('dopamine-dasher-storage')!).state.soundTheme 
+      : 'default';
+
+    if (theme === 'nature') {
+      // Wind chime
+      [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+        const osc = this.ctx!.createOscillator();
+        const gain = this.ctx!.createGain();
+        osc.connect(gain);
+        gain.connect(this.ctx!.destination);
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        const startTime = now + i * 0.15 + Math.random() * 0.05;
+        gain.gain.setValueAtTime(0, startTime);
+        gain.gain.linearRampToValueAtTime(0.1, startTime + 0.05);
+        gain.gain.exponentialRampToValueAtTime(0.001, startTime + 2.0);
+        osc.start(startTime);
+        osc.stop(startTime + 2.0);
+      });
+      return;
+    }
+
+    if (theme === 'arcade') {
+      // Power up
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(220, now);
+      osc.frequency.linearRampToValueAtTime(880, now + 0.3);
+      // Vibrato
+      const lfo = this.ctx.createOscillator();
+      lfo.frequency.value = 20;
+      const lfoGain = this.ctx.createGain();
+      lfoGain.gain.value = 20;
+      lfo.connect(lfoGain);
+      lfoGain.connect(osc.frequency);
+      lfo.start(now);
+      lfo.stop(now + 0.3);
+
+      gain.gain.setValueAtTime(0.1, now);
+      gain.gain.linearRampToValueAtTime(0, now + 0.3);
+      osc.start(now);
+      osc.stop(now + 0.3);
+      return;
+    }
     
-    // Arpeggio
+    // Default Arpeggio
     [440, 554, 659].forEach((freq, i) => {
       const osc = this.ctx!.createOscillator();
       const gain = this.ctx!.createGain();
