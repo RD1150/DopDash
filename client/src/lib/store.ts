@@ -56,6 +56,7 @@ interface AppState {
   lastAffirmationDate: string | null;
   savedTasks: Omit<MicroAction, 'completed' | 'id'>[];
   emergencyMode: boolean;
+  brainDump: string;
 
   // Actions
   startApp: () => void;
@@ -86,6 +87,7 @@ interface AppState {
   saveTask: (text: string, category: 'focus' | 'energy' | 'momentum') => void;
   removeSavedTask: (text: string) => void;
   setEmergencyMode: (enabled: boolean) => void;
+  setBrainDump: (text: string) => void;
 }
 
 const BADGES_LIBRARY: Badge[] = [
@@ -165,6 +167,7 @@ export const useStore = create<AppState>()(
       lastAffirmationDate: null,
       savedTasks: [],
       emergencyMode: false,
+      brainDump: '',
 
       startApp: () => set({ hasStarted: true }),
       completeTutorial: () => set({ hasSeenTutorial: true }),
@@ -428,7 +431,8 @@ export const useStore = create<AppState>()(
           const selected = shuffled.slice(0, 3).map(a => ({ ...a, completed: false }));
           set({ emergencyMode: false, todaysActions: selected });
         }
-      }
+      },
+      setBrainDump: (text) => set({ brainDump: text })
     }),
     {
       name: 'dopamine-dasher-storage',

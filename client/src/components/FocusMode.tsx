@@ -85,13 +85,23 @@ export default function FocusMode({ isOpen, onClose, taskName, onComplete }: Foc
           <div className="relative w-48 h-48 mx-auto">
             <Mascot pose={isActive ? "hero" : "waiting"} className="w-full h-full" />
             {isActive && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="absolute -right-4 top-0 bg-card border shadow-sm px-3 py-1 rounded-full text-xs font-medium"
-              >
-                I'm working too!
-              </motion.div>
+              <>
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="absolute -right-4 top-0 bg-card border shadow-sm px-3 py-1 rounded-full text-xs font-medium"
+                >
+                  I'm working too!
+                </motion.div>
+                {/* Typing/Working Animation Overlay */}
+                <motion.div
+                  className="absolute bottom-0 right-8 text-2xl"
+                  animate={{ y: [0, -5, 0] }}
+                  transition={{ duration: 0.5, repeat: Infinity }}
+                >
+                  ⌨️
+                </motion.div>
+              </>
             )}
           </div>
 

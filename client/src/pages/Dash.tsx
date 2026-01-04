@@ -18,7 +18,9 @@ import BossBattle from '@/components/BossBattle';
 import BodyDouble from '@/components/BodyDouble';
 import AffirmationOverlay from '@/components/AffirmationOverlay';
 import BubblePop from '@/components/BubblePop';
-import { Timer, CircleDashed } from 'lucide-react';
+import WeeklyReview from '@/components/WeeklyReview';
+import BrainDump from '@/components/BrainDump';
+import { Timer, CircleDashed, StickyNote } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -46,7 +48,6 @@ export default function Dash() {
   const [editText, setEditText] = useState('');
   const [magicMode, setMagicMode] = useState(false);
   const [focusTask, setFocusTask] = useState<{id: string, text: string} | null>(null);
-  const [showBrainDump, setShowBrainDump] = useState(false);
   const [challengeMode, setChallengeMode] = useState(false);
   const [challengeTime, setChallengeTime] = useState<number | null>(null);
   const [comboCount, setComboCount] = useState(0);
@@ -54,6 +55,7 @@ export default function Dash() {
   const [showLootBox, setShowLootBox] = useState(false);
   const [showBossBattle, setShowBossBattle] = useState(false);
   const [showBubblePop, setShowBubblePop] = useState(false);
+  const [showBrainDump, setShowBrainDump] = useState(false);
   const [isAddingTask, setIsAddingTask] = useState(false);
   const [newTaskText, setNewTaskText] = useState('');
   const [newTaskCategory, setNewTaskCategory] = useState<'focus' | 'energy' | 'momentum'>('focus');
@@ -333,6 +335,8 @@ export default function Dash() {
         {showBossBattle && <BossBattle onClose={() => setShowBossBattle(false)} />}
         {showBubblePop && <BubblePop onClose={() => setShowBubblePop(false)} />}
       </AnimatePresence>
+      <WeeklyReview />
+      <BrainDump isOpen={showBrainDump} onClose={() => setShowBrainDump(false)} />
       <BodyDouble />
       <div className="flex flex-col h-full">
         {/* Header */}
@@ -760,6 +764,15 @@ export default function Dash() {
             >
               <CircleDashed className="w-4 h-4" />
               Bubble Pop
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="gap-2 text-muted-foreground hover:text-primary"
+              onClick={() => setShowBrainDump(true)}
+            >
+              <StickyNote className="w-4 h-4" />
+              Brain Dump
             </Button>
           </div>
         </div>
