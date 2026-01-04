@@ -31,6 +31,7 @@ export default function Dash() {
   const toggleAction = useStore((state) => state.toggleAction);
   const resetDay = useStore((state) => state.resetDay);
   const updateActionText = useStore((state) => state.updateActionText);
+  const addAction = useStore((state) => state.addAction);
   const coins = useStore((state) => state.coins);
   const addCoins = useStore((state) => state.addCoins);
   const zenMode = useStore((state) => state.zenMode);
@@ -46,7 +47,10 @@ export default function Dash() {
   const [lastActionTime, setLastActionTime] = useState(0);
   const [showLootBox, setShowLootBox] = useState(false);
   const [showBossBattle, setShowBossBattle] = useState(false);
+  const [isAddingTask, setIsAddingTask] = useState(false);
+  const [newTaskText, setNewTaskText] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
+  const newTaskInputRef = useRef<HTMLInputElement>(null);
   
   // Ensure we have actions if page is loaded directly
   useEffect(() => {
@@ -177,6 +181,25 @@ export default function Dash() {
       saveEdit();
     } else if (e.key === 'Escape') {
       setEditingId(null);
+    }
+  };
+
+  const handleAddTask = () => {
+    if (newTaskText.trim()) {
+      addAction(newTaskText.trim());
+      setNewTaskText('');
+      setIsAddingTask(false);
+      soundManager.playPop();
+      haptics.success();
+    }
+  };
+
+  const handleNewTaskKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleAddTask();
+    } else if (e.key === 'Escape') {
+      setIsAddingTask(false);
+      setNewTaskText('');
     }
   };
 
