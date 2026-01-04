@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import Mascot from '@/components/Mascot';
-import { Play, Pause, X, CheckCircle2 } from 'lucide-react';
+import { Play, Pause, X, CheckCircle2, CloudRain, Trees, Waves } from 'lucide-react';
 import { soundManager } from '@/lib/sound';
 
 interface FocusModeProps {
@@ -47,6 +47,17 @@ export default function FocusMode({ isOpen, onClose, taskName, onComplete }: Foc
     soundManager.playPop();
   };
 
+  const toggleAmbient = (type: 'white_noise' | 'rain' | 'forest') => {
+    soundManager.playAmbient(type);
+  };
+
+  // Stop ambient sound when closing
+  useEffect(() => {
+    if (!isOpen) {
+      soundManager.stopAmbient();
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
@@ -87,6 +98,31 @@ export default function FocusMode({ isOpen, onClose, taskName, onComplete }: Foc
           {/* Timer */}
           <div className="text-7xl font-mono font-bold tabular-nums tracking-tight text-primary">
             {formatTime(timeLeft)}
+          </div>
+
+          {/* Ambient Sounds */}
+          <div className="flex justify-center gap-4">
+            <button 
+              onClick={() => toggleAmbient('white_noise')}
+              className="p-3 rounded-full bg-secondary/50 hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
+              title="White Noise"
+            >
+              <Waves className="w-5 h-5" />
+            </button>
+            <button 
+              onClick={() => toggleAmbient('rain')}
+              className="p-3 rounded-full bg-secondary/50 hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
+              title="Rain"
+            >
+              <CloudRain className="w-5 h-5" />
+            </button>
+            <button 
+              onClick={() => toggleAmbient('forest')}
+              className="p-3 rounded-full bg-secondary/50 hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
+              title="Forest"
+            >
+              <Trees className="w-5 h-5" />
+            </button>
           </div>
 
           {/* Controls */}

@@ -6,7 +6,7 @@ import { useStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
 import canvasConfetti from 'canvas-confetti';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Check, Pencil, Settings, Sparkles } from 'lucide-react';
+import { Check, Pencil, Settings, Sparkles, BrainCircuit, Zap } from 'lucide-react';
 import { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'wouter';
 import TutorialOverlay from '@/components/TutorialOverlay';
@@ -26,6 +26,9 @@ export default function Dash() {
   const [editText, setEditText] = useState('');
   const [magicMode, setMagicMode] = useState(false);
   const [focusTask, setFocusTask] = useState<{id: string, text: string} | null>(null);
+  const [showBrainDump, setShowBrainDump] = useState(false);
+  const [challengeMode, setChallengeMode] = useState(false);
+  const [challengeTime, setChallengeTime] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   
   // Ensure we have actions if page is loaded directly
@@ -47,12 +50,53 @@ export default function Dash() {
         colors: ['#A7F3D0', '#6EE7B7', '#34D399', '#FCD34D', '#FDBA74'] // Sage/Green/Gold theme
       });
       
+      // Challenge Mode Bonus
+      if (challengeMode && challengeTime && challengeTime > 0) {
+        // Double coins logic would go here if we had a method for it
+        // For now just extra confetti
+        setTimeout(() => {
+          canvasConfetti({
+            particleCount: 50,
+            spread: 100,
+            origin: { y: 0.3 },
+            colors: ['#FFD700']
+          });
+        }, 500);
+      }
+      
       const timer = setTimeout(() => {
         setLocation('/reward');
       }, 1500); // Longer delay to enjoy confetti
       return () => clearTimeout(timer);
     }
-  }, [actions, setLocation]);
+  }, [actions, setLocation, challengeMode, challengeTime]);
+
+  // Challenge Timer
+  useEffect(() => {
+    if (challengeMode && challengeTime !== null && challengeTime > 0 && !actions.every(a => a.completed)) {
+      const timer = setInterval(() => {
+        setChallengeTime(prev => (prev && prev > 0) ? prev - 1 : 0);
+      }, 1000);
+      return () => clearInterval(timer);
+    } else if (challengeTime === 0) {
+      setChallengeMode(false); // Challenge failed
+    }
+  }, [challengeMode, challengeTime, actions]);
+
+  const startChallenge = () => {
+    if (actions.some(a => a.completed)) {
+      if (!confirm("Start a Speed Dash? It's best to start with 0 tasks done.")) return;
+    }
+    setChallengeMode(true);
+    setChallengeTime(300); // 5 minutes
+    soundManager.playPop();
+  };
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
   const handleToggle = (id: string) => {
     if (editingId === id) return; // Don't toggle while editing
@@ -131,6 +175,13 @@ export default function Dash() {
                 <div className="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 px-3 py-0.5 rounded-full text-sm font-bold flex items-center gap-1">
                   <span>⭐</span> {coins}
                 </div>
+                <button 
+                  onClick={() => setShowBrainDump(true)}
+                  className="p-1 text-muted-foreground hover:text-foreground transition-colors"
+                  title="Brain Dump"
+                >
+                  <BrainCircuit className="w-5 h-5" />
+                </button>
               </div>
             </div>
             
@@ -287,21 +338,37 @@ export default function Dash() {
           />
         )}
 
-        {/* Magic Button */}
-        <div className="py-8 flex flex-col items-center gap-4">
-          <Button
-            onClick={handleMagicButton}
-            disabled={actions.every(a => a.completed) || magicMode}
-            className={cn(
-              "rounded-full px-6 py-6 h-auto text-lg gap-2 shadow-lg transition-all hover:scale-105 active:scale-95",
-              magicMode ? "animate-pulse bg-purple-500 hover:bg-purple-600" : "bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600"
-            )}
-          >
-            <Sparkles className={cn("w-6 h-6", magicMode && "animate-spin")} />
-            {magicMode ? "Picking for you..." : "Pick for me"}
-          </Button>
-          <p className="text-sm text-muted-foreground/40">
-            Can't decide? Let the magic button choose.
+        {/* Magic Button & Challenge */}
+        <div className="py-8 flex flex-col items-center gap-6">
+          <div className="flex gap-4">
+            <Button
+              onClick={handleMagicButton}
+              disabled={actions.every(a => a.completed) || magicMode}
+              className={cn(
+                "rounded-full px-6 py-6 h-auto text-lg gap-2 shadow-lg transition-all hover:scale-105 active:scale-95",
+                magicMode ? "animate-pulse bg-purple-500 hover:bg-purple-600" : "bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600"
+              )}
+            >
+              <Sparkles className={cn("w-6 h-6", magicMode && "animate-spin")} />
+              {magicMode ? "Picking..." : "Pick for me"}
+            </Button>
+
+            <Button
+              onClick={startChallenge}
+              disabled={actions.every(a => a.completed) || challengeMode}
+              variant="outline"
+              className={cn(
+                "rounded-full px-6 py-6 h-auto text-lg gap-2 shadow-lg transition-all hover:scale-105 active:scale-95 border-2",
+                challengeMode ? "border-orange-500 text-orange-500 bg-orange-50 dark:bg-orange-950/30" : "border-orange-200 hover:border-orange-400 text-orange-600"
+              )}
+            >
+              <Zap className={cn("w-6 h-6", challengeMode && "animate-pulse")} />
+              {challengeMode ? formatTime(challengeTime || 0) : "Speed Dash"}
+            </Button>
+          </div>
+          
+          <p className="text-sm text-muted-foreground/40 text-center max-w-xs">
+            Use <strong>Pick for me</strong> if you're stuck, or <strong>Speed Dash</strong> to race against the clock (5 min).
           </p>
         </div>
       </div>
