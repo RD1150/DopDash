@@ -4,7 +4,7 @@ import { CustomAccessory } from '@/components/DesignStudio';
 
 export type Flavor = 'calm' | 'playful' | 'matter-of-fact' | 'celebratory';
 export type Theme = 'default' | 'ocean' | 'sunset' | 'lavender' | 'cottagecore' | 'cyberpunk';
-export type Context = 'nest' | 'grind' | 'self';
+export type Context = 'nest' | 'grind' | 'self' | 'family';
 
 export type MicroAction = {
   id: string;
@@ -55,6 +55,7 @@ interface AppState {
   vacationDaysRemaining: number;
   lastAffirmationDate: string | null;
   savedTasks: Omit<MicroAction, 'completed' | 'id'>[];
+  emergencyMode: boolean;
 
   // Actions
   startApp: () => void;
@@ -84,6 +85,7 @@ interface AppState {
   addAction: (text: string, category?: 'focus' | 'energy' | 'momentum') => void;
   saveTask: (text: string, category: 'focus' | 'energy' | 'momentum') => void;
   removeSavedTask: (text: string) => void;
+  setEmergencyMode: (enabled: boolean) => void;
 }
 
 const BADGES_LIBRARY: Badge[] = [
@@ -119,6 +121,14 @@ const TASK_PACKS: Record<Context, Omit<MicroAction, 'completed'>[]> = {
     { id: 's4', text: 'Put on comfortable clothes', category: 'momentum' },
     { id: 's5', text: 'Wash your face', category: 'momentum' },
     { id: 's6', text: 'Listen to one song', category: 'focus' },
+  ],
+  family: [
+    { id: 'f1', text: 'Hug someone', category: 'momentum' },
+    { id: 'f2', text: 'Put away one toy', category: 'momentum' },
+    { id: 'f3', text: 'Send one text to family', category: 'momentum' },
+    { id: 'f4', text: 'Listen for 2 minutes', category: 'focus' },
+    { id: 'f5', text: 'Plan one meal', category: 'focus' },
+    { id: 'f6', text: 'Take a deep breath before reacting', category: 'energy' },
   ]
 };
 
@@ -154,6 +164,7 @@ export const useStore = create<AppState>()(
       vacationDaysRemaining: 0,
       lastAffirmationDate: null,
       savedTasks: [],
+      emergencyMode: false,
 
       startApp: () => set({ hasStarted: true }),
       completeTutorial: () => set({ hasSeenTutorial: true }),
@@ -401,6 +412,22 @@ export const useStore = create<AppState>()(
       removeSavedTask: (text) => {
         const { savedTasks } = get();
         set({ savedTasks: savedTasks.filter(t => t.text !== text) });
+      },
+      setEmergencyMode: (enabled) => {
+        if (enabled) {
+          // Clear everything and set one tiny task
+          set({ 
+            emergencyMode: true,
+            todaysActions: [{ id: 'emergency-1', text: 'Just breathe', category: 'energy', completed: false }]
+          });
+        } else {
+          // Restore normal flow (reset day to current context)
+          const { context } = get();
+          const pack = TASK_PACKS[context] || TASK_PACKS.self;
+          const shuffled = [...pack].sort(() => 0.5 - Math.random());
+          const selected = shuffled.slice(0, 3).map(a => ({ ...a, completed: false }));
+          set({ emergencyMode: false, todaysActions: selected });
+        }
       }
     }),
     {

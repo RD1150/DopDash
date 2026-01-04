@@ -6,7 +6,7 @@ import { useStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
 import canvasConfetti from 'canvas-confetti';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Check, Pencil, Settings, Sparkles, BrainCircuit, Zap, Sword, RefreshCw, Plus, Mic, MicOff, Tag, Star, Heart } from 'lucide-react';
+import { Check, Pencil, Settings, Sparkles, BrainCircuit, Zap, Sword, RefreshCw, Plus, Mic, MicOff, Tag, Star, Heart, Home, Briefcase, User, Users } from 'lucide-react';
 import { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'wouter';
 import TutorialOverlay from '@/components/TutorialOverlay';
@@ -39,6 +39,8 @@ export default function Dash() {
   const coins = useStore((state) => state.coins);
   const addCoins = useStore((state) => state.addCoins);
   const zenMode = useStore((state) => state.zenMode);
+  const context = useStore((state) => state.context);
+  const setContext = useStore((state) => state.setContext);
   const swapAction = useStore((state) => state.swapAction);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState('');
@@ -65,6 +67,20 @@ export default function Dash() {
       resetDay();
     }
   }, [actions.length, resetDay]);
+
+  // Night Mode Schedule
+  useEffect(() => {
+    const checkNightMode = () => {
+      const hour = new Date().getHours();
+      if (hour >= 20 || hour < 6) {
+        document.documentElement.classList.add('dark');
+      }
+    };
+    
+    checkNightMode();
+    const interval = setInterval(checkNightMode, 60000); // Check every minute
+    return () => clearInterval(interval);
+  }, []);
 
   // Check for completion to trigger reward
   useEffect(() => {
@@ -320,7 +336,7 @@ export default function Dash() {
       <BodyDouble />
       <div className="flex flex-col h-full">
         {/* Header */}
-        <header className="pt-8 pb-12 space-y-2">
+        <header className="pt-8 pb-8 space-y-4">
           <div className="flex justify-between items-start">
             <div>
               <h1 className="text-3xl font-bold text-primary">Today’s Dash</h1>
@@ -410,6 +426,46 @@ export default function Dash() {
                 </svg>
               </div>
             </div>
+          </div>
+          
+          {/* Life Area Tabs */}
+          <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+            <button
+              onClick={() => setContext('nest')}
+              className={cn(
+                "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap",
+                context === 'nest' ? "bg-primary text-primary-foreground shadow-md" : "bg-accent/50 text-muted-foreground hover:bg-accent"
+              )}
+            >
+              <Home className="w-4 h-4" /> Nest
+            </button>
+            <button
+              onClick={() => setContext('grind')}
+              className={cn(
+                "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap",
+                context === 'grind' ? "bg-primary text-primary-foreground shadow-md" : "bg-accent/50 text-muted-foreground hover:bg-accent"
+              )}
+            >
+              <Briefcase className="w-4 h-4" /> Grind
+            </button>
+            <button
+              onClick={() => setContext('self')}
+              className={cn(
+                "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap",
+                context === 'self' ? "bg-primary text-primary-foreground shadow-md" : "bg-accent/50 text-muted-foreground hover:bg-accent"
+              )}
+            >
+              <User className="w-4 h-4" /> Self
+            </button>
+            <button
+              onClick={() => setContext('family')}
+              className={cn(
+                "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap",
+                context === 'family' ? "bg-primary text-primary-foreground shadow-md" : "bg-accent/50 text-muted-foreground hover:bg-accent"
+              )}
+            >
+              <Users className="w-4 h-4" /> Family
+            </button>
           </div>
         </header>
 

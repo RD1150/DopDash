@@ -2,7 +2,7 @@ import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Theme, useStore } from '@/lib/store';
-import { ChevronLeft, Moon, Palette, Volume2, Bell, Download, Smartphone, Sparkles, Plane } from 'lucide-react';
+import { ChevronLeft, Moon, Palette, Volume2, Bell, Download, Smartphone, Sparkles, Plane, AlertTriangle } from 'lucide-react';
 import { useLocation } from 'wouter';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
@@ -25,6 +25,8 @@ export default function SettingsPage() {
   const setVacationMode = useStore((state) => state.setVacationMode);
   const cancelVacationMode = useStore((state) => state.cancelVacationMode);
   const vacationDaysRemaining = useStore((state) => state.vacationDaysRemaining);
+  const emergencyMode = useStore((state) => state.emergencyMode);
+  const setEmergencyMode = useStore((state) => state.setEmergencyMode);
 
   const handleNotificationToggle = async (checked: boolean) => {
     if (checked) {
@@ -113,6 +115,32 @@ export default function SettingsPage() {
             <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Preferences</h2>
             
             <div className="bg-card rounded-xl border border-border divide-y divide-border">
+              {/* Emergency Mode */}
+              <div className="p-4 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-red-100 dark:bg-red-900/30 rounded-lg text-red-600 dark:text-red-400">
+                    <AlertTriangle className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-red-600 dark:text-red-400">Emergency Mode</p>
+                    <p className="text-sm text-muted-foreground">Panic button: Just one tiny task</p>
+                  </div>
+                </div>
+                <Switch 
+                  checked={emergencyMode}
+                  onCheckedChange={(checked) => {
+                    if (checked) {
+                      if (confirm("Feeling overwhelmed? This will clear your list and give you just one tiny step. You can switch back anytime.")) {
+                        setEmergencyMode(true);
+                        setLocation('/');
+                      }
+                    } else {
+                      setEmergencyMode(false);
+                    }
+                  }}
+                />
+              </div>
+
               {/* Zen Mode */}
               <div className="p-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
