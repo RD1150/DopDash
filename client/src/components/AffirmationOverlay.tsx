@@ -12,7 +12,7 @@ const AFFIRMATIONS = [
   "Small steps are still steps.",
   "You are capable of more than you think.",
   "It's okay to start over.",
-  "Forgive yourself for yesterday.",
+  "Today is a fresh start.",
   "You are doing your best, and that is enough.",
   "Focus comes and goes. Be gentle with yourself.",
   "Your worth is not measured by your productivity."
