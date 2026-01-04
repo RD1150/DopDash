@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { useStore } from '@/lib/store';
 import { soundManager } from '@/lib/sound';
 import canvasConfetti from 'canvas-confetti';
-import DesignStudio from './DesignStudio';
+import DesignStudio from '@/components/DesignStudio';
 
 interface LootBoxProps {
   onClose: () => void;
