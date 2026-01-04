@@ -6,7 +6,7 @@ import { useStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
 import canvasConfetti from 'canvas-confetti';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Check, Pencil, Settings, Sparkles, BrainCircuit, Zap, Sword, RefreshCw, Plus } from 'lucide-react';
+import { Check, Pencil, Settings, Sparkles, BrainCircuit, Zap, Sword, RefreshCw, Plus, Mic, MicOff, Tag, Star, Heart } from 'lucide-react';
 import { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'wouter';
 import TutorialOverlay from '@/components/TutorialOverlay';
@@ -17,7 +17,8 @@ import FocusMode from '@/components/FocusMode';
 import BossBattle from '@/components/BossBattle';
 import BodyDouble from '@/components/BodyDouble';
 import AffirmationOverlay from '@/components/AffirmationOverlay';
-import { Timer } from 'lucide-react';
+import BubblePop from '@/components/BubblePop';
+import { Timer, CircleDashed } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,6 +33,9 @@ export default function Dash() {
   const resetDay = useStore((state) => state.resetDay);
   const updateActionText = useStore((state) => state.updateActionText);
   const addAction = useStore((state) => state.addAction);
+  const saveTask = useStore((state) => state.saveTask);
+  const savedTasks = useStore((state) => state.savedTasks);
+  const removeSavedTask = useStore((state) => state.removeSavedTask);
   const coins = useStore((state) => state.coins);
   const addCoins = useStore((state) => state.addCoins);
   const zenMode = useStore((state) => state.zenMode);
@@ -47,8 +51,11 @@ export default function Dash() {
   const [lastActionTime, setLastActionTime] = useState(0);
   const [showLootBox, setShowLootBox] = useState(false);
   const [showBossBattle, setShowBossBattle] = useState(false);
+  const [showBubblePop, setShowBubblePop] = useState(false);
   const [isAddingTask, setIsAddingTask] = useState(false);
   const [newTaskText, setNewTaskText] = useState('');
+  const [newTaskCategory, setNewTaskCategory] = useState<'focus' | 'energy' | 'momentum'>('focus');
+  const [isListening, setIsListening] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const newTaskInputRef = useRef<HTMLInputElement>(null);
   
@@ -157,6 +164,11 @@ export default function Dash() {
       setLastActionTime(now);
       haptics.success();
       addCoins(1); // Earn 1 coin per task
+
+      // Random Reward (10% chance)
+      if (Math.random() < 0.1) {
+        setTimeout(() => setShowLootBox(true), 500);
+      }
     }
     
     toggleAction(id);
@@ -186,12 +198,56 @@ export default function Dash() {
 
   const handleAddTask = () => {
     if (newTaskText.trim()) {
-      addAction(newTaskText.trim());
+      addAction(newTaskText.trim(), newTaskCategory);
       setNewTaskText('');
+      setNewTaskCategory('focus');
       setIsAddingTask(false);
       soundManager.playPop();
       haptics.success();
     }
+  };
+
+  const handleSaveTask = () => {
+    if (newTaskText.trim()) {
+      saveTask(newTaskText.trim(), newTaskCategory);
+      soundManager.playSuccess();
+      haptics.success();
+    }
+  };
+
+  const toggleVoiceInput = () => {
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+      alert('Voice input is not supported in this browser.');
+      return;
+    }
+
+    if (isListening) {
+      setIsListening(false);
+      return;
+    }
+
+    setIsListening(true);
+    const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
+
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      setNewTaskText(transcript);
+      setIsListening(false);
+    };
+
+    recognition.onerror = () => {
+      setIsListening(false);
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+
+    recognition.start();
   };
 
   const handleNewTaskKeyDown = (e: React.KeyboardEvent) => {
@@ -259,6 +315,7 @@ export default function Dash() {
           setLocation('/reward');
         }} />}
         {showBossBattle && <BossBattle onClose={() => setShowBossBattle(false)} />}
+        {showBubblePop && <BubblePop onClose={() => setShowBubblePop(false)} />}
       </AnimatePresence>
       <BodyDouble />
       <div className="flex flex-col h-full">
@@ -490,17 +547,85 @@ export default function Dash() {
                     value={newTaskText}
                     onChange={(e) => setNewTaskText(e.target.value)}
                     onKeyDown={handleNewTaskKeyDown}
-                    onBlur={() => {
-                      if (!newTaskText.trim()) setIsAddingTask(false);
-                    }}
                     placeholder="What's one small step?"
                     className="h-8 text-lg font-medium bg-transparent border-none p-0 focus-visible:ring-0 placeholder:text-muted-foreground/50"
                     autoFocus
                   />
-                  <Button size="sm" onClick={handleAddTask} disabled={!newTaskText.trim()}>
-                    Add
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={toggleVoiceInput}
+                      className={cn(
+                        "p-2 rounded-full transition-colors",
+                        isListening ? "bg-red-100 text-red-500 animate-pulse" : "hover:bg-accent text-muted-foreground"
+                      )}
+                    >
+                      {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+                    </button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button className="p-2 hover:bg-accent rounded-full text-muted-foreground transition-colors">
+                          <Tag className={cn("w-4 h-4", 
+                            newTaskCategory === 'focus' && "text-blue-500",
+                            newTaskCategory === 'energy' && "text-green-500",
+                            newTaskCategory === 'momentum' && "text-orange-500"
+                          )} />
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuItem onClick={() => setNewTaskCategory('focus')} className="gap-2">
+                          <BrainCircuit className="w-4 h-4 text-blue-500" /> Focus
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setNewTaskCategory('energy')} className="gap-2">
+                          <Zap className="w-4 h-4 text-green-500" /> Energy
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setNewTaskCategory('momentum')} className="gap-2">
+                          <Sparkles className="w-4 h-4 text-orange-500" /> Momentum
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                    <button
+                      onClick={handleSaveTask}
+                      className="p-2 hover:bg-accent rounded-full text-muted-foreground hover:text-yellow-500 transition-colors"
+                      title="Save to Favorites"
+                    >
+                      <Star className="w-4 h-4" />
+                    </button>
+                    <Button size="sm" onClick={handleAddTask} disabled={!newTaskText.trim()}>
+                      Add
+                    </Button>
+                  </div>
                 </div>
+                
+                {/* Saved Tasks Quick Pick */}
+                {savedTasks.length > 0 && (
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {savedTasks.map((task, i) => (
+                      <button
+                        key={i}
+                        onClick={() => {
+                          addAction(task.text, task.category);
+                          setIsAddingTask(false);
+                          soundManager.playPop();
+                        }}
+                        className="text-xs bg-accent/50 hover:bg-accent px-3 py-1.5 rounded-full flex items-center gap-2 transition-colors group"
+                      >
+                        {task.category === 'focus' && <BrainCircuit className="w-3 h-3 text-blue-500" />}
+                        {task.category === 'energy' && <Zap className="w-3 h-3 text-green-500" />}
+                        {task.category === 'momentum' && <Sparkles className="w-3 h-3 text-orange-500" />}
+                        {task.text}
+                        <span 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeSavedTask(task.text);
+                          }}
+                          className="ml-1 opacity-0 group-hover:opacity-100 hover:text-red-500"
+                        >
+                          ×
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                )}
               </motion.div>
             ) : (
               <motion.button
@@ -560,6 +685,27 @@ export default function Dash() {
           <p className="text-sm text-muted-foreground/40 text-center max-w-xs">
             Use <strong>Pick for me</strong> if you're stuck, or <strong>Speed Dash</strong> to race against the clock (5 min).
           </p>
+
+          <div className="flex gap-2 pb-8">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="gap-2 text-muted-foreground hover:text-primary"
+              onClick={() => setShowBossBattle(true)}
+            >
+              <Sword className="w-4 h-4" />
+              Slay a Monster
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="gap-2 text-muted-foreground hover:text-primary"
+              onClick={() => setShowBubblePop(true)}
+            >
+              <CircleDashed className="w-4 h-4" />
+              Bubble Pop
+            </Button>
+          </div>
         </div>
       </div>
     </Layout>

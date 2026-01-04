@@ -54,6 +54,7 @@ interface AppState {
   vacationMode: boolean;
   vacationDaysRemaining: number;
   lastAffirmationDate: string | null;
+  savedTasks: Omit<MicroAction, 'completed' | 'id'>[];
 
   // Actions
   startApp: () => void;
@@ -80,7 +81,9 @@ interface AppState {
   setVacationMode: (days: number) => void;
   cancelVacationMode: () => void;
   setLastAffirmationDate: (date: string) => void;
-  addAction: (text: string) => void;
+  addAction: (text: string, category?: 'focus' | 'energy' | 'momentum') => void;
+  saveTask: (text: string, category: 'focus' | 'energy' | 'momentum') => void;
+  removeSavedTask: (text: string) => void;
 }
 
 const BADGES_LIBRARY: Badge[] = [
@@ -150,6 +153,7 @@ export const useStore = create<AppState>()(
       vacationMode: false,
       vacationDaysRemaining: 0,
       lastAffirmationDate: null,
+      savedTasks: [],
 
       startApp: () => set({ hasStarted: true }),
       completeTutorial: () => set({ hasSeenTutorial: true }),
@@ -378,15 +382,25 @@ export const useStore = create<AppState>()(
       setVacationMode: (days: number) => set({ vacationMode: true, vacationDaysRemaining: days }),
       cancelVacationMode: () => set({ vacationMode: false, vacationDaysRemaining: 0 }),
       setLastAffirmationDate: (date: string) => set({ lastAffirmationDate: date }),
-      addAction: (text: string) => {
+      addAction: (text: string, category = 'focus') => {
         const { todaysActions } = get();
         const newAction: MicroAction = {
           id: `custom-${Date.now()}`,
           text,
-          category: 'focus', // Default category for custom tasks
+          category,
           completed: false
         };
         set({ todaysActions: [...todaysActions, newAction] });
+      },
+      saveTask: (text, category) => {
+        const { savedTasks } = get();
+        if (!savedTasks.some(t => t.text === text)) {
+          set({ savedTasks: [...savedTasks, { text, category }] });
+        }
+      },
+      removeSavedTask: (text) => {
+        const { savedTasks } = get();
+        set({ savedTasks: savedTasks.filter(t => t.text !== text) });
       }
     }),
     {

@@ -19,7 +19,9 @@ export type MascotPose =
   | 'stars' 
   | 'down'
   | 'jumping'
-  | 'working';
+  | 'working'
+  | 'sleepy'
+  | 'excited';
 
 interface MascotProps {
   pose: MascotPose;
@@ -30,7 +32,23 @@ interface MascotProps {
 export default function Mascot({ pose, className, animate = true }: MascotProps) {
   const [dialogue, setDialogue] = useState<string | null>(null);
   const [showDialogue, setShowDialogue] = useState(false);
-  const { customAccessories, equippedCustomAccessory, level } = useStore();
+  const { customAccessories, equippedCustomAccessory, level, todaysActions } = useStore();
+  
+  // Determine mood based on time and progress
+  const hour = new Date().getHours();
+  const isMorning = hour >= 5 && hour < 10;
+  const isNight = hour >= 22 || hour < 5;
+  const completedCount = todaysActions.filter(a => a.completed).length;
+  const totalCount = todaysActions.length;
+  const progress = totalCount > 0 ? completedCount / totalCount : 0;
+
+  // Override pose based on mood if default 'waiting' is passed
+  let displayPose = pose;
+  if (pose === 'waiting') {
+    if (isNight) displayPose = 'sleepy';
+    else if (isMorning && progress === 0) displayPose = 'sleepy'; // Waking up
+    else if (progress > 0.5 && progress < 1) displayPose = 'excited';
+  }
   
   const equippedAccessory = customAccessories.find(a => a.id === equippedCustomAccessory);
 
@@ -150,21 +168,43 @@ export default function Mascot({ pose, className, animate = true }: MascotProps)
       )}
 
       <motion.img
-        src={pose === 'jumping' ? '/images/mascot/hero.png' : pose === 'working' ? '/images/mascot/zen.png' : `/images/mascot/${pose}.png`}
-        alt={`Mascot ${pose}`}
+        src={
+          displayPose === 'jumping' ? '/images/mascot/hero.png' : 
+          displayPose === 'working' ? '/images/mascot/zen.png' : 
+          displayPose === 'sleepy' ? '/images/mascot/zen.png' : // Reuse zen for sleepy for now
+          displayPose === 'excited' ? '/images/mascot/happy.png' : // Reuse happy for excited
+          `/images/mascot/${displayPose}.png`
+        }
+        alt={`Mascot ${displayPose}`}
         className={cn(
           "w-full h-full object-contain drop-shadow-lg cursor-pointer relative z-10",
-          pose === 'jumping' && "mb-4", // Lift up slightly
+          displayPose === 'jumping' && "mb-4", // Lift up slightly
+          displayPose === 'sleepy' && "opacity-80", // Dim for sleepy
           level < 6 && "scale-75 brightness-110", // Egg/Baby form
           level >= 11 && "scale-110 drop-shadow-2xl" // Bloom/Elder form
         )}
         variants={squishVariants}
-        animate={animate ? (pose === 'jumping' ? 'jumping' : "idle") : undefined}
+        animate={animate ? (displayPose === 'jumping' ? 'jumping' : "idle") : undefined}
         initial="pop"
         whileTap={{ scale: 0.9, rotate: -5 }}
         onMouseDown={handleTap}
         onMouseEnter={handleInteraction}
       />
+      
+      {/* Sleepy Zzzs */}
+      {displayPose === 'sleepy' && (
+        <motion.div
+          className="absolute -top-4 right-0 text-2xl font-bold text-blue-300"
+          animate={{ 
+            opacity: [0, 1, 0],
+            y: [0, -20],
+            x: [0, 10]
+          }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
+        >
+          Zzz...
+        </motion.div>
+      )}
 
       {/* Detached Shadow for Jumping Pose */}
       {pose === 'jumping' && (
