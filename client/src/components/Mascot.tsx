@@ -30,7 +30,7 @@ interface MascotProps {
 export default function Mascot({ pose, className, animate = true }: MascotProps) {
   const [dialogue, setDialogue] = useState<string | null>(null);
   const [showDialogue, setShowDialogue] = useState(false);
-  const { customAccessories, equippedCustomAccessory } = useStore();
+  const { customAccessories, equippedCustomAccessory, level } = useStore();
   
   const equippedAccessory = customAccessories.find(a => a.id === equippedCustomAccessory);
 
@@ -154,7 +154,9 @@ export default function Mascot({ pose, className, animate = true }: MascotProps)
         alt={`Mascot ${pose}`}
         className={cn(
           "w-full h-full object-contain drop-shadow-lg cursor-pointer relative z-10",
-          pose === 'jumping' && "mb-4" // Lift up slightly
+          pose === 'jumping' && "mb-4", // Lift up slightly
+          level < 6 && "scale-75 brightness-110", // Egg/Baby form
+          level >= 11 && "scale-110 drop-shadow-2xl" // Bloom/Elder form
         )}
         variants={squishVariants}
         animate={animate ? (pose === 'jumping' ? 'jumping' : "idle") : undefined}

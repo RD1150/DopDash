@@ -2,7 +2,7 @@ import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { useStore } from '@/lib/store';
 import { motion } from 'framer-motion';
-import { Calendar as CalendarIcon, Settings, Share2, Trophy, ShoppingBag } from 'lucide-react';
+import { Calendar as CalendarIcon, Settings, Share2, Trophy, ShoppingBag, BookOpen } from 'lucide-react';
 import { useLocation } from 'wouter';
 import { cn } from '@/lib/utils';
 import { DayPicker } from 'react-day-picker';
@@ -46,6 +46,12 @@ export default function Streak() {
           className="p-2 text-muted-foreground hover:text-foreground transition-colors"
         >
           <ShoppingBag className="w-6 h-6" />
+        </button>
+        <button 
+          onClick={() => setLocation('/journal')}
+          className="p-2 text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <BookOpen className="w-6 h-6" />
         </button>
         <button 
           onClick={() => setLocation('/settings')}

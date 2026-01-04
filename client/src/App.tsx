@@ -10,6 +10,7 @@ import SettingsPage from "./pages/Settings";
 import Streak from "./pages/Streak";
 import Welcome from "./pages/Welcome";
 import Shop from "./pages/Shop";
+import JournalPage from "./pages/Journal";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
@@ -23,6 +24,7 @@ function Router() {
       <Route path="/reward" component={Reward} />
       <Route path={"/streak"} component={Streak} />
       <Route path={"/shop"} component={Shop} />
+      <Route path={"/journal"} component={JournalPage} />
       <Route path={"/settings"} component={SettingsPage} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}

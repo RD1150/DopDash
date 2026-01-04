@@ -167,7 +167,7 @@ export default function SettingsPage() {
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
-                  {(['default', 'ocean', 'sunset', 'lavender'] as Theme[]).map((t) => (
+                  {(['default', 'ocean', 'sunset', 'lavender', 'cottagecore', 'cyberpunk'] as Theme[]).map((t) => (
                     <button
                       key={t}
                       onClick={() => setTheme(t)}

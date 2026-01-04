@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware';
 import { CustomAccessory } from '@/components/DesignStudio';
 
 export type Flavor = 'calm' | 'playful' | 'matter-of-fact' | 'celebratory';
-export type Theme = 'default' | 'ocean' | 'sunset' | 'lavender';
+export type Theme = 'default' | 'ocean' | 'sunset' | 'lavender' | 'cottagecore' | 'cyberpunk';
 
 export type MicroAction = {
   id: string;
@@ -47,6 +47,8 @@ interface AppState {
   bodyDoubleActive: boolean;
   bodyDoubleTask: string | null;
   bodyDoubleStartTime: number | null;
+  xp: number;
+  level: number;
 
   // Actions
   startApp: () => void;
@@ -118,6 +120,8 @@ export const useStore = create<AppState>()(
       bodyDoubleActive: false,
       bodyDoubleTask: null,
       bodyDoubleStartTime: null,
+      xp: 0,
+      level: 1,
 
       startApp: () => set({ hasStarted: true }),
       completeTutorial: () => set({ hasSeenTutorial: true }),
@@ -154,13 +158,23 @@ export const useStore = create<AppState>()(
           }
         }
 
-        set({ 
-          todaysActions: newActions,
-          streak: newStreak,
-          lastCompletedDate: newLastCompletedDate,
-          history: newHistory,
-          coins: isCompleting ? coins + 1 : coins
-        });
+          // XP Logic: 10 XP per task
+          const currentXp = get().xp;
+          const currentLevel = get().level;
+          const newXp = isCompleting ? currentXp + 10 : currentXp;
+          
+          // Level up every 100 XP
+          const newLevel = Math.floor(newXp / 100) + 1;
+
+          set({ 
+            todaysActions: newActions,
+            streak: newStreak,
+            lastCompletedDate: newLastCompletedDate,
+            history: newHistory,
+            coins: isCompleting ? coins + 1 : coins,
+            xp: newXp,
+            level: newLevel
+          });
         
         // Check badges after state update
         get().checkBadges();
