@@ -9,6 +9,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Check } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'wouter';
+import TutorialOverlay from '@/components/TutorialOverlay';
 
 export default function Dash() {
   const [, setLocation] = useLocation();
@@ -62,6 +63,7 @@ export default function Dash() {
 
   return (
     <Layout>
+      <TutorialOverlay />
       <div className="flex flex-col h-full">
         {/* Header */}
         <header className="pt-8 pb-12 space-y-2">

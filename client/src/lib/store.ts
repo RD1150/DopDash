@@ -19,9 +19,11 @@ interface AppState {
   streak: number;
   lastCompletedDate: string | null;
   history: string[]; // Array of ISO date strings (YYYY-MM-DD)
+  hasSeenTutorial: boolean;
   
   // Actions
   startApp: () => void;
+  completeTutorial: () => void;
   setFlavor: (flavor: Flavor) => void;
   setTheme: (theme: Theme) => void;
   toggleAction: (id: string) => void;
@@ -54,8 +56,10 @@ export const useStore = create<AppState>()(
       streak: 0,
       lastCompletedDate: null,
       history: [],
+      hasSeenTutorial: false,
 
       startApp: () => set({ hasStarted: true }),
+      completeTutorial: () => set({ hasSeenTutorial: true }),
 
       setFlavor: (flavor: Flavor) => set({ flavor }),
       setTheme: (theme: Theme) => set({ theme }),
