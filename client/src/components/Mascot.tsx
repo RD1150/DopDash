@@ -18,7 +18,8 @@ export type MascotPose =
   | 'shy' 
   | 'stars' 
   | 'down'
-  | 'jumping';
+  | 'jumping'
+  | 'working';
 
 interface MascotProps {
   pose: MascotPose;
@@ -122,6 +123,17 @@ export default function Mascot({ pose, className, animate = true }: MascotProps)
         )}
       </AnimatePresence>
 
+      {/* Glasses for Working Pose */}
+      {pose === 'working' && (
+        <motion.div
+          className="absolute top-[25%] left-1/2 -translate-x-1/2 text-4xl z-20 pointer-events-none"
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+        >
+          👓
+        </motion.div>
+      )}
+
       {/* Flame Effect for Jumping Pose */}
       {pose === 'jumping' && (
         <motion.div
@@ -138,7 +150,7 @@ export default function Mascot({ pose, className, animate = true }: MascotProps)
       )}
 
       <motion.img
-        src={pose === 'jumping' ? '/images/mascot/hero.png' : `/images/mascot/${pose}.png`}
+        src={pose === 'jumping' ? '/images/mascot/hero.png' : pose === 'working' ? '/images/mascot/zen.png' : `/images/mascot/${pose}.png`}
         alt={`Mascot ${pose}`}
         className={cn(
           "w-full h-full object-contain drop-shadow-lg cursor-pointer relative z-10",

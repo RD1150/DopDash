@@ -44,6 +44,10 @@ interface AppState {
     accessory?: string;
   };
   
+  bodyDoubleActive: boolean;
+  bodyDoubleTask: string | null;
+  bodyDoubleStartTime: number | null;
+
   // Actions
   startApp: () => void;
   completeTutorial: () => void;
@@ -62,6 +66,9 @@ interface AppState {
   addCoins: (amount: number) => void;
   setCustomAccessory: (accessory: CustomAccessory) => void;
   equipCustomAccessory: (id: string | null) => void;
+  swapAction: (id: string) => void;
+  startBodyDouble: (userTask: string) => void;
+  stopBodyDouble: () => void;
 }
 
 const BADGES_LIBRARY: Badge[] = [
@@ -108,6 +115,9 @@ export const useStore = create<AppState>()(
       customAccessories: [],
       equippedCustomAccessory: null,
       equippedItems: {},
+      bodyDoubleActive: false,
+      bodyDoubleTask: null,
+      bodyDoubleStartTime: null,
 
       startApp: () => set({ hasStarted: true }),
       completeTutorial: () => set({ hasSeenTutorial: true }),
@@ -205,6 +215,49 @@ export const useStore = create<AppState>()(
 
       equipCustomAccessory: (id) => {
         set({ equippedCustomAccessory: id });
+      },
+
+      swapAction: (id) => {
+        const { todaysActions } = get();
+        // Find a new random action that isn't currently in the list
+        const currentIds = todaysActions.map(a => a.id);
+        const available = ACTION_LIBRARY.filter(a => !currentIds.includes(a.id));
+        
+        if (available.length === 0) return; // No more unique actions
+        
+        const randomNew = available[Math.floor(Math.random() * available.length)];
+        
+        set({
+          todaysActions: todaysActions.map(a => 
+            a.id === id ? { ...randomNew, completed: false } : a
+          )
+        });
+      },
+
+      startBodyDouble: (userTask) => {
+        const mascotTasks = [
+          "Polishing my shell",
+          "Organizing pixels",
+          "Sharpening sword",
+          "Sorting inventory",
+          "Practicing jumps",
+          "Updating map"
+        ];
+        const randomMascotTask = mascotTasks[Math.floor(Math.random() * mascotTasks.length)];
+        
+        set({
+          bodyDoubleActive: true,
+          bodyDoubleTask: randomMascotTask,
+          bodyDoubleStartTime: Date.now()
+        });
+      },
+
+      stopBodyDouble: () => {
+        set({
+          bodyDoubleActive: false,
+          bodyDoubleTask: null,
+          bodyDoubleStartTime: null
+        });
       },
 
       checkBadges: () => {

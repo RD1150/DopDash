@@ -6,7 +6,7 @@ import { useStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
 import canvasConfetti from 'canvas-confetti';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Check, Pencil, Settings, Sparkles, BrainCircuit, Zap, Sword } from 'lucide-react';
+import { Check, Pencil, Settings, Sparkles, BrainCircuit, Zap, Sword, RefreshCw, Plus } from 'lucide-react';
 import { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'wouter';
 import TutorialOverlay from '@/components/TutorialOverlay';
@@ -15,7 +15,14 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import FocusMode from '@/components/FocusMode';
 import BossBattle from '@/components/BossBattle';
+import BodyDouble from '@/components/BodyDouble';
 import { Timer } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function Dash() {
   const [, setLocation] = useLocation();
@@ -26,6 +33,7 @@ export default function Dash() {
   const coins = useStore((state) => state.coins);
   const addCoins = useStore((state) => state.addCoins);
   const zenMode = useStore((state) => state.zenMode);
+  const swapAction = useStore((state) => state.swapAction);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState('');
   const [magicMode, setMagicMode] = useState(false);
@@ -215,6 +223,7 @@ export default function Dash() {
         }} />}
         {showBossBattle && <BossBattle onClose={() => setShowBossBattle(false)} />}
       </AnimatePresence>
+      <BodyDouble />
       <div className="flex flex-col h-full">
         {/* Header */}
         <header className="pt-8 pb-12 space-y-2">
@@ -235,20 +244,28 @@ export default function Dash() {
                     )}
                   </>
                 )}
-                <button 
-                  onClick={() => setShowBrainDump(true)}
-                  className="p-1 text-muted-foreground hover:text-foreground transition-colors"
-                  title="Brain Dump"
-                >
-                  <BrainCircuit className="w-5 h-5" />
-                </button>
-                <button 
-                  onClick={() => setShowBossBattle(true)}
-                  className="p-1 text-muted-foreground hover:text-red-500 transition-colors"
-                  title="Boss Battle"
-                >
-                  <Sword className="w-5 h-5" />
-                </button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm" className="gap-2">
+                      <Plus className="w-4 h-4" />
+                      New Mission
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="w-56">
+                    <DropdownMenuItem onClick={() => setShowBrainDump(true)} className="gap-2 cursor-pointer">
+                      <Sparkles className="w-4 h-4 text-yellow-500" />
+                      <span>Quick Win (Minor)</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setShowBossBattle(true)} className="gap-2 cursor-pointer">
+                      <Sword className="w-4 h-4 text-red-500" />
+                      <span>Slay a Monster (Major)</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => useStore.getState().startBodyDouble("Focus Sprint")} className="gap-2 cursor-pointer">
+                      <Timer className="w-4 h-4 text-blue-500" />
+                      <span>Body Double (Sprint)</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
             
@@ -370,6 +387,17 @@ export default function Dash() {
                               aria-label="Edit action"
                             >
                               <Pencil className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                swapAction(action.id);
+                                soundManager.playPop();
+                              }}
+                              className="p-2 text-muted-foreground hover:text-primary"
+                              aria-label="Swap task"
+                            >
+                              <RefreshCw className="w-4 h-4" />
                             </button>
                           </div>
                         )}
