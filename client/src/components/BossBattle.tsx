@@ -58,7 +58,7 @@ export default function BossBattle({ onClose }: BossBattleProps) {
       // Trigger attack animation
       setIsAttacking(true);
       setDamageDealt(Math.round(damagePerTask));
-      soundManager.playSquish(); // Use squish as hit sound for now
+      soundManager.playAttack();
       haptics.medium();
 
       // Update health after delay
@@ -182,7 +182,7 @@ export default function BossBattle({ onClose }: BossBattleProps) {
                 {/* Boss */}
                 <motion.div 
                   className="absolute top-10"
-                  animate={isAttacking ? { x: [0, 10, -10, 5, -5, 0], color: '#ef4444' } : { y: [0, -10, 0] }}
+                  animate={isAttacking ? { x: [0, 10, -10, 5, -5, 0], color: '#ef4444', scale: [1, 0.9, 1] } : { y: [0, -10, 0] }}
                   transition={isAttacking ? { duration: 0.4 } : { duration: 3, repeat: Infinity, ease: "easeInOut" }}
                 >
                   <div className="text-8xl filter drop-shadow-2xl grayscale brightness-50 contrast-125">
@@ -191,6 +191,19 @@ export default function BossBattle({ onClose }: BossBattleProps) {
                   <div className="text-center font-bold text-white mt-2 bg-black/50 px-3 py-1 rounded-full backdrop-blur-sm">
                     {bossName}
                   </div>
+                  {/* Hit Flash */}
+                  <AnimatePresence>
+                    {isAttacking && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 1.5 }}
+                        animate={{ opacity: 1, scale: 2 }}
+                        exit={{ opacity: 0 }}
+                        className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                      >
+                        <div className="text-6xl">💥</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </motion.div>
 
                 {/* Damage Number */}

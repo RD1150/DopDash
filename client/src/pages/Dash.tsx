@@ -213,6 +213,18 @@ export default function Dash() {
   // Override with jumping pose if on a combo streak
   if (comboCount > 3) mascotPose = 'jumping';
 
+  const handleMascotInteraction = (type: 'pet' | 'feed') => {
+    if (type === 'pet') {
+      soundManager.playSquish();
+      haptics.medium();
+      // Visual feedback handled by Mascot component internal state or we could lift it
+    } else if (type === 'feed') {
+      soundManager.playPop();
+      haptics.success();
+      // Could add a feeding animation state here
+    }
+  };
+
   return (
     <Layout>
       <TutorialOverlay />
@@ -271,8 +283,26 @@ export default function Dash() {
             
             {/* Mascot & Progress */}
             <div className="flex items-center gap-4" role="status" aria-label={`Progress: ${completedCount} of 3 actions completed`}>
-              <div className="w-16 h-16" aria-hidden="true">
-                 <Mascot pose={mascotPose} className="w-full h-full" />
+              <div className="w-16 h-16 relative group" aria-hidden="true">
+                <Mascot pose={mascotPose} />
+                
+                {/* Interaction Menu (Hover/Focus) */}
+                <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity bg-background/80 backdrop-blur-sm p-1 rounded-full shadow-lg border border-border">
+                  <button 
+                    onClick={() => handleMascotInteraction('pet')}
+                    className="p-1.5 hover:bg-primary/10 rounded-full text-xs"
+                    title="Pet"
+                  >
+                    👋
+                  </button>
+                  <button 
+                    onClick={() => handleMascotInteraction('feed')}
+                    className="p-1.5 hover:bg-primary/10 rounded-full text-xs"
+                    title="Feed"
+                  >
+                    🍎
+                  </button>
+                </div>
               </div>
               {/* Progress Ring */}
               <div className="relative w-12 h-12 flex items-center justify-center" aria-hidden="true">

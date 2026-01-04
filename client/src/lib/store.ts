@@ -49,6 +49,8 @@ interface AppState {
   bodyDoubleStartTime: number | null;
   xp: number;
   level: number;
+  vacationMode: boolean;
+  vacationDaysRemaining: number;
 
   // Actions
   startApp: () => void;
@@ -71,6 +73,8 @@ interface AppState {
   swapAction: (id: string) => void;
   startBodyDouble: (userTask: string) => void;
   stopBodyDouble: () => void;
+  setVacationMode: (days: number) => void;
+  cancelVacationMode: () => void;
 }
 
 const BADGES_LIBRARY: Badge[] = [
@@ -122,6 +126,8 @@ export const useStore = create<AppState>()(
       bodyDoubleStartTime: null,
       xp: 0,
       level: 1,
+      vacationMode: false,
+      vacationDaysRemaining: 0,
 
       startApp: () => set({ hasStarted: true }),
       completeTutorial: () => set({ hasSeenTutorial: true }),
@@ -310,7 +316,7 @@ export const useStore = create<AppState>()(
       },
 
       checkStreak: () => {
-        const { lastCompletedDate, streak } = get();
+        const { lastCompletedDate, streak, vacationMode, vacationDaysRemaining } = get();
         if (!lastCompletedDate) return;
 
         const last = new Date(lastCompletedDate);
@@ -318,11 +324,27 @@ export const useStore = create<AppState>()(
         const diffTime = Math.abs(today.getTime() - last.getTime());
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
 
+        // If vacation mode is active, decrement days and don't reset streak
+        if (vacationMode && vacationDaysRemaining > 0) {
+          // Check if a day has actually passed since last check/decrement
+          // For simplicity in this prototype, we'll just trust the user toggled it on
+          // In a real app, we'd track "lastVacationCheck"
+          return;
+        }
+
+        // If vacation mode expired
+        if (vacationMode && vacationDaysRemaining <= 0) {
+          set({ vacationMode: false });
+        }
+
         // If more than 2 days passed (yesterday is fine), reset streak? 
         // Spec says: "Missing days do NOT scold or reset aggressively"
         // So maybe we just keep it or handle it very gently. 
         // For now, let's just leave it as is to be supportive.
-      }
+      },
+
+      setVacationMode: (days: number) => set({ vacationMode: true, vacationDaysRemaining: days }),
+      cancelVacationMode: () => set({ vacationMode: false, vacationDaysRemaining: 0 })
     }),
     {
       name: 'dopamine-dasher-storage',

@@ -2,7 +2,7 @@ import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Theme, useStore } from '@/lib/store';
-import { ChevronLeft, Moon, Palette, Volume2, Bell, Download, Smartphone, Sparkles } from 'lucide-react';
+import { ChevronLeft, Moon, Palette, Volume2, Bell, Download, Smartphone, Sparkles, Plane } from 'lucide-react';
 import { useLocation } from 'wouter';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
@@ -21,6 +21,10 @@ export default function SettingsPage() {
   const soundTheme = useStore((state) => state.soundTheme);
   const setSoundTheme = useStore((state) => state.setSoundTheme);
   const [showWallpaperGen, setShowWallpaperGen] = useState(false);
+  const vacationMode = useStore((state) => state.vacationMode);
+  const setVacationMode = useStore((state) => state.setVacationMode);
+  const cancelVacationMode = useStore((state) => state.cancelVacationMode);
+  const vacationDaysRemaining = useStore((state) => state.vacationDaysRemaining);
 
   const handleNotificationToggle = async (checked: boolean) => {
     if (checked) {
@@ -123,6 +127,33 @@ export default function SettingsPage() {
                 <Switch 
                   checked={zenMode}
                   onCheckedChange={setZenMode}
+                />
+              </div>
+
+              {/* Vacation Mode */}
+              <div className="p-4 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-primary/10 rounded-lg text-primary">
+                    <Plane className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="font-medium">Vacation Mode</p>
+                    <p className="text-sm text-muted-foreground">
+                      {vacationMode 
+                        ? `${vacationDaysRemaining} days remaining` 
+                        : "Freeze streak for 7 days"}
+                    </p>
+                  </div>
+                </div>
+                <Switch 
+                  checked={vacationMode}
+                  onCheckedChange={(checked) => {
+                    if (checked) {
+                      setVacationMode(7);
+                    } else {
+                      cancelVacationMode();
+                    }
+                  }}
                 />
               </div>
 

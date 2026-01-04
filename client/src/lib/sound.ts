@@ -84,6 +84,36 @@ class SoundManager {
     osc.stop(this.ctx.currentTime + 0.15);
   }
 
+  playAttack() {
+    if (!this.ctx) return;
+    const now = this.ctx.currentTime;
+    
+    // Sword slash / punch effect
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    const filter = this.ctx.createBiquadFilter();
+    
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(this.ctx.destination);
+    
+    // Noise-like saw
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(800, now);
+    osc.frequency.exponentialRampToValueAtTime(100, now + 0.1);
+    
+    // Lowpass sweep
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(3000, now);
+    filter.frequency.exponentialRampToValueAtTime(100, now + 0.1);
+    
+    gain.gain.setValueAtTime(0.3, now);
+    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+    
+    osc.start(now);
+    osc.stop(now + 0.1);
+  }
+
   playCombo(count: number) {
     if (!this.ctx) return;
     const now = this.ctx.currentTime;
