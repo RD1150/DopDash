@@ -2,9 +2,12 @@ import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Theme, useStore } from '@/lib/store';
-import { ChevronLeft, Moon, Palette, Volume2, Bell, Download } from 'lucide-react';
+import { ChevronLeft, Moon, Palette, Volume2, Bell, Download, Smartphone } from 'lucide-react';
 import { useLocation } from 'wouter';
 import { cn } from '@/lib/utils';
+import { useState } from 'react';
+import WallpaperGenerator from '@/components/WallpaperGenerator';
+import { AnimatePresence } from 'framer-motion';
 
 export default function SettingsPage() {
   const [, setLocation] = useLocation();
@@ -13,6 +16,7 @@ export default function SettingsPage() {
   const setTheme = useStore((state) => state.setTheme);
   const notificationsEnabled = useStore((state) => state.notificationsEnabled);
   const setNotificationsEnabled = useStore((state) => state.setNotificationsEnabled);
+  const [showWallpaperGen, setShowWallpaperGen] = useState(false);
 
   const handleNotificationToggle = async (checked: boolean) => {
     if (checked) {
@@ -44,6 +48,9 @@ export default function SettingsPage() {
 
   return (
     <Layout>
+      <AnimatePresence>
+        {showWallpaperGen && <WallpaperGenerator onClose={() => setShowWallpaperGen(false)} />}
+      </AnimatePresence>
       <div className="flex flex-col h-full">
         <header className="pt-6 pb-8 flex items-center gap-4">
           <button 
@@ -68,6 +75,28 @@ export default function SettingsPage() {
                 <p className="text-sm text-muted-foreground">Tap to change style</p>
               </div>
               <ChevronLeft className="w-5 h-5 rotate-180 text-muted-foreground" />
+            </div>
+          </section>
+
+          {/* Widgets & Wallpapers */}
+          <section className="space-y-4">
+            <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Widgets</h2>
+            <div className="bg-card rounded-xl border border-border divide-y divide-border">
+              <div 
+                onClick={() => setShowWallpaperGen(true)}
+                className="p-4 flex items-center justify-between cursor-pointer hover:bg-muted/50 transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-primary/10 rounded-lg text-primary">
+                    <Smartphone className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="font-medium">Create Wallpaper Widget</p>
+                    <p className="text-sm text-muted-foreground">Lock screen motivation</p>
+                  </div>
+                </div>
+                <ChevronLeft className="w-5 h-5 rotate-180 text-muted-foreground" />
+              </div>
             </div>
           </section>
 
