@@ -1,3 +1,4 @@
+import { soundManager } from '@/lib/sound';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 
@@ -52,16 +53,21 @@ export default function Mascot({ pose, className, animate = true }: MascotProps)
     }
   };
 
+  const handleTap = () => {
+    soundManager.playSquish();
+  };
+
   return (
     <div className={cn("relative flex items-center justify-center", className)}>
       <motion.img
         src={`/images/mascot/${pose}.png`}
         alt={`Mascot ${pose}`}
-        className="w-full h-full object-contain drop-shadow-lg"
+        className="w-full h-full object-contain drop-shadow-lg cursor-pointer"
         variants={squishVariants}
         animate={animate ? "idle" : undefined}
         initial="pop"
         whileTap={{ scale: 0.9, rotate: -5 }}
+        onMouseDown={handleTap}
       />
     </div>
   );

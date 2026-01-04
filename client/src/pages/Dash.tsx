@@ -1,6 +1,9 @@
 import Layout from '@/components/Layout';
+import Mascot, { MascotPose } from '@/components/Mascot';
+import { soundManager } from '@/lib/sound';
 import { useStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
+import canvasConfetti from 'canvas-confetti';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Check } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -22,14 +25,37 @@ export default function Dash() {
   // Check for completion to trigger reward
   useEffect(() => {
     if (actions.length > 0 && actions.every(a => a.completed)) {
+      soundManager.playSuccess();
+      canvasConfetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#A7F3D0', '#6EE7B7', '#34D399', '#FCD34D', '#FDBA74'] // Sage/Green/Gold theme
+      });
+      
       const timer = setTimeout(() => {
         setLocation('/reward');
-      }, 800); // Slight delay to let the checkmark animation finish
+      }, 1500); // Longer delay to enjoy confetti
       return () => clearTimeout(timer);
     }
   }, [actions, setLocation]);
 
-  const progress = Math.round((actions.filter(a => a.completed).length / 3) * 100);
+  const handleToggle = (id: string) => {
+    const action = actions.find(a => a.id === id);
+    if (!action?.completed) {
+      soundManager.playPop();
+    }
+    toggleAction(id);
+  };
+
+  const completedCount = actions.filter(a => a.completed).length;
+  const progress = Math.round((completedCount / 3) * 100);
+
+  // Determine mascot pose based on progress
+  let mascotPose: MascotPose = 'waiting';
+  if (completedCount === 1) mascotPose = 'happy';
+  if (completedCount === 2) mascotPose = 'proud';
+  if (completedCount === 3) mascotPose = 'hero';
 
   return (
     <Layout>
@@ -42,9 +68,14 @@ export default function Dash() {
               <p className="text-muted-foreground">Just start. That’s enough.</p>
             </div>
             
-            {/* Progress Ring */}
-            <div className="relative w-12 h-12 flex items-center justify-center">
-              <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
+            {/* Mascot & Progress */}
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16">
+                 <Mascot pose={mascotPose} className="w-full h-full" />
+              </div>
+              {/* Progress Ring */}
+              <div className="relative w-12 h-12 flex items-center justify-center">
+                <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
                 <path
                   className="text-muted"
                   d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
@@ -63,7 +94,8 @@ export default function Dash() {
                   animate={{ strokeDasharray: `${progress}, 100` }}
                   transition={{ duration: 0.5, ease: "easeOut" }}
                 />
-              </svg>
+                </svg>
+              </div>
             </div>
           </div>
         </header>
@@ -77,7 +109,7 @@ export default function Dash() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                onClick={() => toggleAction(action.id)}
+                onClick={() => handleToggle(action.id)}
                 className={cn(
                   "group relative overflow-hidden rounded-2xl p-6 cursor-pointer transition-all duration-300",
                   "bg-card shadow-sm border border-transparent hover:shadow-md",
