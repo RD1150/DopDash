@@ -11,7 +11,7 @@ export default function Layout({ children, className }: LayoutProps) {
   return (
     <div className="min-h-screen w-full bg-background flex justify-center overflow-hidden relative">
       {/* Background Texture/Gradient */}
-      <div className="absolute inset-0 z-0 opacity-40 pointer-events-none">
+      <div className="absolute inset-0 z-0 opacity-40 pointer-events-none" aria-hidden="true">
         <img 
           src="/images/hero-calm.jpg" 
           alt="" 

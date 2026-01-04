@@ -29,6 +29,7 @@ interface AppState {
   toggleAction: (id: string) => void;
   resetDay: () => void;
   checkStreak: () => void;
+  updateActionText: (id: string, text: string) => void;
 }
 
 const ACTION_LIBRARY: Omit<MicroAction, 'completed'>[] = [
@@ -101,6 +102,14 @@ export const useStore = create<AppState>()(
         const shuffled = [...ACTION_LIBRARY].sort(() => 0.5 - Math.random());
         const selected = shuffled.slice(0, 3).map(a => ({ ...a, completed: false }));
         set({ todaysActions: selected });
+      },
+
+      updateActionText: (id, text) => {
+        set((state) => ({
+          todaysActions: state.todaysActions.map((a) =>
+            a.id === id ? { ...a, text } : a
+          ),
+        }));
       },
 
       checkStreak: () => {

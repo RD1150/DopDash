@@ -6,16 +6,21 @@ import { useStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
 import canvasConfetti from 'canvas-confetti';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Check } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { Check, Pencil } from 'lucide-react';
+import { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'wouter';
 import TutorialOverlay from '@/components/TutorialOverlay';
+import { Input } from '@/components/ui/input';
 
 export default function Dash() {
   const [, setLocation] = useLocation();
   const actions = useStore((state) => state.todaysActions);
   const toggleAction = useStore((state) => state.toggleAction);
   const resetDay = useStore((state) => state.resetDay);
+  const updateActionText = useStore((state) => state.updateActionText);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editText, setEditText] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
   
   // Ensure we have actions if page is loaded directly
   useEffect(() => {
@@ -44,12 +49,35 @@ export default function Dash() {
   }, [actions, setLocation]);
 
   const handleToggle = (id: string) => {
+    if (editingId === id) return; // Don't toggle while editing
     const action = actions.find(a => a.id === id);
     if (!action?.completed) {
       soundManager.playPop();
       haptics.light();
     }
     toggleAction(id);
+  };
+
+  const startEditing = (e: React.MouseEvent, id: string, currentText: string) => {
+    e.stopPropagation();
+    setEditingId(id);
+    setEditText(currentText);
+    // Focus will be handled by useEffect or autoFocus
+  };
+
+  const saveEdit = () => {
+    if (editingId && editText.trim()) {
+      updateActionText(editingId, editText.trim());
+    }
+    setEditingId(null);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      saveEdit();
+    } else if (e.key === 'Escape') {
+      setEditingId(null);
+    }
   };
 
   const completedCount = actions.filter(a => a.completed).length;
@@ -74,12 +102,12 @@ export default function Dash() {
             </div>
             
             {/* Mascot & Progress */}
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16">
+            <div className="flex items-center gap-4" role="status" aria-label={`Progress: ${completedCount} of 3 actions completed`}>
+              <div className="w-16 h-16" aria-hidden="true">
                  <Mascot pose={mascotPose} className="w-full h-full" />
               </div>
               {/* Progress Ring */}
-              <div className="relative w-12 h-12 flex items-center justify-center">
+              <div className="relative w-12 h-12 flex items-center justify-center" aria-hidden="true">
                 <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
                 <path
                   className="text-muted"
@@ -115,8 +143,17 @@ export default function Dash() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 onClick={() => handleToggle(action.id)}
+                role="checkbox"
+                aria-checked={action.completed}
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === ' ' || e.key === 'Enter') {
+                    e.preventDefault();
+                    handleToggle(action.id);
+                  }
+                }}
                 className={cn(
-                  "group relative overflow-hidden rounded-2xl p-6 cursor-pointer transition-all duration-300",
+                  "group relative overflow-hidden rounded-2xl p-6 cursor-pointer transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
                   "bg-card shadow-sm border border-transparent hover:shadow-md",
                   action.completed ? "bg-primary/5 border-primary/20" : "hover:border-primary/10"
                 )}
@@ -144,12 +181,36 @@ export default function Dash() {
 
                   {/* Text */}
                   <div className="flex-1">
-                    <p className={cn(
-                      "text-lg font-medium transition-all duration-300",
-                      action.completed ? "text-muted-foreground line-through decoration-primary/30" : "text-foreground"
-                    )}>
-                      {action.text}
-                    </p>
+                    {editingId === action.id ? (
+                      <Input
+                        ref={inputRef}
+                        value={editText}
+                        onChange={(e) => setEditText(e.target.value)}
+                        onBlur={saveEdit}
+                        onKeyDown={handleKeyDown}
+                        autoFocus
+                        className="text-lg font-medium bg-transparent border-none shadow-none focus-visible:ring-0 p-0 h-auto"
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                    ) : (
+                      <div className="flex items-center justify-between group/text">
+                        <p className={cn(
+                          "text-lg font-medium transition-all duration-300",
+                          action.completed ? "text-muted-foreground line-through decoration-primary/30" : "text-foreground"
+                        )}>
+                          {action.text}
+                        </p>
+                        {!action.completed && (
+                          <button
+                            onClick={(e) => startEditing(e, action.id, action.text)}
+                            className="opacity-0 group-hover:opacity-100 transition-opacity p-2 text-muted-foreground hover:text-primary"
+                            aria-label="Edit action"
+                          >
+                            <Pencil className="w-4 h-4" />
+                          </button>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
                 
