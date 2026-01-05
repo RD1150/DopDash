@@ -82,3 +82,6 @@
 - [x] Strengthen CTAs and remove friction points
 - [x] Add urgency/momentum messaging ("Live now - Start immediately")
 - [x] Ensure mobile-first optimization
+
+## Landing Page Dashie Hero - Completed
+- [x] Add animated Dashie mascot to hero section next to headline

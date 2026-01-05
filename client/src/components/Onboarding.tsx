@@ -150,12 +150,39 @@ export default function Onboarding() {
             exit={{ opacity: 0, x: -20 }}
             className="space-y-8 text-center px-4 max-h-[90vh] overflow-y-auto"
           >
+            {/* Hero Section with Dashie */}
             <motion.div 
               className="space-y-4"
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.6 }}
             >
+              {/* Dashie Mascot */}
+              <motion.div
+                className="flex justify-center mb-4"
+                initial={{ y: -20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.3, duration: 0.6 }}
+              >
+                <motion.div
+                  animate={{ 
+                    y: [0, -10, 0],
+                    rotate: [0, 5, -5, 0]
+                  }}
+                  transition={{ 
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                  className="text-8xl md:text-9xl"
+                  style={{
+                    filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.1))'
+                  }}
+                >
+                  🌱
+                </motion.div>
+              </motion.div>
+              
               <div className="relative inline-block">
                 <h1 className="text-4xl md:text-5xl font-bold relative z-10" style={{
                   color: 'hsl(var(--primary))',
