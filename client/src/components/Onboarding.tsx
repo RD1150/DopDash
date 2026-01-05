@@ -121,14 +121,14 @@ export default function Onboarding() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            className="min-h-screen flex flex-col items-center justify-center px-4 py-8 space-y-6"
+            className="min-h-screen flex flex-col items-center justify-start pt-12 px-4 space-y-2"
           >
             {/* Hero Section */}
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.6 }}
-              className="flex flex-col items-center space-y-3 text-center"
+              className="flex flex-col items-center space-y-1 text-center"
             >
               {/* Dashie Mascot */}
               <motion.img
@@ -143,7 +143,7 @@ export default function Onboarding() {
                   repeat: Infinity,
                   ease: "easeInOut"
                 }}
-                className="w-24 h-24 md:w-28 md:h-28 object-contain"
+                className="w-20 h-20 md:w-24 md:h-24 object-contain"
                 style={{
                   filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.15))'
                 }}
@@ -168,7 +168,7 @@ export default function Onboarding() {
               </div>
 
               {/* Tagline */}
-              <p className="text-lg md:text-xl font-medium max-w-sm" style={{ color: 'hsl(var(--foreground) / 0.85)' }}>
+              <p className="text-base md:text-lg font-medium max-w-sm" style={{ color: 'hsl(var(--foreground) / 0.85)' }}>
                 Finally, a task app that doesn't make you feel broken.
               </p>
             </motion.div>
@@ -178,12 +178,12 @@ export default function Onboarding() {
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.6 }}
-              className="space-y-4 max-w-lg"
+              className="space-y-2 max-w-lg"
             >
-              <p className="text-lg font-semibold text-foreground/90 leading-relaxed">
+              <p className="text-base font-semibold text-foreground/90 leading-relaxed">
                 Staring at your to-do list for 20 minutes and doing nothing?
               </p>
-              <p className="text-base leading-relaxed" style={{ color: 'hsl(var(--foreground) / 0.8)' }}>
+              <p className="text-sm leading-relaxed" style={{ color: 'hsl(var(--foreground) / 0.8)' }}>
                 Break free from task paralysis. Dopamine Dasher turns overwhelming projects into 2-5 minute wins. No judgment. No guilt. Just instant dopamine hits that actually get you moving.
               </p>
               <div className="flex flex-wrap gap-2 justify-center pt-2">
@@ -198,7 +198,7 @@ export default function Onboarding() {
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.5, duration: 0.6 }}
-              className="pt-2"
+              className="pt-1"
             >
               <Button 
                 size="lg"
@@ -212,7 +212,7 @@ export default function Onboarding() {
               >
                 Start Your First Win (Free) 🚀
               </Button>
-              <p className="text-xs mt-3" style={{ color: 'hsl(var(--foreground) / 0.6)' }}>
+              <p className="text-xs mt-1" style={{ color: 'hsl(var(--foreground) / 0.6)' }}>
                 ⚡ Takes 30 seconds to get your first dopamine hit
               </p>
               <p className="text-xs" style={{ color: 'hsl(var(--foreground) / 0.5)' }}>
@@ -226,7 +226,7 @@ export default function Onboarding() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.6, duration: 0.6 }}
               onSubmit={handleEmailSubmit}
-              className="space-y-2 w-full max-w-sm"
+              className="space-y-1 w-full max-w-sm"
             >
               <p className="text-sm font-medium" style={{ color: 'hsl(var(--foreground) / 0.7)' }}>
                 📧 Get notified when we add new features
