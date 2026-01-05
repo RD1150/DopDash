@@ -58,6 +58,7 @@ interface AppState {
   emergencyMode: boolean;
   brainDump: string;
   activeQuest: string | null;
+  taskDifficultyRatings: Record<string, 'easy' | 'medium' | 'hard'>; // Track user's difficulty ratings
   questProgress: number;
   showOnboardingChecklist: boolean;
   onboardingChecklist: {
@@ -103,6 +104,7 @@ interface AppState {
   quitQuest: () => void;
   setOnboardingChecklist: (key: string, value: boolean) => void;
   dismissOnboardingChecklist: () => void;
+  rateDifficulty: (taskId: string, difficulty: 'easy' | 'medium' | 'hard') => void;
 }
 
 const BADGES_LIBRARY: Badge[] = [
@@ -184,6 +186,7 @@ export const useStore = create<AppState>()(
       emergencyMode: false,
       brainDump: '',
       activeQuest: null,
+      taskDifficultyRatings: {},
       questProgress: 0,
       showOnboardingChecklist: true,
       onboardingChecklist: {
@@ -469,7 +472,16 @@ export const useStore = create<AppState>()(
           },
         }));
       },
-      dismissOnboardingChecklist: () => set({ showOnboardingChecklist: false })
+      dismissOnboardingChecklist: () => set({ showOnboardingChecklist: false }),
+      rateDifficulty: (taskId, difficulty) => {
+        const { taskDifficultyRatings } = get();
+        set({
+          taskDifficultyRatings: {
+            ...taskDifficultyRatings,
+            [taskId]: difficulty
+          }
+        });
+      }
     }),
     {
       name: 'dopamine-dasher-storage',
