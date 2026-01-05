@@ -57,3 +57,7 @@
 ## New Features - Completed
 - [x] AI-powered task breakdown (break overwhelming tasks into micro-steps)
 - [x] Progressive Dashie slide animation (slides down incrementally with each task)
+
+## Flexibility Features - Completed
+- [x] Add "Skip Setup" button to onboarding (jump straight in with defaults)
+- [x] Add "Change Your Vibe" section to Settings (switch enemy/context/theme anytime)

@@ -11,6 +11,7 @@ import EmailCollection from '@/components/EmailCollection';
 import { notificationScheduler } from '@/lib/notifications';
 import { AnimatePresence } from 'framer-motion';
 import PremiumUpgrade from '@/components/PremiumUpgrade';
+import ChangeYourVibe from '@/components/ChangeYourVibe';
 import { usePremium, isPremiumTheme } from '@/hooks/usePremium';
 import { Crown } from 'lucide-react';
 import { toast } from 'sonner';
@@ -29,6 +30,7 @@ export default function SettingsPage() {
   const soundTheme = useStore((state) => state.soundTheme);
   const setSoundTheme = useStore((state) => state.setSoundTheme);
   const [showWallpaperGen, setShowWallpaperGen] = useState(false);
+  const [showChangeVibe, setShowChangeVibe] = useState(false);
   const vacationMode = useStore((state) => state.vacationMode);
   const setVacationMode = useStore((state) => state.setVacationMode);
   const cancelVacationMode = useStore((state) => state.cancelVacationMode);
@@ -60,6 +62,7 @@ export default function SettingsPage() {
     <Layout>
       <AnimatePresence>
         {showWallpaperGen && <WallpaperGenerator onClose={() => setShowWallpaperGen(false)} />}
+        {showChangeVibe && <ChangeYourVibe isOpen={showChangeVibe} onClose={() => setShowChangeVibe(false)} />}
       </AnimatePresence>
       <div className="flex flex-col h-full">
         <header className="pt-6 pb-8 flex items-center gap-4">
@@ -73,18 +76,18 @@ export default function SettingsPage() {
         </header>
 
         <div className="space-y-8">
-          {/* Flavor Section */}
+          {/* Change Your Vibe Section */}
           <section className="space-y-4">
-            <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Reward Flavor</h2>
+            <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Change Your Vibe</h2>
             <div 
-              onClick={() => setLocation('/flavor')}
+              onClick={() => setShowChangeVibe(true)}
               className="bg-card p-4 rounded-xl border border-border flex items-center justify-between cursor-pointer hover:border-primary/30 transition-colors"
             >
               <div>
-                <p className="font-medium capitalize">{flavor.replace(/-/g, ' ')}</p>
-                <p className="text-sm text-muted-foreground">Tap to change style</p>
+                <p className="font-medium">Enemy, Context & Theme</p>
+                <p className="text-sm text-muted-foreground">Adjust anytime, no judgment</p>
               </div>
-              <ChevronLeft className="w-5 h-5 rotate-180 text-muted-foreground" />
+              <Palette className="w-5 h-5 text-muted-foreground" />
             </div>
           </section>
 

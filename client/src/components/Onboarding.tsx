@@ -108,6 +108,21 @@ export default function Onboarding() {
             <p className="text-sm text-muted-foreground/60">
               No login. No signup. No explanation wall.
             </p>
+            
+            {/* Skip Setup Link */}
+            <button
+              onClick={() => {
+                // Set smart defaults
+                setFlavor('calm'); // Wall of Awful
+                setContext('self'); // The Self
+                setTheme('cottagecore'); // Cottagecore
+                startApp();
+                setLocation('/dash');
+              }}
+              className="text-sm text-muted-foreground/60 hover:text-primary transition-colors underline"
+            >
+              Just throw me in →
+            </button>
           </motion.div>
         )}
 
