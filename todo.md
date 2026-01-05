@@ -85,3 +85,7 @@
 
 ## Landing Page Dashie Hero - Completed
 - [x] Add animated Dashie mascot to hero section next to headline
+
+## Replace Emoji with Real Dashie - Completed
+- [x] Find existing Dashie character images in project
+- [x] Replace sprout emoji with actual Dashie image on landing page

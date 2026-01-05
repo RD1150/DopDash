@@ -164,23 +164,23 @@ export default function Onboarding() {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.3, duration: 0.6 }}
               >
-                <motion.div
+                <motion.img
+                  src="/images/mascot/hero.png"
+                  alt="Dashie - Your ADHD task buddy"
                   animate={{ 
                     y: [0, -10, 0],
-                    rotate: [0, 5, -5, 0]
+                    rotate: [0, 3, -3, 0]
                   }}
                   transition={{ 
-                    duration: 2,
+                    duration: 2.5,
                     repeat: Infinity,
                     ease: "easeInOut"
                   }}
-                  className="text-8xl md:text-9xl"
+                  className="w-32 h-32 md:w-40 md:h-40 object-contain"
                   style={{
-                    filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.1))'
+                    filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.15))'
                   }}
-                >
-                  🌱
-                </motion.div>
+                />
               </motion.div>
               
               <div className="relative inline-block">
