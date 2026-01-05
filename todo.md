@@ -129,3 +129,14 @@
 ## Fix Content Cutoff at Bottom - Completed
 - [x] Fix container/viewport so "Dopamine Dasher" title and all content is visible
 - [x] Ensure proper scrolling or scaling to fit all content on screen
+
+## Launch Preparation - Current
+- [ ] Write Mailchimp account recovery email
+- [ ] Provide ConvertKit integration step-by-step guide
+- [ ] Write launch posts for Reddit (r/ADHD)
+- [ ] Write launch posts for ADHD Facebook groups
+- [ ] Write launch posts for Twitter/X
+- [ ] Write TikTok video script/captions
+
+## Fix Dashie Size - Completed
+- [x] Reduce Dashie to appropriate size (w-24/h-24 md:w-28/h-28)

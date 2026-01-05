@@ -176,7 +176,7 @@ export default function Onboarding() {
                     repeat: Infinity,
                     ease: "easeInOut"
                   }}
-                  className="w-32 h-32 md:w-40 md:h-40 object-contain"
+                  className="w-24 h-24 md:w-28 md:h-28 object-contain"
                   style={{
                     filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.2))'
                   }}
