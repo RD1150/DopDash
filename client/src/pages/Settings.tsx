@@ -7,6 +7,8 @@ import { useLocation } from 'wouter';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import WallpaperGenerator from '@/components/WallpaperGenerator';
+import EmailCollection from '@/components/EmailCollection';
+import { notificationScheduler } from '@/lib/notifications';
 import { AnimatePresence } from 'framer-motion';
 
 export default function SettingsPage() {
@@ -28,32 +30,24 @@ export default function SettingsPage() {
   const vacationDaysRemaining = useStore((state) => state.vacationDaysRemaining);
   const emergencyMode = useStore((state) => state.emergencyMode);
   const setEmergencyMode = useStore((state) => state.setEmergencyMode);
+  const streak = useStore((state) => state.streak);
 
   const handleNotificationToggle = async (checked: boolean) => {
     if (checked) {
-      if (!('Notification' in window)) {
-        alert('This browser does not support desktop notification');
-        return;
-      }
-      
-      if (Notification.permission === 'granted') {
+      const granted = await notificationScheduler.requestPermission();
+      if (granted) {
         setNotificationsEnabled(true);
-        new Notification('Notifications Enabled', {
-          body: 'We will gently remind you to dash!',
-          icon: '/pwa-192x192.png'
-        });
-      } else if (Notification.permission !== 'denied') {
-        const permission = await Notification.requestPermission();
-        if (permission === 'granted') {
-          setNotificationsEnabled(true);
-          new Notification('Notifications Enabled', {
-            body: 'We will gently remind you to dash!',
-            icon: '/pwa-192x192.png'
-          });
-        }
+        notificationScheduler.scheduleDailyReminder(9, 0);
+        notificationScheduler.scheduleStreakProtection(streak);
+        notificationScheduler.showNotification(
+          'Notifications Enabled! 🎯',
+          'We\'ll send you gentle reminders to keep your streak alive.',
+          '/pwa-192x192.png'
+        );
       }
     } else {
       setNotificationsEnabled(false);
+      notificationScheduler.clearAllNotifications();
     }
   };
 
@@ -304,6 +298,12 @@ export default function SettingsPage() {
                 <Switch defaultChecked />
               </div>
             </div>
+          </section>
+
+          {/* Email Updates */}
+          <section className="space-y-4">
+            <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Stay Connected</h2>
+            <EmailCollection inline />
           </section>
 
           {/* Data Management */}

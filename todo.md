@@ -17,3 +17,10 @@
 - [ ] Test all features end-to-end
 - [ ] Create checkpoint for deployment
 - [ ] Final delivery
+
+## New Features - Completed
+- [x] Email Collection Integration (GHL-ready form in Settings)
+- [x] Push Notifications System (daily reminders and streak alerts)
+
+## Skipped Features (Not needed for mobile-first PWA)
+- [-] Social Features (friend challenges and leaderboards) - Deferred for future update
