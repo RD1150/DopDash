@@ -61,3 +61,6 @@
 ## Flexibility Features - Completed
 - [x] Add "Skip Setup" button to onboarding (jump straight in with defaults)
 - [x] Add "Change Your Vibe" section to Settings (switch enemy/context/theme anytime)
+
+## Visual Design - Completed
+- [x] Redesign landing page with animated background, visual elements, and inviting aesthetics
