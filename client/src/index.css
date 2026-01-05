@@ -211,7 +211,9 @@
   select:not(:disabled),
   input[type="checkbox"]:not(:disabled),
   input[type="radio"]:not(:disabled) {
-    @apply cursor-pointer;
+    @apply cursor-pointer touch-manipulation;
+    min-height: 44px; /* Minimum touch target size */
+    min-width: 44px;
   }
 }
 
