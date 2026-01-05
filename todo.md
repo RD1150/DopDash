@@ -53,3 +53,7 @@
 
 ## Copy Updates
 - [x] Change "tiny wins" to "well deserved" throughout the app
+
+## New Features - Completed
+- [x] AI-powered task breakdown (break overwhelming tasks into micro-steps)
+- [x] Progressive Dashie slide animation (slides down incrementally with each task)

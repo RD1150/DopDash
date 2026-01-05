@@ -25,6 +25,7 @@ import Questlines from '@/components/Questlines';
 import OnboardingChecklist from '@/components/OnboardingChecklist';
 import DashieSlide from '@/components/DashieSlide';
 import MilestoneCelebration from '@/components/MilestoneCelebration';
+import TaskBreakdown from '@/components/TaskBreakdown';
 import { Timer, CircleDashed, StickyNote, Volume2, Map } from 'lucide-react';
 import {
   DropdownMenu,
@@ -64,7 +65,8 @@ export default function Dash() {
   const [showBrainDump, setShowBrainDump] = useState(false);
   const [showSoundMixer, setShowSoundMixer] = useState(false);
   const [showQuestlines, setShowQuestlines] = useState(false);
-  const [showDashieSlide, setShowDashieSlide] = useState(false);
+  const [showTaskBreakdown, setShowTaskBreakdown] = useState(false);
+
   const [showBubblePop, setShowBubblePop] = useState(false);
   const [isAddingTask, setIsAddingTask] = useState(false);
   const [newTaskText, setNewTaskText] = useState('');
@@ -200,8 +202,7 @@ export default function Dash() {
         setTimeout(() => setShowLootBox(true), 500);
       }
       
-      // Trigger Dashie slide animation
-      setShowDashieSlide(true);
+
     }
     
     toggleAction(id);
@@ -352,7 +353,10 @@ export default function Dash() {
         {showBossBattle && <BossBattle onClose={() => setShowBossBattle(false)} />}
         {showBubblePop && <BubblePop onClose={() => setShowBubblePop(false)} />}
       </AnimatePresence>
-      <DashieSlide show={showDashieSlide} onComplete={() => setShowDashieSlide(false)} />
+      <DashieSlide 
+        completedCount={actions.filter(a => a.completed).length}
+        totalCount={actions.length}
+      />
       <MilestoneCelebration 
         percentage={Math.round((actions.filter(a => a.completed).length / Math.max(actions.length, 1)) * 100)} 
       />
@@ -360,6 +364,7 @@ export default function Dash() {
       <BrainDump isOpen={showBrainDump} onClose={() => setShowBrainDump(false)} />
       <SoundMixer isOpen={showSoundMixer} onClose={() => setShowSoundMixer(false)} />
       <Questlines isOpen={showQuestlines} onClose={() => setShowQuestlines(false)} />
+      <TaskBreakdown isOpen={showTaskBreakdown} onClose={() => setShowTaskBreakdown(false)} />
       <BodyDouble />
       <div className="flex flex-col h-full">
         {/* Header */}
@@ -389,6 +394,10 @@ export default function Dash() {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="start" className="w-56">
+                    <DropdownMenuItem onClick={() => setShowTaskBreakdown(true)} className="gap-2 cursor-pointer">
+                      <BrainCircuit className="w-4 h-4 text-purple-500" />
+                      <span>Break It Down (AI)</span>
+                    </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setShowBrainDump(true)} className="gap-2 cursor-pointer">
                       <Sparkles className="w-4 h-4 text-yellow-500" />
                       <span>Quick Win (Minor)</span>
