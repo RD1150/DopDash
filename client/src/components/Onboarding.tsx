@@ -148,18 +148,18 @@ export default function Onboarding() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            className="space-y-4 text-center px-4 py-4 max-h-[95vh] overflow-y-auto pb-20"
+            className="space-y-3 text-center px-4 py-2 max-h-screen overflow-y-auto pb-16"
           >
             {/* Hero Section with Dashie */}
             <motion.div 
-              className="space-y-2"
+              className="space-y-1"
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.6 }}
             >
               {/* Dashie Mascot */}
               <motion.div
-                className="flex justify-center mb-2"
+                className="flex justify-center mb-1"
                 initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.3, duration: 0.6 }}
@@ -176,7 +176,7 @@ export default function Onboarding() {
                     repeat: Infinity,
                     ease: "easeInOut"
                   }}
-                  className="w-24 h-24 md:w-28 md:h-28 object-contain"
+                  className="w-20 h-20 md:w-24 md:h-24 object-contain"
                   style={{
                     filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.2))'
                   }}
@@ -184,7 +184,7 @@ export default function Onboarding() {
               </motion.div>
               
               <div className="relative inline-block">
-                <h1 className="text-4xl md:text-5xl font-bold relative z-10" style={{
+                <h1 className="text-3xl md:text-4xl font-bold relative z-10" style={{
                   color: 'hsl(var(--primary))',
                   filter: 'brightness(1.3)',
                   textShadow: '0 2px 10px hsl(var(--primary) / 0.5), 0 0 20px hsl(var(--primary) / 0.3)'
@@ -203,7 +203,7 @@ export default function Onboarding() {
 
             {/* Pain Point + Value Proposition */}
             <motion.div 
-              className="space-y-6 py-6"
+              className="space-y-4 py-3"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.6 }}
@@ -223,7 +223,7 @@ export default function Onboarding() {
               </div>
             </motion.div>
             
-            <div className="py-4">
+            <div className="py-2">
               <Button 
                 size="lg"
                 onClick={() => {
@@ -271,7 +271,7 @@ export default function Onboarding() {
               </AnimatePresence>
             </div>
             
-            <p className="text-sm font-medium" style={{ color: 'hsl(var(--foreground) / 0.75)' }}>
+            <p className="text-xs font-medium" style={{ color: 'hsl(var(--foreground) / 0.75)' }}>
               ⚡ Takes 30 seconds to get your first dopamine hit
             </p>
             <p className="text-xs" style={{ color: 'hsl(var(--foreground) / 0.7)' }}>
@@ -283,9 +283,9 @@ export default function Onboarding() {
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.7, duration: 0.6 }}
-              className="py-4"
+              className="py-2"
             >
-              <div className="space-y-2">
+              <div className="space-y-1">
                 <p className="text-base text-primary font-semibold">
                   🔥 Live now - Start immediately
                 </p>
@@ -300,9 +300,9 @@ export default function Onboarding() {
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.75, duration: 0.6 }}
-              className="py-4"
+              className="py-2"
             >
-              <div className="max-w-md mx-auto space-y-3">
+              <div className="max-w-md mx-auto space-y-2">
                 <p className="text-sm font-semibold" style={{ color: 'hsl(var(--foreground) / 0.8)' }}>
                   📧 Get notified when we add new features
                 </p>
@@ -332,43 +332,43 @@ export default function Onboarding() {
             
             {/* How It Works Section */}
             <motion.div
-              className="space-y-6 py-8"
+              className="space-y-4 py-4"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.8, duration: 0.6 }}
             >
-              <h2 className="text-2xl font-bold text-foreground">How It Works</h2>
-              <div className="grid gap-6 max-w-2xl mx-auto">
+              <h2 className="text-xl font-bold text-foreground">How It Works</h2>
+              <div className="grid gap-3 max-w-2xl mx-auto">
                 {/* Step 1 */}
-                <div className="flex items-start gap-4 text-left">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-2xl">
+                <div className="flex items-start gap-3 text-left">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-lg">
                     1️⃣
                   </div>
                   <div>
-                    <h3 className="font-semibold text-foreground mb-1">Pick a tiny task</h3>
-                    <p className="text-sm text-muted-foreground">Choose from pre-loaded micro-tasks or add your own. Each one takes 2-5 minutes max.</p>
+                    <h3 className="font-semibold text-foreground mb-0.5">Pick a tiny task</h3>
+                    <p className="text-xs text-muted-foreground">Choose from pre-loaded micro-tasks or add your own. Each one takes 2-5 minutes max.</p>
                   </div>
                 </div>
                 
                 {/* Step 2 */}
-                <div className="flex items-start gap-4 text-left">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-2xl">
+                <div className="flex items-start gap-3 text-left">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-lg">
                     2️⃣
                   </div>
                   <div>
-                    <h3 className="font-semibold text-foreground mb-1">Just do it</h3>
-                    <p className="text-sm text-muted-foreground">No timers. No pressure. Just tap when you're done. That's it.</p>
+                    <h3 className="font-semibold text-foreground mb-0.5">Just do it</h3>
+                    <p className="text-xs text-muted-foreground">No timers. No pressure. Just tap when you're done. That's it.</p>
                   </div>
                 </div>
                 
                 {/* Step 3 */}
-                <div className="flex items-start gap-4 text-left">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-2xl">
+                <div className="flex items-start gap-3 text-left">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-lg">
                     3️⃣
                   </div>
                   <div>
-                    <h3 className="font-semibold text-foreground mb-1">Celebrate & level up</h3>
-                    <p className="text-sm text-muted-foreground">Get instant rewards, XP, and watch your streak grow. Your brain gets the dopamine it craves.</p>
+                    <h3 className="font-semibold text-foreground mb-0.5">Celebrate & level up</h3>
+                    <p className="text-xs text-muted-foreground">Get instant rewards, XP, and watch your streak grow. Your brain gets the dopamine it craves.</p>
                   </div>
                 </div>
               </div>
@@ -376,60 +376,60 @@ export default function Onboarding() {
             
             {/* FAQ Section */}
             <motion.div
-              className="space-y-6 py-8"
+              className="space-y-3 py-3"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.9, duration: 0.6 }}
             >
-              <h2 className="text-2xl font-bold text-foreground">FAQ</h2>
-              <div className="space-y-4 max-w-2xl mx-auto text-left">
+              <h2 className="text-xl font-bold text-foreground">FAQ</h2>
+              <div className="space-y-2 max-w-2xl mx-auto text-left">
                 {/* FAQ 1 */}
-                <div className="bg-card/50 backdrop-blur-sm rounded-lg p-4 border border-border/50">
-                  <h3 className="font-semibold text-foreground mb-2">Do I need to sign up?</h3>
-                  <p className="text-sm text-muted-foreground">Nope! Just click "Let's Go!" and start. No email, no password, no friction. Your data saves locally on your device.</p>
+                <div className="bg-card/50 backdrop-blur-sm rounded-lg p-3 border border-border/50">
+                  <h3 className="font-semibold text-foreground mb-1 text-sm">Do I need to sign up?</h3>
+                  <p className="text-xs text-muted-foreground">Nope! Just click "Let's Go!" and start. No email, no password, no friction. Your data saves locally on your device.</p>
                 </div>
                 
                 {/* FAQ 2 */}
-                <div className="bg-card/50 backdrop-blur-sm rounded-lg p-4 border border-border/50">
-                  <h3 className="font-semibold text-foreground mb-2">Is it really free?</h3>
-                  <p className="text-sm text-muted-foreground">Core features are 100% free forever. Premium themes and advanced features are available for a one-time $29.99 payment (no subscription).</p>
+                <div className="bg-card/50 backdrop-blur-sm rounded-lg p-3 border border-border/50">
+                  <h3 className="font-semibold text-foreground mb-1 text-sm">Is it really free?</h3>
+                  <p className="text-xs text-muted-foreground">Core features are 100% free forever. Premium themes and advanced features are available for a one-time $29.99 payment (no subscription).</p>
                 </div>
                 
                 {/* FAQ 3 */}
-                <div className="bg-card/50 backdrop-blur-sm rounded-lg p-4 border border-border/50">
-                  <h3 className="font-semibold text-foreground mb-2">What makes this different from other task apps?</h3>
-                  <p className="text-sm text-muted-foreground">Most apps overwhelm you with features and make you feel guilty. Dopamine Dasher breaks everything into 2-5 minute tasks and celebrates every win. It's designed specifically for ADHD brains that need instant rewards and zero judgment.</p>
+                <div className="bg-card/50 backdrop-blur-sm rounded-lg p-3 border border-border/50">
+                  <h3 className="font-semibold text-foreground mb-1 text-sm">What makes this different from other task apps?</h3>
+                  <p className="text-xs text-muted-foreground">Most apps overwhelm you with features and make you feel guilty. Dopamine Dasher breaks everything into 2-5 minute tasks and celebrates every win. It's designed specifically for ADHD brains that need instant rewards and zero judgment.</p>
                 </div>
               </div>
             </motion.div>
             
             {/* Testimonials Section */}
             <motion.div 
-              className="space-y-4 py-8"
+              className="space-y-2 py-3"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.6, duration: 0.6 }}
             >
-              <div className="grid gap-4 max-w-2xl mx-auto">
+              <div className="grid gap-2 max-w-2xl mx-auto">
                 {/* Testimonial 1 */}
-                <div className="bg-card/50 backdrop-blur-sm rounded-lg p-4 border border-border/50">
-                  <p className="text-sm text-muted-foreground italic mb-2">
+                <div className="bg-card/50 backdrop-blur-sm rounded-lg p-3 border border-border/50">
+                  <p className="text-xs text-muted-foreground italic mb-1">
                     "I'd stare at my to-do list for 20 minutes and do nothing. This app made it so easy to just... start. The tiny tasks don't feel overwhelming."
                   </p>
                   <p className="text-xs text-muted-foreground/60">— Alex T., Creative Professional</p>
                 </div>
                 
                 {/* Testimonial 2 */}
-                <div className="bg-card/50 backdrop-blur-sm rounded-lg p-4 border border-border/50">
-                  <p className="text-sm text-muted-foreground italic mb-2">
+                <div className="bg-card/50 backdrop-blur-sm rounded-lg p-3 border border-border/50">
+                  <p className="text-xs text-muted-foreground italic mb-1">
                     "First app that doesn't make me feel broken. The gamification isn't cheesy - it's genuinely motivating. I actually cleaned my kitchen for the first time in weeks."
                   </p>
                   <p className="text-xs text-muted-foreground/60">— Jordan M., Software Developer</p>
                 </div>
                 
                 {/* Testimonial 3 */}
-                <div className="bg-card/50 backdrop-blur-sm rounded-lg p-4 border border-border/50">
-                  <p className="text-sm text-muted-foreground italic mb-2">
+                <div className="bg-card/50 backdrop-blur-sm rounded-lg p-3 border border-border/50">
+                  <p className="text-xs text-muted-foreground italic mb-1">
                     "The quick wins actually feel... achievable? I've tried every productivity app. This is the first one I actually open every day."
                   </p>
                   <p className="text-xs text-muted-foreground/60">— Sam R., Entrepreneur</p>
