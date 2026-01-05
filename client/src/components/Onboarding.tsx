@@ -243,6 +243,40 @@ export default function Onboarding() {
               No login. No signup. No explanation wall.
             </p>
             
+            {/* Testimonials Section */}
+            <motion.div 
+              className="space-y-4 py-8"
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.6, duration: 0.6 }}
+            >
+              <div className="grid gap-4 max-w-2xl mx-auto">
+                {/* Testimonial 1 */}
+                <div className="bg-card/50 backdrop-blur-sm rounded-lg p-4 border border-border/50">
+                  <p className="text-sm text-muted-foreground italic mb-2">
+                    "I'd stare at my to-do list for 20 minutes and do nothing. This app made it so easy to just... start. The tiny tasks don't feel overwhelming."
+                  </p>
+                  <p className="text-xs text-muted-foreground/60">— Alex T., Creative Professional</p>
+                </div>
+                
+                {/* Testimonial 2 */}
+                <div className="bg-card/50 backdrop-blur-sm rounded-lg p-4 border border-border/50">
+                  <p className="text-sm text-muted-foreground italic mb-2">
+                    "First app that doesn't make me feel broken. The gamification isn't cheesy - it's genuinely motivating. I actually cleaned my kitchen for the first time in weeks."
+                  </p>
+                  <p className="text-xs text-muted-foreground/60">— Jordan M., Software Developer</p>
+                </div>
+                
+                {/* Testimonial 3 */}
+                <div className="bg-card/50 backdrop-blur-sm rounded-lg p-4 border border-border/50">
+                  <p className="text-sm text-muted-foreground italic mb-2">
+                    "The quick wins actually feel... achievable? I've tried every productivity app. This is the first one I actually open every day."
+                  </p>
+                  <p className="text-xs text-muted-foreground/60">— Sam R., Entrepreneur</p>
+                </div>
+              </div>
+            </motion.div>
+            
             {/* Skip Setup Link */}
             <button
               onClick={() => {
