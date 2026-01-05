@@ -42,3 +42,7 @@
 - [x] Implement premium feature gating (themes locked with crown icon)
 - [x] Create upgrade flow in Settings
 - [x] Set up pricing: $29.99 lifetime only (no monthly)
+
+## Next Features
+- [ ] Dashie slide animation for task completions
+- [ ] Publish app and connect dopaminedasher.com domain
