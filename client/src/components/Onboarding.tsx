@@ -243,6 +243,91 @@ export default function Onboarding() {
               No login. No signup. No explanation wall.
             </p>
             
+            {/* Social Proof */}
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.7, duration: 0.6 }}
+              className="py-4"
+            >
+              <p className="text-base text-primary/90 font-medium">
+                Join ADHD brains who are finally getting stuff done
+              </p>
+            </motion.div>
+            
+            {/* How It Works Section */}
+            <motion.div
+              className="space-y-6 py-8"
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.8, duration: 0.6 }}
+            >
+              <h2 className="text-2xl font-bold text-foreground">How It Works</h2>
+              <div className="grid gap-6 max-w-2xl mx-auto">
+                {/* Step 1 */}
+                <div className="flex items-start gap-4 text-left">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-2xl">
+                    1️⃣
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-foreground mb-1">Pick a tiny task</h3>
+                    <p className="text-sm text-muted-foreground">Choose from pre-loaded micro-tasks or add your own. Each one takes 2-5 minutes max.</p>
+                  </div>
+                </div>
+                
+                {/* Step 2 */}
+                <div className="flex items-start gap-4 text-left">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-2xl">
+                    2️⃣
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-foreground mb-1">Just do it</h3>
+                    <p className="text-sm text-muted-foreground">No timers. No pressure. Just tap when you're done. That's it.</p>
+                  </div>
+                </div>
+                
+                {/* Step 3 */}
+                <div className="flex items-start gap-4 text-left">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-2xl">
+                    3️⃣
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-foreground mb-1">Celebrate & level up</h3>
+                    <p className="text-sm text-muted-foreground">Get instant rewards, XP, and watch your streak grow. Your brain gets the dopamine it craves.</p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+            
+            {/* FAQ Section */}
+            <motion.div
+              className="space-y-6 py-8"
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.9, duration: 0.6 }}
+            >
+              <h2 className="text-2xl font-bold text-foreground">FAQ</h2>
+              <div className="space-y-4 max-w-2xl mx-auto text-left">
+                {/* FAQ 1 */}
+                <div className="bg-card/50 backdrop-blur-sm rounded-lg p-4 border border-border/50">
+                  <h3 className="font-semibold text-foreground mb-2">Do I need to sign up?</h3>
+                  <p className="text-sm text-muted-foreground">Nope! Just click "Let's Go!" and start. No email, no password, no friction. Your data saves locally on your device.</p>
+                </div>
+                
+                {/* FAQ 2 */}
+                <div className="bg-card/50 backdrop-blur-sm rounded-lg p-4 border border-border/50">
+                  <h3 className="font-semibold text-foreground mb-2">Is it really free?</h3>
+                  <p className="text-sm text-muted-foreground">Core features are 100% free forever. Premium themes and advanced features are available for a one-time $29.99 payment (no subscription).</p>
+                </div>
+                
+                {/* FAQ 3 */}
+                <div className="bg-card/50 backdrop-blur-sm rounded-lg p-4 border border-border/50">
+                  <h3 className="font-semibold text-foreground mb-2">What makes this different from other task apps?</h3>
+                  <p className="text-sm text-muted-foreground">Most apps overwhelm you with features and make you feel guilty. Dopamine Dasher breaks everything into 2-5 minute tasks and celebrates every win. It's designed specifically for ADHD brains that need instant rewards and zero judgment.</p>
+                </div>
+              </div>
+            </motion.div>
+            
             {/* Testimonials Section */}
             <motion.div 
               className="space-y-4 py-8"
