@@ -89,3 +89,6 @@
 ## Replace Emoji with Real Dashie - Completed
 - [x] Find existing Dashie character images in project
 - [x] Replace sprout emoji with actual Dashie image on landing page
+
+## Fix Dashie Visibility - Completed
+- [x] Make Dashie larger and ensure full character is visible (not cropped)

@@ -168,7 +168,7 @@ export default function Onboarding() {
                   src="/images/mascot/hero.png"
                   alt="Dashie - Your ADHD task buddy"
                   animate={{ 
-                    y: [0, -10, 0],
+                    y: [0, -15, 0],
                     rotate: [0, 3, -3, 0]
                   }}
                   transition={{ 
@@ -176,9 +176,9 @@ export default function Onboarding() {
                     repeat: Infinity,
                     ease: "easeInOut"
                   }}
-                  className="w-32 h-32 md:w-40 md:h-40 object-contain"
+                  className="w-48 h-48 md:w-64 md:h-64 object-contain"
                   style={{
-                    filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.15))'
+                    filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.2))'
                   }}
                 />
               </motion.div>
