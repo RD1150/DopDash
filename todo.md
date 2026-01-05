@@ -24,3 +24,6 @@
 
 ## Skipped Features (Not needed for mobile-first PWA)
 - [-] Social Features (friend challenges and leaderboards) - Deferred for future update
+
+## Completed
+- [x] Enhance landing page with value proposition and feature highlights

@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useStore, Flavor, Theme, Context } from '@/lib/store';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { Brain, Zap, Battery, Palette, Moon, Sun, Leaf, Cpu, Home, Briefcase, User } from 'lucide-react';
+import { Brain, Zap, Battery, Palette, Moon, Sun, Leaf, Cpu, Home, Briefcase, User, Target, Trophy, Heart, Sparkles } from 'lucide-react';
 import { useLocation } from 'wouter';
 
 export default function Onboarding() {
@@ -39,20 +39,62 @@ export default function Onboarding() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            className="space-y-8 text-center"
+            className="space-y-8 text-center px-4 max-h-[90vh] overflow-y-auto"
           >
             <div className="space-y-4">
-              <h1 className="text-4xl font-bold text-primary">Dopamine Dasher</h1>
+              <h1 className="text-4xl md:text-5xl font-bold text-primary">Dopamine Dasher</h1>
               <p className="text-xl text-muted-foreground">Just start. That's enough.</p>
             </div>
+
+            {/* Value Proposition */}
+            <div className="space-y-3 py-4">
+              <p className="text-base text-muted-foreground leading-relaxed max-w-sm mx-auto">
+                The task manager that actually gets ADHD brains. No overwhelming lists. No guilt trips. Just tiny wins that build momentum.
+              </p>
+            </div>
+
+            {/* Key Features */}
+            <div className="grid grid-cols-2 gap-3 py-4">
+              <div className="bg-card border border-border rounded-xl p-4 space-y-2">
+                <div className="w-10 h-10 mx-auto rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+                  <Zap className="w-5 h-5" />
+                </div>
+                <h3 className="text-sm font-semibold">Instant Wins</h3>
+                <p className="text-xs text-muted-foreground">Quick dopamine hits</p>
+              </div>
+
+              <div className="bg-card border border-border rounded-xl p-4 space-y-2">
+                <div className="w-10 h-10 mx-auto rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+                  <Trophy className="w-5 h-5" />
+                </div>
+                <h3 className="text-sm font-semibold">Gamified</h3>
+                <p className="text-xs text-muted-foreground">Level up & earn coins</p>
+              </div>
+
+              <div className="bg-card border border-border rounded-xl p-4 space-y-2">
+                <div className="w-10 h-10 mx-auto rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+                  <Heart className="w-5 h-5" />
+                </div>
+                <h3 className="text-sm font-semibold">Your Buddy</h3>
+                <p className="text-xs text-muted-foreground">Celebrates every win</p>
+              </div>
+
+              <div className="bg-card border border-border rounded-xl p-4 space-y-2">
+                <div className="w-10 h-10 mx-auto rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+                  <Sparkles className="w-5 h-5" />
+                </div>
+                <h3 className="text-sm font-semibold">Boss Battles</h3>
+                <p className="text-xs text-muted-foreground">Slay your dragons</p>
+              </div>
+            </div>
             
-            <div className="py-8">
+            <div className="py-4">
               <Button 
                 size="lg"
                 onClick={() => setStep('enemy')}
-                className="w-full h-16 text-lg rounded-full shadow-lg"
+                className="w-full h-14 text-lg rounded-full shadow-lg"
               >
-                Let's Go
+                Start today
               </Button>
             </div>
             
