@@ -65,7 +65,7 @@ export default function Home() {
         >
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             The task manager that actually gets ADHD brains. No overwhelming lists. 
-            No guilt trips. Just tiny wins that build momentum.
+            No guilt trips. Just well-deserved wins that build momentum.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">

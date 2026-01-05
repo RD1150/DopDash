@@ -50,3 +50,6 @@
 ## Current Work
 - [x] Progressive milestone celebrations (25%, 50%, 75% completion)
 - [x] Milestone sounds and visual feedback
+
+## Copy Updates
+- [x] Change "tiny wins" to "well deserved" throughout the app

@@ -54,7 +54,7 @@ export default function Onboarding() {
                   Mind like a browser with 47 tabs open?
                 </p>
                 <p className="text-base text-muted-foreground leading-relaxed max-w-md mx-auto">
-                  The task manager that actually gets ADHD brains. No overwhelming lists. No guilt trips. Just tiny wins that build momentum.
+                  The task manager that actually gets ADHD brains. No overwhelming lists. No guilt trips. Just well-deserved wins that build momentum.
                 </p>
               </div>
             </div>
