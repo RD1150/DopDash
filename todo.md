@@ -116,3 +116,12 @@
 - [x] Fix text contrast - make all text dark and highly readable for ADHD users
 - [x] Add email capture form to collect interested visitors
 - [ ] Republish latest version with Dashie, testimonials, and FAQ
+
+## Adjust Dashie Size and Spacing - Current
+- [ ] Make Dashie smaller (reduce from 48x48/64x64)
+- [ ] Decrease spacing/buffer around hero section
+
+## Fix Dashie and Text Visibility - Completed
+- [x] Ensure full Dashie character is visible (not cut off)
+- [x] Ensure all text is visible without overlapping Dashie
+- [x] Reduce overall spacing to fit everything on screen

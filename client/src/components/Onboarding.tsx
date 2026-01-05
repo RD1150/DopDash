@@ -159,7 +159,7 @@ export default function Onboarding() {
             >
               {/* Dashie Mascot */}
               <motion.div
-                className="flex justify-center mb-4"
+                className="flex justify-center mb-2"
                 initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.3, duration: 0.6 }}
@@ -176,7 +176,7 @@ export default function Onboarding() {
                     repeat: Infinity,
                     ease: "easeInOut"
                   }}
-                  className="w-48 h-48 md:w-64 md:h-64 object-contain"
+                  className="w-32 h-32 md:w-40 md:h-40 object-contain"
                   style={{
                     filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.2))'
                   }}
