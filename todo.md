@@ -46,3 +46,7 @@
 ## Next Features
 - [x] Dashie slide animation for task completions
 - [ ] Publish app and connect dopaminedasher.com domain
+
+## Current Work
+- [x] Progressive milestone celebrations (25%, 50%, 75% completion)
+- [x] Milestone sounds and visual feedback

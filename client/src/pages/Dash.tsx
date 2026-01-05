@@ -24,6 +24,7 @@ import SoundMixer from '@/components/SoundMixer';
 import Questlines from '@/components/Questlines';
 import OnboardingChecklist from '@/components/OnboardingChecklist';
 import DashieSlide from '@/components/DashieSlide';
+import MilestoneCelebration from '@/components/MilestoneCelebration';
 import { Timer, CircleDashed, StickyNote, Volume2, Map } from 'lucide-react';
 import {
   DropdownMenu,
@@ -352,6 +353,9 @@ export default function Dash() {
         {showBubblePop && <BubblePop onClose={() => setShowBubblePop(false)} />}
       </AnimatePresence>
       <DashieSlide show={showDashieSlide} onComplete={() => setShowDashieSlide(false)} />
+      <MilestoneCelebration 
+        percentage={Math.round((actions.filter(a => a.completed).length / Math.max(actions.length, 1)) * 100)} 
+      />
       <WeeklyReview />
       <BrainDump isOpen={showBrainDump} onClose={() => setShowBrainDump(false)} />
       <SoundMixer isOpen={showSoundMixer} onClose={() => setShowSoundMixer(false)} />
