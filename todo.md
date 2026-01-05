@@ -92,3 +92,14 @@
 
 ## Fix Dashie Visibility - Completed
 - [x] Make Dashie larger and ensure full character is visible (not cropped)
+
+## Fix Landing Page Overflow - Completed
+- [x] Fix layout so Dashie and all content are fully visible without being cut off
+- [x] Ensure proper scrolling or viewport fitting
+
+## Stripe Payment Integration - Current
+- [ ] Add Stripe test API keys to environment secrets
+- [ ] Verify Stripe integration is working
+
+## Fix Bottom Cutoff - Completed
+- [x] Increase bottom padding to prevent content being cut off by "Made with Manus" badge
