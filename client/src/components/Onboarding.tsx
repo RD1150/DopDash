@@ -175,15 +175,16 @@ export default function Onboarding() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            className="space-y-3 text-center px-4 py-2 max-h-screen overflow-y-auto pb-16"
+            className="flex flex-col text-center px-4 py-8"
           >
-            {/* Hero Section with Dashie */}
-            <motion.div 
-              className="space-y-1"
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.6 }}
-            >
+            {/* Hero Section - Centered Vertically */}
+            <div className="flex flex-col justify-center items-center min-h-screen">
+              <motion.div 
+                className="space-y-1 flex flex-col items-center"
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.2, duration: 0.6 }}
+              >
               {/* Dashie Mascot */}
               <motion.div
                 className="flex justify-center mb-1"
@@ -227,6 +228,7 @@ export default function Onboarding() {
               </div>
               <p className="text-xl font-medium" style={{ color: 'hsl(var(--foreground) / 0.85)' }}>Finally, a task app that doesn't make you feel broken.</p>
             </motion.div>
+            </div>
 
             {/* Pain Point + Value Proposition */}
             <motion.div 
