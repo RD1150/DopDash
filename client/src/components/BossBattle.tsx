@@ -30,6 +30,7 @@ export default function BossBattle({ onClose }: BossBattleProps) {
   const [isAttacking, setIsAttacking] = useState(false);
   const [damageDealt, setDamageDealt] = useState<number | null>(null);
   const addCoins = useStore(state => state.addCoins);
+  const setOnboardingChecklist = useStore(state => state.setOnboardingChecklist);
 
   const handleAddTask = () => {
     if (newTask.trim()) {
@@ -42,6 +43,7 @@ export default function BossBattle({ onClose }: BossBattleProps) {
     if (bossName && subTasks.length > 0) {
       setStep('battle');
       soundManager.playPop();
+      setOnboardingChecklist('boss_battle', true);
     }
   };
 

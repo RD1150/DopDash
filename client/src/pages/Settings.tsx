@@ -14,6 +14,7 @@ export default function SettingsPage() {
   const flavor = useStore((state) => state.flavor);
   const currentTheme = useStore((state) => state.theme);
   const setTheme = useStore((state) => state.setTheme);
+  const setOnboardingChecklist = useStore((state) => state.setOnboardingChecklist);
   const notificationsEnabled = useStore((state) => state.notificationsEnabled);
   const setNotificationsEnabled = useStore((state) => state.setNotificationsEnabled);
   const zenMode = useStore((state) => state.zenMode);
@@ -229,7 +230,10 @@ export default function SettingsPage() {
                   {(['default', 'ocean', 'sunset', 'lavender', 'cottagecore', 'cyberpunk'] as Theme[]).map((t) => (
                     <button
                       key={t}
-                      onClick={() => setTheme(t)}
+                      onClick={() => {
+                        setTheme(t);
+                        setOnboardingChecklist('customize_theme', true);
+                      }}
                       className={cn(
                         "p-3 rounded-xl text-sm font-medium transition-all border-2",
                         currentTheme === t 

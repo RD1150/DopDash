@@ -59,6 +59,14 @@ interface AppState {
   brainDump: string;
   activeQuest: string | null;
   questProgress: number;
+  showOnboardingChecklist: boolean;
+  onboardingChecklist: {
+    first_task: boolean;
+    pet_mascot: boolean;
+    check_streak: boolean;
+    customize_theme: boolean;
+    boss_battle: boolean;
+  };
 
   // Actions
   startApp: () => void;
@@ -93,6 +101,8 @@ interface AppState {
   startQuest: (questId: string) => void;
   advanceQuest: () => void;
   quitQuest: () => void;
+  setOnboardingChecklist: (key: string, value: boolean) => void;
+  dismissOnboardingChecklist: () => void;
 }
 
 const BADGES_LIBRARY: Badge[] = [
@@ -175,6 +185,14 @@ export const useStore = create<AppState>()(
       brainDump: '',
       activeQuest: null,
       questProgress: 0,
+      showOnboardingChecklist: true,
+      onboardingChecklist: {
+        first_task: false,
+        pet_mascot: false,
+        check_streak: false,
+        customize_theme: false,
+        boss_battle: false,
+      },
 
       startApp: () => set({ hasStarted: true }),
       completeTutorial: () => set({ hasSeenTutorial: true }),
@@ -442,7 +460,16 @@ export const useStore = create<AppState>()(
       setBrainDump: (text) => set({ brainDump: text }),
       startQuest: (questId) => set({ activeQuest: questId, questProgress: 0 }),
       advanceQuest: () => set((state) => ({ questProgress: state.questProgress + 1 })),
-      quitQuest: () => set({ activeQuest: null, questProgress: 0 })
+      quitQuest: () => set({ activeQuest: null, questProgress: 0 }),
+      setOnboardingChecklist: (key, value) => {
+        set((state) => ({
+          onboardingChecklist: {
+            ...state.onboardingChecklist,
+            [key]: value,
+          },
+        }));
+      },
+      dismissOnboardingChecklist: () => set({ showOnboardingChecklist: false })
     }),
     {
       name: 'dopamine-dasher-storage',

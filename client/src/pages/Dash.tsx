@@ -22,6 +22,7 @@ import WeeklyReview from '@/components/WeeklyReview';
 import BrainDump from '@/components/BrainDump';
 import SoundMixer from '@/components/SoundMixer';
 import Questlines from '@/components/Questlines';
+import OnboardingChecklist from '@/components/OnboardingChecklist';
 import { Timer, CircleDashed, StickyNote, Volume2, Map } from 'lucide-react';
 import {
   DropdownMenu,
@@ -46,6 +47,7 @@ export default function Dash() {
   const context = useStore((state) => state.context);
   const setContext = useStore((state) => state.setContext);
   const swapAction = useStore((state) => state.swapAction);
+  const setOnboardingChecklist = useStore((state) => state.setOnboardingChecklist);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState('');
   const [magicMode, setMagicMode] = useState(false);
@@ -91,6 +93,8 @@ export default function Dash() {
   // Check for completion to trigger reward
   useEffect(() => {
     if (actions.length > 0 && actions.every(a => a.completed)) {
+      // Mark first task as complete in checklist
+      setOnboardingChecklist('first_task', true);
       soundManager.playSuccess();
       haptics.celebrate();
       canvasConfetti({
@@ -319,10 +323,12 @@ export default function Dash() {
     if (type === 'pet') {
       soundManager.playSquish();
       haptics.medium();
+      setOnboardingChecklist('pet_mascot', true);
       // Visual feedback handled by Mascot component internal state or we could lift it
     } else if (type === 'feed') {
       soundManager.playPop();
       haptics.success();
+      setOnboardingChecklist('pet_mascot', true);
       // Could add a feeding animation state here
     }
   };
@@ -801,6 +807,9 @@ export default function Dash() {
           </div>
         </div>
       </div>
+      
+      {/* Onboarding Checklist */}
+      <OnboardingChecklist />
     </Layout>
   );
 }

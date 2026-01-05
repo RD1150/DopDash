@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useStore } from '@/lib/store';
-import { X, Map, Shield, Sparkles, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { X, Map, Shield, Sparkles, ArrowRight, CheckCircle2, Trophy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { soundManager } from '@/lib/sound';
+import QuestBoard from './QuestBoard';
 
 interface Quest {
   id: string;
@@ -101,8 +102,34 @@ export default function Questlines({ isOpen, onClose }: QuestlinesProps) {
             </Button>
           </div>
 
+          {/* Quest Board - Daily/Weekly/Milestone Quests */}
+          <div className="bg-card border border-border rounded-2xl p-6 space-y-4 shadow-lg">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-3 bg-purple-500/10 rounded-xl text-purple-500">
+                <Trophy className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold">Quest Board</h3>
+                <p className="text-sm text-muted-foreground">Complete quests to earn XP and coins!</p>
+              </div>
+            </div>
+            <QuestBoard />
+          </div>
+
+          {/* Story Questlines */}
+          <div className="bg-card border border-border rounded-2xl p-6 space-y-4 shadow-lg">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-3 bg-primary/10 rounded-xl text-primary">
+                <Map className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold">Story Quests</h3>
+                <p className="text-sm text-muted-foreground">Epic multi-step adventures</p>
+              </div>
+            </div>
+
           {activeQuest && currentQuest ? (
-            <div className="bg-card border border-border rounded-2xl p-6 space-y-6 shadow-lg">
+            <div className="space-y-6">
               <div className="flex items-center gap-4">
                 <div className={`p-4 rounded-xl ${currentQuest.color} text-white`}>
                   <currentQuest.icon className="w-8 h-8" />
@@ -173,6 +200,7 @@ export default function Questlines({ isOpen, onClose }: QuestlinesProps) {
               ))}
             </div>
           )}
+          </div>
         </div>
       </motion.div>
     </AnimatePresence>

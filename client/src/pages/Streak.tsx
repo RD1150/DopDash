@@ -2,13 +2,13 @@ import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { useStore } from '@/lib/store';
 import { motion } from 'framer-motion';
-import { Calendar as CalendarIcon, Settings, Share2, Trophy, ShoppingBag, BookOpen } from 'lucide-react';
+import { Calendar as CalendarIcon, Settings, Share2, Trophy, ShoppingBag, BookOpen, TrendingUp } from 'lucide-react';
 import { useLocation } from 'wouter';
 import { cn } from '@/lib/utils';
 import { DayPicker } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
 import { toPng } from 'html-to-image';
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { toast } from 'sonner';
 import Mascot from '@/components/Mascot';
 
@@ -18,6 +18,12 @@ export default function Streak() {
   const history = useStore((state) => state.history) || [];
   const badges = useStore((state) => state.badges) || [];
   const shareRef = useRef<HTMLDivElement>(null);
+  const setOnboardingChecklist = useStore((state) => state.setOnboardingChecklist);
+
+  // Mark checklist item as complete when visiting Streak page
+  useEffect(() => {
+    setOnboardingChecklist('check_streak', true);
+  }, [setOnboardingChecklist]);
 
   // Convert history strings to Date objects
   const completedDays = history.map(dateStr => new Date(dateStr));
@@ -54,6 +60,12 @@ export default function Streak() {
           <BookOpen className="w-6 h-6" />
         </button>
         <button 
+          onClick={() => setLocation('/stats')}
+          className="p-2 text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <TrendingUp className="w-6 h-6" />
+        </button>
+        <button 
           onClick={() => setLocation('/settings')}
           className="p-2 text-muted-foreground hover:text-foreground transition-colors"
         >
@@ -68,7 +80,11 @@ export default function Streak() {
         className="space-y-12 w-full"
       >
         {/* Shareable Card Area */}
-        <div ref={shareRef} className="bg-background p-4 rounded-3xl">
+        <div ref={shareRef} className="bg-background p-8 rounded-3xl border border-border shadow-sm max-w-sm mx-auto">
+          <div className="flex items-center justify-center mb-4">
+            <span className="text-sm font-bold text-primary uppercase tracking-widest">Dopamine Dasher</span>
+          </div>
+          
           <div className="relative w-48 h-48 mx-auto flex items-center justify-center mb-6">
             {/* Circular Progress Background */}
             <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
@@ -79,7 +95,7 @@ export default function Streak() {
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="8"
-                className="text-muted"
+                className="text-muted/20"
               />
               <motion.circle
                 cx="50"
@@ -97,19 +113,24 @@ export default function Streak() {
             </svg>
             
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <div className="w-16 h-16 mb-1">
+              <div className="w-20 h-20 mb-2">
                 <Mascot pose="hero" className="w-full h-full" />
               </div>
-              <span className="text-3xl font-bold text-foreground">{streak}</span>
-              <span className="text-xs text-muted-foreground uppercase tracking-wider font-medium">Days Streak</span>
+              <span className="text-4xl font-black text-foreground">{streak}</span>
+              <span className="text-xs text-muted-foreground uppercase tracking-wider font-bold">Day Streak</span>
             </div>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-3 text-center">
             <h2 className="text-2xl font-bold text-foreground">Consistency beats intensity.</h2>
-            <p className="text-muted-foreground max-w-xs mx-auto">
-              I'm building a habit of starting with Dopamine Dasher.
+            <p className="text-muted-foreground text-sm">
+              Building momentum one tiny step at a time.
             </p>
+          </div>
+          
+          <div className="mt-6 pt-6 border-t border-border flex justify-between items-center text-xs text-muted-foreground">
+            <span>dopaminedasher.app</span>
+            <span>{new Date().toLocaleDateString()}</span>
           </div>
         </div>
 

@@ -11,11 +11,12 @@ import Streak from "./pages/Streak";
 import Welcome from "./pages/Welcome";
 import Shop from "./pages/Shop";
 import JournalPage from "./pages/Journal";
+import Stats from "./pages/Stats";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
-
 function Router() {
+  // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path="/" component={Welcome} />
@@ -25,6 +26,7 @@ function Router() {
       <Route path={"/streak"} component={Streak} />
       <Route path={"/shop"} component={Shop} />
       <Route path={"/journal"} component={JournalPage} />
+      <Route path={"/stats"} component={Stats} />
       <Route path={"/settings"} component={SettingsPage} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
