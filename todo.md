@@ -32,3 +32,13 @@
 - [x] Simplify landing page - remove feature cards, emphasize pain point
 - [x] Update pain point to focus on scattered mind/lack of focus
 - [x] Make landing page more ADHD-friendly (energetic CTA, animations, prominent button)
+
+## UX Improvements - Completed
+- [x] Make "Let's Go!" button text darker for better visibility
+- [x] Add Dashie popup celebration when clicking "Let's Go!"
+
+## Monetization - Completed
+- [x] Add Stripe integration for payments
+- [x] Implement premium feature gating (themes locked with crown icon)
+- [x] Create upgrade flow in Settings
+- [x] Set up pricing: $29.99 lifetime only (no monthly)

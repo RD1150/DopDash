@@ -10,9 +10,14 @@ import WallpaperGenerator from '@/components/WallpaperGenerator';
 import EmailCollection from '@/components/EmailCollection';
 import { notificationScheduler } from '@/lib/notifications';
 import { AnimatePresence } from 'framer-motion';
+import PremiumUpgrade from '@/components/PremiumUpgrade';
+import { usePremium, isPremiumTheme } from '@/hooks/usePremium';
+import { Crown } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function SettingsPage() {
   const [, setLocation] = useLocation();
+  const { isPremium } = usePremium();
   const flavor = useStore((state) => state.flavor);
   const currentTheme = useStore((state) => state.theme);
   const setTheme = useStore((state) => state.setTheme);
@@ -221,23 +226,37 @@ export default function SettingsPage() {
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
-                  {(['default', 'ocean', 'sunset', 'lavender', 'cottagecore', 'cyberpunk'] as Theme[]).map((t) => (
-                    <button
-                      key={t}
-                      onClick={() => {
-                        setTheme(t);
-                        setOnboardingChecklist('customize_theme', true);
-                      }}
-                      className={cn(
-                        "p-3 rounded-xl text-sm font-medium transition-all border-2",
-                        currentTheme === t 
-                          ? "border-primary bg-primary/5 text-primary" 
-                          : "border-transparent bg-secondary/50 hover:bg-secondary text-muted-foreground"
-                      )}
-                    >
-                      {t.charAt(0).toUpperCase() + t.slice(1)}
-                    </button>
-                  ))}
+                  {(['default', 'ocean', 'sunset', 'lavender', 'cottagecore', 'cyberpunk'] as Theme[]).map((t) => {
+                    const isLocked = isPremiumTheme(t) && !isPremium;
+                    return (
+                      <button
+                        key={t}
+                        onClick={() => {
+                          if (isLocked) {
+                            toast.error('This theme requires Premium', {
+                              description: 'Upgrade to unlock all premium themes',
+                            });
+                            return;
+                          }
+                          setTheme(t);
+                          setOnboardingChecklist('customize_theme', true);
+                        }}
+                        className={cn(
+                          "p-3 rounded-xl text-sm font-medium transition-all border-2 relative",
+                          currentTheme === t 
+                            ? "border-primary bg-primary/5 text-primary" 
+                            : isLocked
+                            ? "border-transparent bg-secondary/30 text-muted-foreground/50 cursor-not-allowed"
+                            : "border-transparent bg-secondary/50 hover:bg-secondary text-muted-foreground"
+                        )}
+                      >
+                        {t.charAt(0).toUpperCase() + t.slice(1)}
+                        {isLocked && (
+                          <Crown className="w-3 h-3 absolute top-1 right-1 text-primary" />
+                        )}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
               <div className="p-4 flex items-center justify-between">
@@ -298,6 +317,12 @@ export default function SettingsPage() {
                 <Switch defaultChecked />
               </div>
             </div>
+          </section>
+
+          {/* Premium Upgrade */}
+          <section className="space-y-4">
+            <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Premium</h2>
+            <PremiumUpgrade />
           </section>
 
           {/* Email Updates */}

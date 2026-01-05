@@ -4,6 +4,12 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import * as db from "./db";
+import Stripe from "stripe";
+import { PRODUCTS } from "../shared/products.js";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2025-12-15.clover',
+});
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -176,6 +182,60 @@ export const appRouter = router({
           ...input,
         });
         return { success: true };
+      }),
+  }),
+
+  // Stripe payment procedures
+  stripe: router({
+    createCheckoutSession: protectedProcedure
+      .mutation(async ({ ctx }) => {
+        const origin = ctx.req.headers.origin || `http://localhost:${process.env.PORT || 3000}`;
+        
+        try {
+          const session = await stripe.checkout.sessions.create({
+            mode: 'payment',
+            payment_method_types: ['card'],
+            line_items: [
+              {
+                price_data: {
+                  currency: PRODUCTS.PREMIUM_LIFETIME.currency,
+                  product_data: {
+                    name: PRODUCTS.PREMIUM_LIFETIME.name,
+                    description: PRODUCTS.PREMIUM_LIFETIME.description,
+                  },
+                  unit_amount: Math.round(PRODUCTS.PREMIUM_LIFETIME.price * 100), // Convert to cents
+                },
+                quantity: 1,
+              },
+            ],
+            success_url: `${origin}/settings?upgrade=success`,
+            cancel_url: `${origin}/settings?upgrade=cancelled`,
+            customer_email: ctx.user.email || undefined,
+            client_reference_id: ctx.user.id.toString(),
+            metadata: {
+              user_id: ctx.user.id.toString(),
+              customer_email: ctx.user.email || '',
+              customer_name: ctx.user.name || '',
+            },
+            allow_promotion_codes: true,
+          });
+
+          return {
+            url: session.url,
+            sessionId: session.id,
+          };
+        } catch (error: any) {
+          console.error('[Stripe] Error creating checkout session:', error);
+          throw new Error(`Failed to create checkout session: ${error.message}`);
+        }
+      }),
+
+    checkPremiumStatus: protectedProcedure
+      .query(async ({ ctx }) => {
+        return {
+          isPremium: ctx.user.isPremium === 1,
+          stripeCustomerId: ctx.user.stripeCustomerId,
+        };
       }),
   }),
 });

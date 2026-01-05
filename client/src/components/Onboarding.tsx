@@ -9,6 +9,7 @@ import { useLocation } from 'wouter';
 export default function Onboarding() {
   const [, setLocation] = useLocation();
   const [step, setStep] = useState<'intro' | 'enemy' | 'context' | 'vibe'>('intro');
+  const [showDashie, setShowDashie] = useState(false);
   const setFlavor = useStore((state) => state.setFlavor);
   const setTheme = useStore((state) => state.setTheme);
   const setContext = useStore((state) => state.setContext);
@@ -61,14 +62,47 @@ export default function Onboarding() {
             <div className="py-4">
               <Button 
                 size="lg"
-                onClick={() => setStep('enemy')}
+                onClick={() => {
+                  setShowDashie(true);
+                  setTimeout(() => {
+                    setShowDashie(false);
+                    setStep('enemy');
+                  }, 1500);
+                }}
                 className="w-full h-16 text-xl font-bold rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 animate-pulse"
                 style={{
                   background: 'linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary) / 0.8) 100%)',
+                  color: 'hsl(var(--primary-foreground))',
                 }}
               >
                 Let's Go! 🚀
               </Button>
+              
+              {/* Dashie Celebration Popup */}
+              <AnimatePresence>
+                {showDashie && (
+                  <motion.div
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0, opacity: 0 }}
+                    className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none"
+                  >
+                    <motion.div
+                      animate={{ 
+                        y: [0, -20, 0],
+                        rotate: [0, 10, -10, 0]
+                      }}
+                      transition={{ 
+                        duration: 0.5,
+                        repeat: 2
+                      }}
+                      className="text-8xl"
+                    >
+                      🎉
+                    </motion.div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
             
             <p className="text-sm text-muted-foreground/60">
