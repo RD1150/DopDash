@@ -148,11 +148,11 @@ export default function Onboarding() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            className="space-y-6 text-center px-4 py-8 max-h-[90vh] overflow-y-auto pb-24"
+            className="space-y-4 text-center px-4 py-4 max-h-[95vh] overflow-y-auto pb-20"
           >
             {/* Hero Section with Dashie */}
             <motion.div 
-              className="space-y-4"
+              className="space-y-2"
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.6 }}

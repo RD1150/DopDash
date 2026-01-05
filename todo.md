@@ -125,3 +125,7 @@
 - [x] Ensure full Dashie character is visible (not cut off)
 - [x] Ensure all text is visible without overlapping Dashie
 - [x] Reduce overall spacing to fit everything on screen
+
+## Fix Content Cutoff at Bottom - Completed
+- [x] Fix container/viewport so "Dopamine Dasher" title and all content is visible
+- [x] Ensure proper scrolling or scaling to fit all content on screen
