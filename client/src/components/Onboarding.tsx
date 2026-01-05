@@ -178,7 +178,7 @@ export default function Onboarding() {
             className="flex flex-col text-center px-4 py-8"
           >
             {/* Hero Section - Centered Vertically */}
-            <div className="flex flex-col justify-center items-center min-h-screen">
+            <div className="flex flex-col justify-center items-center min-h-screen w-full max-w-md mx-auto">
               <motion.div 
                 className="space-y-1 flex flex-col items-center"
                 initial={{ scale: 0.9, opacity: 0 }}
