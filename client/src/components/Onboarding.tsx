@@ -171,7 +171,7 @@ export default function Onboarding() {
                   ✨
                 </motion.span>
               </div>
-              <p className="text-xl text-muted-foreground">Just start. That's enough.</p>
+              <p className="text-xl text-muted-foreground font-medium">Finally, a task app that doesn't make you feel broken.</p>
             </motion.div>
 
             {/* Pain Point + Value Proposition */}
@@ -181,13 +181,18 @@ export default function Onboarding() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.6 }}
             >
-              <div className="space-y-3">
-                <p className="text-lg text-muted-foreground/80 leading-relaxed max-w-md mx-auto">
-                  Mind like a browser with 47 tabs open?
+              <div className="space-y-4">
+                <p className="text-xl font-semibold text-foreground/90 leading-relaxed max-w-lg mx-auto">
+                  Staring at your to-do list for 20 minutes and doing nothing?
                 </p>
-                <p className="text-base text-muted-foreground leading-relaxed max-w-md mx-auto">
-                  The task manager that actually gets ADHD brains. No overwhelming lists. No guilt trips. Just well-deserved wins that build momentum.
+                <p className="text-base text-muted-foreground leading-relaxed max-w-lg mx-auto">
+                  Break free from task paralysis. Dopamine Dasher turns overwhelming projects into 2-5 minute wins. No judgment. No guilt. Just instant dopamine hits that actually get you moving.
                 </p>
+                <div className="flex flex-wrap gap-2 justify-center pt-2">
+                  <span className="px-3 py-1 bg-primary/10 text-primary text-sm rounded-full">✨ Instant gratification</span>
+                  <span className="px-3 py-1 bg-primary/10 text-primary text-sm rounded-full">🎮 Gamified rewards</span>
+                  <span className="px-3 py-1 bg-primary/10 text-primary text-sm rounded-full">🧠 ADHD-designed</span>
+                </div>
               </div>
             </motion.div>
             
@@ -209,7 +214,7 @@ export default function Onboarding() {
                   border: '2px solid hsl(var(--primary))',
                 }}
               >
-                Let's Go! 🚀
+                Start Your First Win (Free) 🚀
               </Button>
               
               {/* Dashie Celebration Popup */}
@@ -239,8 +244,11 @@ export default function Onboarding() {
               </AnimatePresence>
             </div>
             
-            <p className="text-sm text-muted-foreground/60">
-              No login. No signup. No explanation wall.
+            <p className="text-sm text-muted-foreground/70 font-medium">
+              ⚡ Takes 30 seconds to get your first dopamine hit
+            </p>
+            <p className="text-xs text-muted-foreground/60">
+              No login • No signup • No credit card
             </p>
             
             {/* Social Proof */}
@@ -250,9 +258,14 @@ export default function Onboarding() {
               transition={{ delay: 0.7, duration: 0.6 }}
               className="py-4"
             >
-              <p className="text-base text-primary/90 font-medium">
-                Join ADHD brains who are finally getting stuff done
-              </p>
+              <div className="space-y-2">
+                <p className="text-base text-primary font-semibold">
+                  🔥 Live now - Start immediately
+                </p>
+                <p className="text-sm text-muted-foreground/70">
+                  Join ADHD brains who are finally getting stuff done
+                </p>
+              </div>
             </motion.div>
             
             {/* How It Works Section */}
