@@ -198,7 +198,7 @@ export default function Onboarding() {
                   ✨
                 </motion.span>
               </div>
-              <p className="text-xl text-muted-foreground font-medium">Finally, a task app that doesn't make you feel broken.</p>
+              <p className="text-xl font-medium" style={{ color: 'hsl(var(--foreground) / 0.85)' }}>Finally, a task app that doesn't make you feel broken.</p>
             </motion.div>
 
             {/* Pain Point + Value Proposition */}
@@ -212,7 +212,7 @@ export default function Onboarding() {
                 <p className="text-xl font-semibold text-foreground/90 leading-relaxed max-w-lg mx-auto">
                   Staring at your to-do list for 20 minutes and doing nothing?
                 </p>
-                <p className="text-base text-muted-foreground leading-relaxed max-w-lg mx-auto">
+                <p className="text-base leading-relaxed max-w-lg mx-auto" style={{ color: 'hsl(var(--foreground) / 0.8)' }}>
                   Break free from task paralysis. Dopamine Dasher turns overwhelming projects into 2-5 minute wins. No judgment. No guilt. Just instant dopamine hits that actually get you moving.
                 </p>
                 <div className="flex flex-wrap gap-2 justify-center pt-2">
@@ -271,10 +271,10 @@ export default function Onboarding() {
               </AnimatePresence>
             </div>
             
-            <p className="text-sm text-muted-foreground/70 font-medium">
+            <p className="text-sm font-medium" style={{ color: 'hsl(var(--foreground) / 0.75)' }}>
               ⚡ Takes 30 seconds to get your first dopamine hit
             </p>
-            <p className="text-xs text-muted-foreground/60">
+            <p className="text-xs" style={{ color: 'hsl(var(--foreground) / 0.7)' }}>
               No login • No signup • No credit card
             </p>
             
@@ -289,8 +289,43 @@ export default function Onboarding() {
                 <p className="text-base text-primary font-semibold">
                   🔥 Live now - Start immediately
                 </p>
-                <p className="text-sm text-muted-foreground/70">
+                <p className="text-sm" style={{ color: 'hsl(var(--foreground) / 0.75)' }}>
                   Join ADHD brains who are finally getting stuff done
+                </p>
+              </div>
+            </motion.div>
+            
+            {/* Email Capture Form */}
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.75, duration: 0.6 }}
+              className="py-4"
+            >
+              <div className="max-w-md mx-auto space-y-3">
+                <p className="text-sm font-semibold" style={{ color: 'hsl(var(--foreground) / 0.8)' }}>
+                  📧 Get notified when we add new features
+                </p>
+                <div className="flex gap-2">
+                  <input
+                    type="email"
+                    placeholder="your@email.com"
+                    className="flex-1 px-4 py-2 rounded-lg border-2 border-primary/20 focus:border-primary focus:outline-none text-sm"
+                    style={{ backgroundColor: 'hsl(var(--background))', color: 'hsl(var(--foreground))' }}
+                  />
+                  <Button
+                    size="sm"
+                    className="px-6 font-semibold"
+                    style={{
+                      background: 'hsl(var(--primary))',
+                      color: 'hsl(var(--primary-foreground))'
+                    }}
+                  >
+                    Notify Me
+                  </Button>
+                </div>
+                <p className="text-xs" style={{ color: 'hsl(var(--foreground) / 0.6)' }}>
+                  No spam. Unsubscribe anytime. We respect your inbox.
                 </p>
               </div>
             </motion.div>

@@ -103,3 +103,16 @@
 
 ## Fix Bottom Cutoff - Completed
 - [x] Increase bottom padding to prevent content being cut off by "Made with Manus" badge
+
+## Fix Text Contrast for ADHD - Current
+- [ ] Increase text contrast to make copy highly readable (dark text on light background)
+- [ ] Ensure all text has sufficient contrast ratio for accessibility
+
+## Fix Text Contrast for ADHD - Current
+- [ ] Increase text contrast to make copy highly readable (dark text on light background)
+- [ ] Ensure all text has sufficient contrast ratio for accessibility
+
+## URGENT: Fix for Real Visitors - Completed
+- [x] Fix text contrast - make all text dark and highly readable for ADHD users
+- [x] Add email capture form to collect interested visitors
+- [ ] Republish latest version with Dashie, testimonials, and FAQ
