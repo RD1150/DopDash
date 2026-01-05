@@ -148,7 +148,7 @@ export default function Onboarding() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            className="space-y-3 text-center px-4 py-2 pb-16"
+            className="space-y-3 text-center px-4 py-2 max-h-screen overflow-y-auto pb-16"
           >
             {/* Hero Section with Dashie */}
             <motion.div 
@@ -159,7 +159,7 @@ export default function Onboarding() {
             >
               {/* Dashie Mascot */}
               <motion.div
-                className="flex justify-center mb-1 h-auto"
+                className="flex justify-center mb-1"
                 initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.3, duration: 0.6 }}
@@ -176,7 +176,7 @@ export default function Onboarding() {
                     repeat: Infinity,
                     ease: "easeInOut"
                   }}
-                  className="w-28 h-28 md:w-32 md:h-32 object-contain"
+                  className="w-20 h-20 md:w-24 md:h-24 object-contain"
                   style={{
                     filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.2))'
                   }}

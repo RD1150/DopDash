@@ -9,20 +9,20 @@ interface LayoutProps {
 
 export default function Layout({ children, className }: LayoutProps) {
   return (
-    <div className="min-h-screen w-full bg-background flex justify-center overflow-y-auto relative">
+    <div className="min-h-screen w-full bg-background flex justify-center overflow-hidden relative">
       {/* Background Texture/Gradient */}
-      <div className="absolute inset-0 z-0 opacity-40 pointer-events-none top-0 left-0" aria-hidden="true">
+      <div className="absolute inset-0 z-0 opacity-40 pointer-events-none" aria-hidden="true">
         <img 
           src="/images/hero-calm.jpg" 
           alt="" 
-          className="w-screen h-screen object-cover"
+          className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-background/80 backdrop-blur-[2px]" />
       </div>
 
       {/* Mobile Container */}
       <div className={cn(
-        "w-full max-w-md min-h-screen relative z-10 flex flex-col p-6 md:p-8",
+        "w-full max-w-md h-full min-h-screen relative z-10 flex flex-col p-6 md:p-8",
         className
       )}>
         {children}
