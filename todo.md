@@ -64,3 +64,7 @@
 
 ## Visual Design - Completed
 - [x] Redesign landing page with animated background, visual elements, and inviting aesthetics
+
+## Visual Enhancements - Completed
+- [x] Add outline/shadow to "Let's Go!" button for better button affordance
+- [x] Make "Dopamine Dasher" title brighter with shadow effects for emphasis

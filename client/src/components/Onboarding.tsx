@@ -157,7 +157,11 @@ export default function Onboarding() {
               transition={{ delay: 0.2, duration: 0.6 }}
             >
               <div className="relative inline-block">
-                <h1 className="text-4xl md:text-5xl font-bold text-primary relative z-10">Dopamine Dasher</h1>
+                <h1 className="text-4xl md:text-5xl font-bold relative z-10" style={{
+                  color: 'hsl(var(--primary))',
+                  filter: 'brightness(1.3)',
+                  textShadow: '0 2px 10px hsl(var(--primary) / 0.5), 0 0 20px hsl(var(--primary) / 0.3)'
+                }}>Dopamine Dasher</h1>
                 {/* Sparkle accents */}
                 <motion.span
                   animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
@@ -197,10 +201,12 @@ export default function Onboarding() {
                     setStep('enemy');
                   }, 1500);
                 }}
-                className="w-full h-16 text-xl font-bold rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 animate-pulse"
+                className="w-full h-16 text-xl font-bold rounded-full transition-all duration-300 hover:scale-105 animate-pulse"
                 style={{
                   background: 'linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary) / 0.8) 100%)',
                   color: 'hsl(var(--primary-foreground))',
+                  boxShadow: '0 4px 20px hsl(var(--primary) / 0.4), 0 0 0 3px hsl(var(--background)), 0 0 0 5px hsl(var(--primary) / 0.3)',
+                  border: '2px solid hsl(var(--primary))',
                 }}
               >
                 Let's Go! 🚀
