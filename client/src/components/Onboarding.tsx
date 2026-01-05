@@ -1,129 +1,89 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useStore, Flavor, Theme, Context } from '@/lib/store';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import { Brain, Zap, Battery, Palette, Moon, Sun, Leaf, Cpu, Home, Briefcase, User, Target, Trophy, Heart, Sparkles } from 'lucide-react';
-import { useLocation } from 'wouter';
-import { toast } from 'sonner';
+
+
 
 export default function Onboarding() {
-  const [, setLocation] = useLocation();
-  const [step, setStep] = useState<'intro' | 'enemy' | 'context' | 'vibe'>('intro');
+  const [step, setStep] = useState<'intro' | 'flavor' | 'context' | 'theme'>('intro');
+  const [selectedFlavor, setSelectedFlavor] = useState<string>('');
+  const [selectedContext, setSelectedContext] = useState<string>('');
+  const [selectedTheme, setSelectedTheme] = useState<string>('');
   const [showDashie, setShowDashie] = useState(false);
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const setFlavor = useStore((state) => state.setFlavor);
-  const setTheme = useStore((state) => state.setTheme);
-  const setContext = useStore((state) => state.setContext);
-  const startApp = useStore((state) => state.startApp);
-
-  const handleEnemySelect = (flavor: Flavor) => {
-    setFlavor(flavor);
-    setStep('context');
-  };
-
-  const handleContextSelect = (context: Context) => {
-    setContext(context);
-    setStep('vibe');
-  };
-
-  const handleVibeSelect = (theme: Theme) => {
-    setTheme(theme);
-    startApp();
-    setLocation('/dash');
-  };
+  // Navigation will be handled by window.location or Link components
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !email.includes('@')) {
-      toast.error('Please enter a valid email');
+    if (!email) {
+      alert('Please enter your email address');
       return;
     }
+    
     setIsSubmitting(true);
     try {
-      const response = await fetch('/api/subscribe', {
+      const response = await fetch('/api/email/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email })
       });
-      if (!response.ok) throw new Error('Subscription failed');
-      toast.success('You are on the list! Check your email.');
-      setEmail('');
+      
+      if (response.ok) {
+        alert('Success! You\'re on the list!');
+        setEmail('');
+      } else {
+        throw new Error('Failed to subscribe');
+      }
     } catch (error) {
-      console.error('Email subscription error:', error);
-      toast.error('Something went wrong. Please try again.');
+      alert('Failed to subscribe. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  const handleFlavorSelect = (flavor: string) => {
+    setSelectedFlavor(flavor);
+    setStep('context');
+  };
+
+  const handleContextSelect = (context: string) => {
+    setSelectedContext(context);
+    setStep('theme');
+  };
+
+  const handleThemeSelect = (theme: string) => {
+    setSelectedTheme(theme);
+    // Store selections and navigate to main app
+    localStorage.setItem('dashie_flavor', selectedFlavor);
+    localStorage.setItem('dashie_context', selectedContext);
+    localStorage.setItem('dashie_theme', theme);
+    window.location.href = '/dash'
+  };
+
   return (
-    <div className="relative w-full max-w-md mx-auto space-y-8">
-      {/* Animated Background Elements */}
-      {step === 'intro' && (
-        <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
-          {/* Gradient Orbs */}
+    <div className="relative w-full">
+      {/* Animated background elements */}
+      {!showDashie && (
+        <div className="fixed inset-0 pointer-events-none overflow-hidden">
           <motion.div
             animate={{
-              x: [0, 100, 0],
-              y: [0, -100, 0],
-              scale: [1, 1.2, 1],
-            }}
-            transition={{
-              duration: 20,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-            className="absolute top-20 left-10 w-64 h-64 bg-primary/20 rounded-full blur-3xl"
-          />
-          <motion.div
-            animate={{
-              x: [0, -80, 0],
-              y: [0, 100, 0],
-              scale: [1, 1.3, 1],
-            }}
-            transition={{
-              duration: 15,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: 2
-            }}
-            className="absolute bottom-20 right-10 w-72 h-72 bg-purple-500/15 rounded-full blur-3xl"
-          />
-          <motion.div
-            animate={{
-              x: [0, 60, 0],
-              y: [0, -60, 0],
-              scale: [1, 1.1, 1],
-            }}
-            transition={{
-              duration: 18,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: 4
-            }}
-            className="absolute top-1/2 left-1/2 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl"
-          />
-          
-          {/* Floating Icons */}
-          <motion.div
-            animate={{
-              y: [0, -30, 0],
+              y: [0, 40, 0],
               rotate: [0, 10, 0],
             }}
             transition={{
               duration: 6,
               repeat: Infinity,
-              ease: "easeInOut"
+              ease: "easeInOut",
+              delay: 0
             }}
-            className="absolute top-32 right-20 text-4xl opacity-30"
+            className="absolute top-20 left-12 text-5xl opacity-20"
           >
-            ✨
+            🚀
           </motion.div>
           <motion.div
             animate={{
-              y: [0, 25, 0],
+              y: [0, -30, 0],
               rotate: [0, -15, 0],
             }}
             transition={{
@@ -132,24 +92,9 @@ export default function Onboarding() {
               ease: "easeInOut",
               delay: 1
             }}
-            className="absolute bottom-40 left-16 text-3xl opacity-25"
+            className="absolute top-1/3 right-16 text-6xl opacity-15"
           >
-            🎯
-          </motion.div>
-          <motion.div
-            animate={{
-              y: [0, -20, 0],
-              x: [0, 15, 0],
-            }}
-            transition={{
-              duration: 8,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: 2
-            }}
-            className="absolute top-1/3 left-12 text-3xl opacity-20"
-          >
-            🚀
+            ✨
           </motion.div>
           <motion.div
             animate={{
@@ -168,6 +113,7 @@ export default function Onboarding() {
           </motion.div>
         </div>
       )}
+
       <AnimatePresence mode="wait">
         {step === 'intro' && (
           <motion.div
@@ -175,388 +121,184 @@ export default function Onboarding() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            className="flex flex-col text-center px-4 py-8"
+            className="min-h-screen flex flex-col items-center justify-center px-4 py-8 space-y-6"
           >
-            {/* Hero Section - Centered Vertically */}
-            <div className="flex flex-col justify-center items-center min-h-screen w-full max-w-md mx-auto">
-              <motion.div 
-                className="space-y-1 flex flex-col items-center"
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ delay: 0.2, duration: 0.6 }}
-              >
+            {/* Hero Section */}
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.6 }}
+              className="flex flex-col items-center space-y-3 text-center"
+            >
               {/* Dashie Mascot */}
-              <motion.div
-                className="flex justify-center mb-1"
-                initial={{ y: -20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.3, duration: 0.6 }}
-              >
-                <motion.img
-                  src="/images/mascot/hero.png"
-                  alt="Dashie - Your ADHD task buddy"
-                  animate={{ 
-                    y: [0, -15, 0],
-                    rotate: [0, 3, -3, 0]
-                  }}
-                  transition={{ 
-                    duration: 2.5,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                  className="w-20 h-20 md:w-24 md:h-24 object-contain"
-                  style={{
-                    filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.2))'
-                  }}
-                />
-              </motion.div>
+              <motion.img
+                src="/images/mascot/hero.png"
+                alt="Dashie - Your ADHD task buddy"
+                animate={{ 
+                  y: [0, -12, 0],
+                  rotate: [0, 2, -2, 0]
+                }}
+                transition={{ 
+                  duration: 2.5,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                className="w-24 h-24 md:w-28 md:h-28 object-contain"
+                style={{
+                  filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.15))'
+                }}
+              />
               
-              <div className="relative inline-block">
-                <h1 className="text-3xl md:text-4xl font-bold relative z-10" style={{
+              {/* Title with sparkle */}
+              <div className="relative">
+                <h1 className="text-4xl md:text-5xl font-bold" style={{
                   color: 'hsl(var(--primary))',
                   filter: 'brightness(1.3)',
                   textShadow: '0 2px 10px hsl(var(--primary) / 0.5), 0 0 20px hsl(var(--primary) / 0.3)'
-                }}>Dopamine Dasher</h1>
-                {/* Sparkle accents */}
+                }}>
+                  Dopamine Dasher
+                </h1>
                 <motion.span
                   animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
                   transition={{ duration: 2, repeat: Infinity }}
-                  className="absolute -top-2 -right-6 text-2xl"
+                  className="absolute -top-3 -right-8 text-3xl"
                 >
                   ✨
                 </motion.span>
               </div>
-              <p className="text-xl font-medium" style={{ color: 'hsl(var(--foreground) / 0.85)' }}>Finally, a task app that doesn't make you feel broken.</p>
+
+              {/* Tagline */}
+              <p className="text-lg md:text-xl font-medium max-w-sm" style={{ color: 'hsl(var(--foreground) / 0.85)' }}>
+                Finally, a task app that doesn't make you feel broken.
+              </p>
             </motion.div>
-            </div>
 
             {/* Pain Point + Value Proposition */}
-            <motion.div 
-              className="space-y-4 py-3"
+            <motion.div
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.6 }}
+              className="space-y-4 max-w-lg"
             >
-              <div className="space-y-4">
-                <p className="text-xl font-semibold text-foreground/90 leading-relaxed max-w-lg mx-auto">
-                  Staring at your to-do list for 20 minutes and doing nothing?
-                </p>
-                <p className="text-base leading-relaxed max-w-lg mx-auto" style={{ color: 'hsl(var(--foreground) / 0.8)' }}>
-                  Break free from task paralysis. Dopamine Dasher turns overwhelming projects into 2-5 minute wins. No judgment. No guilt. Just instant dopamine hits that actually get you moving.
-                </p>
-                <div className="flex flex-wrap gap-2 justify-center pt-2">
-                  <span className="px-3 py-1 bg-primary/10 text-primary text-sm rounded-full">✨ Instant gratification</span>
-                  <span className="px-3 py-1 bg-primary/10 text-primary text-sm rounded-full">🎮 Gamified rewards</span>
-                  <span className="px-3 py-1 bg-primary/10 text-primary text-sm rounded-full">🧠 ADHD-designed</span>
-                </div>
+              <p className="text-lg font-semibold text-foreground/90 leading-relaxed">
+                Staring at your to-do list for 20 minutes and doing nothing?
+              </p>
+              <p className="text-base leading-relaxed" style={{ color: 'hsl(var(--foreground) / 0.8)' }}>
+                Break free from task paralysis. Dopamine Dasher turns overwhelming projects into 2-5 minute wins. No judgment. No guilt. Just instant dopamine hits that actually get you moving.
+              </p>
+              <div className="flex flex-wrap gap-2 justify-center pt-2">
+                <span className="px-3 py-1 bg-primary/10 text-primary text-sm rounded-full">✨ Instant gratification</span>
+                <span className="px-3 py-1 bg-primary/10 text-primary text-sm rounded-full">🎮 Gamified rewards</span>
+                <span className="px-3 py-1 bg-primary/10 text-primary text-sm rounded-full">🧠 ADHD-designed</span>
               </div>
             </motion.div>
-            
-            <div className="py-2">
+
+            {/* CTA Button */}
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.5, duration: 0.6 }}
+              className="pt-2"
+            >
               <Button 
                 size="lg"
                 onClick={() => {
                   setShowDashie(true);
                   setTimeout(() => {
-                    setShowDashie(false);
-                    setStep('enemy');
-                  }, 1500);
+                    setStep('flavor');
+                  }, 300);
                 }}
-                className="w-full h-16 text-xl font-bold rounded-full transition-all duration-300 hover:scale-105 animate-pulse"
-                style={{
-                  background: 'linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary) / 0.8) 100%)',
-                  color: 'hsl(var(--primary-foreground))',
-                  boxShadow: '0 4px 20px hsl(var(--primary) / 0.4), 0 0 0 3px hsl(var(--background)), 0 0 0 5px hsl(var(--primary) / 0.3)',
-                  border: '2px solid hsl(var(--primary))',
-                }}
+                className="text-base px-8 py-6"
               >
                 Start Your First Win (Free) 🚀
               </Button>
-              
-              {/* Dashie Celebration Popup */}
-              <AnimatePresence>
-                {showDashie && (
-                  <motion.div
-                    initial={{ scale: 0, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: 0, opacity: 0 }}
-                    className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none"
-                  >
-                    <motion.div
-                      animate={{ 
-                        y: [0, -20, 0],
-                        rotate: [0, 10, -10, 0]
-                      }}
-                      transition={{ 
-                        duration: 0.5,
-                        repeat: 2
-                      }}
-                      className="text-8xl"
-                    >
-                      🎉
-                    </motion.div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-            
-            <p className="text-xs font-medium" style={{ color: 'hsl(var(--foreground) / 0.75)' }}>
-              ⚡ Takes 30 seconds to get your first dopamine hit
-            </p>
-            <p className="text-xs" style={{ color: 'hsl(var(--foreground) / 0.7)' }}>
-              No login • No signup • No credit card
-            </p>
-            
-            {/* Social Proof */}
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.7, duration: 0.6 }}
-              className="py-2"
-            >
-              <div className="space-y-1">
-                <p className="text-base text-primary font-semibold">
-                  🔥 Live now - Start immediately
-                </p>
-                <p className="text-sm" style={{ color: 'hsl(var(--foreground) / 0.75)' }}>
-                  Join ADHD brains who are finally getting stuff done
-                </p>
-              </div>
+              <p className="text-xs mt-3" style={{ color: 'hsl(var(--foreground) / 0.6)' }}>
+                ⚡ Takes 30 seconds to get your first dopamine hit
+              </p>
+              <p className="text-xs" style={{ color: 'hsl(var(--foreground) / 0.5)' }}>
+                No login • No signup • No credit card
+              </p>
             </motion.div>
-            
-            {/* Email Capture Form */}
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.75, duration: 0.6 }}
-              className="py-2"
-            >
-              <form onSubmit={handleEmailSubmit} className="max-w-md mx-auto space-y-2">
-                <p className="text-sm font-semibold" style={{ color: 'hsl(var(--foreground) / 0.8)' }}>
-                  📧 Get notified when we add new features
-                </p>
-                <div className="flex gap-2">
-                  <input
-                    type="email"
-                    placeholder="your@email.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    disabled={isSubmitting}
-                    className="flex-1 px-4 py-2 rounded-lg border-2 border-primary/20 focus:border-primary focus:outline-none text-sm disabled:opacity-50"
-                    style={{ backgroundColor: 'hsl(var(--background))', color: 'hsl(var(--foreground))' }}
-                  />
-                  <Button
-                    type="submit"
-                    size="sm"
-                    disabled={isSubmitting}
-                    className="px-6 font-semibold disabled:opacity-50"
-                    style={{
-                      background: 'hsl(var(--primary))',
-                      color: 'hsl(var(--primary-foreground))'
-                    }}
-                  >
-                    {isSubmitting ? '...' : 'Notify Me'}
-                  </Button>
-                </div>
-                <p className="text-xs" style={{ color: 'hsl(var(--foreground) / 0.6)' }}>
-                  No spam. Unsubscribe anytime. We respect your inbox.
-                </p>
-              </form>
-            </motion.div>
-            
-            {/* Skip to How It Works */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.8, duration: 0.6 }}
-              className="flex justify-center py-1"
-            >
-              <a
-                href="#how-it-works"
-                className="text-xs font-medium underline hover:opacity-75 transition-opacity"
-                style={{ color: 'hsl(var(--primary))' }}
-              >
-                Skip to How It Works ↓
-              </a>
-            </motion.div>
-            
-            {/* How It Works Section */}
-            <motion.div
-              id="how-it-works"
-              className="space-y-4 py-4"
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.8, duration: 0.6 }}
-            >
-              <h2 className="text-xl font-bold text-foreground">How It Works</h2>
-              <div className="grid gap-3 max-w-2xl mx-auto">
-                {/* Step 1 */}
-                <div className="flex items-start gap-3 text-left">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-lg">
-                    1️⃣
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-foreground mb-0.5">Pick a tiny task</h3>
-                    <p className="text-xs text-muted-foreground">Choose from pre-loaded micro-tasks or add your own. Each one takes 2-5 minutes max.</p>
-                  </div>
-                </div>
-                
-                {/* Step 2 */}
-                <div className="flex items-start gap-3 text-left">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-lg">
-                    2️⃣
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-foreground mb-0.5">Just do it</h3>
-                    <p className="text-xs text-muted-foreground">No timers. No pressure. Just tap when you're done. That's it.</p>
-                  </div>
-                </div>
-                
-                {/* Step 3 */}
-                <div className="flex items-start gap-3 text-left">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-lg">
-                    3️⃣
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-foreground mb-0.5">Celebrate & level up</h3>
-                    <p className="text-xs text-muted-foreground">Get instant rewards, XP, and watch your streak grow. Your brain gets the dopamine it craves.</p>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-            
-            {/* FAQ Section */}
-            <motion.div
-              className="space-y-3 py-3"
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.9, duration: 0.6 }}
-            >
-              <h2 className="text-xl font-bold text-foreground">FAQ</h2>
-              <div className="space-y-2 max-w-2xl mx-auto text-left">
-                {/* FAQ 1 */}
-                <div className="bg-card/50 backdrop-blur-sm rounded-lg p-3 border border-border/50">
-                  <h3 className="font-semibold text-foreground mb-1 text-sm">Do I need to sign up?</h3>
-                  <p className="text-xs text-muted-foreground">Nope! Just click "Let's Go!" and start. No email, no password, no friction. Your data saves locally on your device.</p>
-                </div>
-                
-                {/* FAQ 2 */}
-                <div className="bg-card/50 backdrop-blur-sm rounded-lg p-3 border border-border/50">
-                  <h3 className="font-semibold text-foreground mb-1 text-sm">Is it really free?</h3>
-                  <p className="text-xs text-muted-foreground">Core features are 100% free forever. Premium themes and advanced features are available for a one-time $29.99 payment (no subscription).</p>
-                </div>
-                
-                {/* FAQ 3 */}
-                <div className="bg-card/50 backdrop-blur-sm rounded-lg p-3 border border-border/50">
-                  <h3 className="font-semibold text-foreground mb-1 text-sm">What makes this different from other task apps?</h3>
-                  <p className="text-xs text-muted-foreground">Most apps overwhelm you with features and make you feel guilty. Dopamine Dasher breaks everything into 2-5 minute tasks and celebrates every win. It's designed specifically for ADHD brains that need instant rewards and zero judgment.</p>
-                </div>
-              </div>
-            </motion.div>
-            
-            {/* Testimonials Section */}
-            <motion.div 
-              className="space-y-2 py-3"
+
+            {/* Email Signup */}
+            <motion.form
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.6, duration: 0.6 }}
+              onSubmit={handleEmailSubmit}
+              className="space-y-2 w-full max-w-sm"
             >
-              <div className="grid gap-2 max-w-2xl mx-auto">
-                {/* Testimonial 1 */}
-                <div className="bg-card/50 backdrop-blur-sm rounded-lg p-3 border border-border/50">
-                  <p className="text-xs text-muted-foreground italic mb-1">
-                    "I'd stare at my to-do list for 20 minutes and do nothing. This app made it so easy to just... start. The tiny tasks don't feel overwhelming."
-                  </p>
-                  <p className="text-xs text-muted-foreground/60">— Alex T., Creative Professional</p>
-                </div>
-                
-                {/* Testimonial 2 */}
-                <div className="bg-card/50 backdrop-blur-sm rounded-lg p-3 border border-border/50">
-                  <p className="text-xs text-muted-foreground italic mb-1">
-                    "First app that doesn't make me feel broken. The gamification isn't cheesy - it's genuinely motivating. I actually cleaned my kitchen for the first time in weeks."
-                  </p>
-                  <p className="text-xs text-muted-foreground/60">— Jordan M., Software Developer</p>
-                </div>
-                
-                {/* Testimonial 3 */}
-                <div className="bg-card/50 backdrop-blur-sm rounded-lg p-3 border border-border/50">
-                  <p className="text-xs text-muted-foreground italic mb-1">
-                    "The quick wins actually feel... achievable? I've tried every productivity app. This is the first one I actually open every day."
-                  </p>
-                  <p className="text-xs text-muted-foreground/60">— Sam R., Entrepreneur</p>
-                </div>
+              <p className="text-sm font-medium" style={{ color: 'hsl(var(--foreground) / 0.7)' }}>
+                📧 Get notified when we add new features
+              </p>
+              <div className="flex gap-2">
+                <input
+                  type="email"
+                  placeholder="your@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="flex-1 px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm"
+                  disabled={isSubmitting}
+                />
+                <Button 
+                  type="submit"
+                  variant="outline"
+                  size="sm"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? '...' : 'Notify Me'}
+                </Button>
               </div>
-            </motion.div>
-            
-            {/* Skip Setup Link */}
-            <button
-              onClick={() => {
-                // Set smart defaults
-                setFlavor('calm'); // Wall of Awful
-                setContext('self'); // The Self
-                setTheme('cottagecore'); // Cottagecore
-                startApp();
-                setLocation('/dash');
-              }}
-              className="text-sm text-muted-foreground/60 hover:text-primary transition-colors underline"
+              <p className="text-xs" style={{ color: 'hsl(var(--foreground) / 0.6)' }}>
+                No spam. Unsubscribe anytime. We respect your inbox.
+              </p>
+            </motion.form>
+
+            {/* Skip link */}
+            <motion.a
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.7, duration: 0.6 }}
+              href="#how-it-works"
+              className="text-xs font-medium underline hover:opacity-75 transition-opacity"
+              style={{ color: 'hsl(var(--primary))' }}
             >
-              Just throw me in →
-            </button>
+              Skip to How It Works ↓
+            </motion.a>
           </motion.div>
         )}
 
-        {step === 'enemy' && (
+        {step === 'flavor' && (
           <motion.div
-            key="enemy"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
+            key="flavor"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            className="space-y-6"
+            className="min-h-screen flex flex-col items-center justify-center px-4 py-8 space-y-6"
           >
-            <div className="text-center space-y-2">
-              <h2 className="text-2xl font-bold">What's the enemy today?</h2>
-              <p className="text-muted-foreground">We'll adjust the vibe to match.</p>
-            </div>
-
-            <div className="grid gap-4">
-              <button
-                onClick={() => handleEnemySelect('calm')}
-                className="bg-card hover:bg-accent p-6 rounded-2xl border-2 border-transparent hover:border-primary transition-all text-left flex items-center gap-4 group"
-              >
-                <div className="p-3 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-xl group-hover:scale-110 transition-transform">
-                  <Brain className="w-6 h-6" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-lg">The Wall of Awful</h3>
-                  <p className="text-sm text-muted-foreground">I can't seem to start anything.</p>
-                </div>
-              </button>
-
-              <button
-                onClick={() => handleEnemySelect('matter-of-fact')}
-                className="bg-card hover:bg-accent p-6 rounded-2xl border-2 border-transparent hover:border-primary transition-all text-left flex items-center gap-4 group"
-              >
-                <div className="p-3 bg-orange-100 dark:bg-orange-900/30 text-orange-600 rounded-xl group-hover:scale-110 transition-transform">
-                  <Zap className="w-6 h-6" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-lg">Squirrel Brain</h3>
-                  <p className="text-sm text-muted-foreground">I'm doing 10 things at once.</p>
-                </div>
-              </button>
-
-              <button
-                onClick={() => handleEnemySelect('playful')}
-                className="bg-card hover:bg-accent p-6 rounded-2xl border-2 border-transparent hover:border-primary transition-all text-left flex items-center gap-4 group"
-              >
-                <div className="p-3 bg-purple-100 dark:bg-purple-900/30 text-purple-600 rounded-xl group-hover:scale-110 transition-transform">
-                  <Battery className="w-6 h-6" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-lg">The Blahs</h3>
-                  <p className="text-sm text-muted-foreground">Low energy. Need a boost.</p>
-                </div>
-              </button>
+            <h2 className="text-2xl md:text-3xl font-bold text-center">What's the enemy today?</h2>
+            <p className="text-foreground/70 text-center">We'll adjust the vibe to match.</p>
+            
+            <div className="grid grid-cols-1 gap-3 max-w-sm w-full">
+              {[
+                { name: 'The Wall of Awful', desc: "I can't seem to start anything.", icon: '🧱' },
+                { name: 'Squirrel Brain', desc: "I'm doing 10 things at once.", icon: '🐿️' },
+                { name: 'The Blahs', desc: 'Low energy. Need a boost.', icon: '😑' }
+              ].map((flavor) => (
+                <motion.button
+                  key={flavor.name}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => handleFlavorSelect(flavor.name)}
+                  className="p-4 rounded-lg border-2 border-dashed border-primary/30 hover:border-primary/60 transition-colors text-left space-y-1"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl">{flavor.icon}</span>
+                    <p className="font-semibold">{flavor.name}</p>
+                  </div>
+                  <p className="text-sm text-foreground/70">{flavor.desc}</p>
+                </motion.button>
+              ))}
             </div>
           </motion.div>
         )}
@@ -564,116 +306,193 @@ export default function Onboarding() {
         {step === 'context' && (
           <motion.div
             key="context"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            className="space-y-6"
+            className="min-h-screen flex flex-col items-center justify-center px-4 py-8 space-y-6"
           >
-            <div className="text-center space-y-2">
-              <h2 className="text-2xl font-bold">What are we tackling?</h2>
-              <p className="text-muted-foreground">We'll load the right tools.</p>
-            </div>
-
-            <div className="grid gap-4">
-              <button
-                onClick={() => handleContextSelect('nest')}
-                className="bg-card hover:bg-accent p-6 rounded-2xl border-2 border-transparent hover:border-primary transition-all text-left flex items-center gap-4 group"
-              >
-                <div className="p-3 bg-green-100 dark:bg-green-900/30 text-green-600 rounded-xl group-hover:scale-110 transition-transform">
-                  <Home className="w-6 h-6" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-lg">The Nest</h3>
-                  <p className="text-sm text-muted-foreground">Chores, cleaning, life admin.</p>
-                </div>
-              </button>
-
-              <button
-                onClick={() => handleContextSelect('grind')}
-                className="bg-card hover:bg-accent p-6 rounded-2xl border-2 border-transparent hover:border-primary transition-all text-left flex items-center gap-4 group"
-              >
-                <div className="p-3 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-xl group-hover:scale-110 transition-transform">
-                  <Briefcase className="w-6 h-6" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-lg">The Grind</h3>
-                  <p className="text-sm text-muted-foreground">Work, study, emails.</p>
-                </div>
-              </button>
-
-              <button
-                onClick={() => handleContextSelect('self')}
-                className="bg-card hover:bg-accent p-6 rounded-2xl border-2 border-transparent hover:border-primary transition-all text-left flex items-center gap-4 group"
-              >
-                <div className="p-3 bg-pink-100 dark:bg-pink-900/30 text-pink-600 rounded-xl group-hover:scale-110 transition-transform">
-                  <User className="w-6 h-6" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-lg">The Self</h3>
-                  <p className="text-sm text-muted-foreground">Hygiene, health, routine.</p>
-                </div>
-              </button>
+            <h2 className="text-2xl md:text-3xl font-bold text-center">What are we tackling?</h2>
+            <p className="text-foreground/70 text-center">We'll load the right tools.</p>
+            
+            <div className="grid grid-cols-1 gap-3 max-w-sm w-full">
+              {[
+                { name: 'The Nest', desc: 'Chores, cleaning, life admin.', icon: '🏠' },
+                { name: 'The Grind', desc: 'Work, study, emails.', icon: '💼' },
+                { name: 'The Self', desc: 'Hygiene, health, routine.', icon: '🧘' }
+              ].map((context) => (
+                <motion.button
+                  key={context.name}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => handleContextSelect(context.name)}
+                  className="p-4 rounded-lg border-2 border-dashed border-primary/30 hover:border-primary/60 transition-colors text-left space-y-1"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl">{context.icon}</span>
+                    <p className="font-semibold">{context.name}</p>
+                  </div>
+                  <p className="text-sm text-foreground/70">{context.desc}</p>
+                </motion.button>
+              ))}
             </div>
           </motion.div>
         )}
 
-        {step === 'vibe' && (
+        {step === 'theme' && (
           <motion.div
-            key="vibe"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
+            key="theme"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            className="space-y-6"
+            className="min-h-screen flex flex-col items-center justify-center px-4 py-8 space-y-6"
           >
-            <div className="text-center space-y-2">
-              <h2 className="text-2xl font-bold">Pick your companion</h2>
-              <p className="text-muted-foreground">What feels good to look at?</p>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <button
-                onClick={() => handleVibeSelect('cottagecore')}
-                className="bg-[#F3F4F6] dark:bg-[#2D3748] p-4 rounded-2xl border-2 border-transparent hover:border-[#A8B5A0] transition-all text-center space-y-3 group"
-              >
-                <div className="w-full aspect-square bg-[#E8EFE6] rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
-                  <Leaf className="w-8 h-8 text-[#5F6F52]" />
-                </div>
-                <span className="font-medium block">Cottagecore</span>
-              </button>
-
-              <button
-                onClick={() => handleVibeSelect('cyberpunk')}
-                className="bg-[#1a1a1a] p-4 rounded-2xl border-2 border-transparent hover:border-[#00ff9d] transition-all text-center space-y-3 group"
-              >
-                <div className="w-full aspect-square bg-black rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform border border-[#00ff9d]/30">
-                  <Cpu className="w-8 h-8 text-[#00ff9d]" />
-                </div>
-                <span className="font-medium block text-white">Cyberpunk</span>
-              </button>
-
-              <button
-                onClick={() => handleVibeSelect('ocean')}
-                className="bg-blue-50 dark:bg-blue-950/30 p-4 rounded-2xl border-2 border-transparent hover:border-blue-400 transition-all text-center space-y-3 group"
-              >
-                <div className="w-full aspect-square bg-blue-100 dark:bg-blue-900/50 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
-                  <div className="text-2xl">🌊</div>
-                </div>
-                <span className="font-medium block">Ocean</span>
-              </button>
-
-              <button
-                onClick={() => handleVibeSelect('sunset')}
-                className="bg-orange-50 dark:bg-orange-950/30 p-4 rounded-2xl border-2 border-transparent hover:border-orange-400 transition-all text-center space-y-3 group"
-              >
-                <div className="w-full aspect-square bg-orange-100 dark:bg-orange-900/50 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
-                  <div className="text-2xl">🌅</div>
-                </div>
-                <span className="font-medium block">Sunset</span>
-              </button>
+            <h2 className="text-2xl md:text-3xl font-bold text-center">Pick your companion</h2>
+            <p className="text-foreground/70 text-center">What feels good to look at?</p>
+            
+            <div className="grid grid-cols-2 gap-4 max-w-sm w-full">
+              {[
+                { name: 'Cottagecore', icon: '🍃', color: 'bg-green-100' },
+                { name: 'Cyberpunk', icon: '🤖', color: 'bg-slate-900' },
+                { name: '🌊 Ocean', icon: '💙', color: 'bg-blue-100' },
+                { name: '🌅 Sunset', icon: '🧡', color: 'bg-orange-100' }
+              ].map((theme) => (
+                <motion.button
+                  key={theme.name}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => handleThemeSelect(theme.name)}
+                  className={`p-6 rounded-lg border-2 border-dashed border-primary/30 hover:border-primary/60 transition-colors flex flex-col items-center gap-2 ${theme.color}`}
+                >
+                  <span className="text-3xl">{theme.icon}</span>
+                  <p className="font-semibold text-sm">{theme.name}</p>
+                </motion.button>
+              ))}
             </div>
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* How It Works Section */}
+      <section id="how-it-works" className="py-12 px-4 max-w-4xl mx-auto space-y-8">
+        <div className="text-center space-y-2">
+          <h2 className="text-3xl md:text-4xl font-bold">How It Works</h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[
+            {
+              num: '1️⃣',
+              title: 'Pick a tiny task',
+              desc: 'Choose from pre-loaded micro-tasks or add your own. Each one takes 2-5 minutes max.'
+            },
+            {
+              num: '2️⃣',
+              title: 'Just do it',
+              desc: 'No timers. No pressure. Just tap when you\'re done. That\'s it.'
+            },
+            {
+              num: '3️⃣',
+              title: 'Celebrate & level up',
+              desc: 'Get instant rewards, XP, and watch your streak grow. Your brain gets the dopamine it craves.'
+            }
+          ].map((step, idx) => (
+            <motion.div
+              key={idx}
+              initial={{ y: 20, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              transition={{ delay: idx * 0.1 }}
+              className="space-y-3 text-center"
+            >
+              <div className="text-4xl">{step.num}</div>
+              <h3 className="text-xl font-semibold">{step.title}</h3>
+              <p className="text-foreground/70">{step.desc}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-12 px-4 max-w-2xl mx-auto space-y-8">
+        <div className="text-center">
+          <h2 className="text-3xl md:text-4xl font-bold">FAQ</h2>
+        </div>
+
+        <div className="space-y-6">
+          {[
+            {
+              q: 'Do I need to sign up?',
+              a: 'Nope! Just click "Let\'s Go!" and start. No email, no password, no friction. Your data saves locally on your device.'
+            },
+            {
+              q: 'Is it really free?',
+              a: 'Core features are 100% free forever. Premium themes and advanced features are available for a one-time $29.99 payment (no subscription).'
+            },
+            {
+              q: 'What makes this different from other task apps?',
+              a: 'Most apps overwhelm you with features and make you feel guilty. Dopamine Dasher breaks everything into 2-5 minute tasks and celebrates every win. It\'s designed specifically for ADHD brains that need instant rewards and zero judgment.'
+            }
+          ].map((faq, idx) => (
+            <motion.div
+              key={idx}
+              initial={{ y: 20, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              transition={{ delay: idx * 0.1 }}
+              className="space-y-2"
+            >
+              <h3 className="text-lg font-semibold">{faq.q}</h3>
+              <p className="text-foreground/70">{faq.a}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-12 px-4 max-w-2xl mx-auto space-y-8">
+        <div className="space-y-6">
+          {[
+            {
+              text: "I'd stare at my to-do list for 20 minutes and do nothing. This app made it so easy to just... start. The tiny tasks don't feel overwhelming.",
+              author: 'Alex T., Creative Professional'
+            },
+            {
+              text: "First app that doesn't make me feel broken. The gamification isn't cheesy - it's genuinely motivating. I actually cleaned my kitchen for the first time in weeks.",
+              author: 'Jordan M., Software Developer'
+            },
+            {
+              text: "The quick wins actually feel... achievable? I've tried every productivity app. This is the first one I actually open every day.",
+              author: 'Sam R., Entrepreneur'
+            }
+          ].map((testimonial, idx) => (
+            <motion.div
+              key={idx}
+              initial={{ y: 20, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              transition={{ delay: idx * 0.1 }}
+              className="space-y-2 p-4 rounded-lg bg-foreground/5"
+            >
+              <p className="italic text-foreground/80">"{testimonial.text}"</p>
+              <p className="text-sm font-semibold">— {testimonial.author}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="py-12 px-4 text-center space-y-4">
+        <h2 className="text-2xl md:text-3xl font-bold">Ready to break free?</h2>
+        <Button 
+          size="lg"
+          onClick={() => {
+            setShowDashie(true);
+            setTimeout(() => {
+              setStep('flavor');
+            }, 300);
+          }}
+          className="text-base px-8 py-6"
+        >
+          Just throw me in →
+        </Button>
+      </section>
     </div>
   );
 }
