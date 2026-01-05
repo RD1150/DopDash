@@ -30,3 +30,5 @@
 
 ## Current Task
 - [x] Simplify landing page - remove feature cards, emphasize pain point
+- [x] Update pain point to focus on scattered mind/lack of focus
+- [x] Make landing page more ADHD-friendly (energetic CTA, animations, prominent button)

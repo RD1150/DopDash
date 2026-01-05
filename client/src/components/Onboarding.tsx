@@ -50,7 +50,7 @@ export default function Onboarding() {
             <div className="space-y-6 py-6">
               <div className="space-y-3">
                 <p className="text-lg text-muted-foreground/80 leading-relaxed max-w-md mx-auto">
-                  Tired of productivity apps that make you feel broken?
+                  Mind like a browser with 47 tabs open?
                 </p>
                 <p className="text-base text-muted-foreground leading-relaxed max-w-md mx-auto">
                   The task manager that actually gets ADHD brains. No overwhelming lists. No guilt trips. Just tiny wins that build momentum.
@@ -62,9 +62,12 @@ export default function Onboarding() {
               <Button 
                 size="lg"
                 onClick={() => setStep('enemy')}
-                className="w-full h-14 text-lg rounded-full shadow-lg"
+                className="w-full h-16 text-xl font-bold rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 animate-pulse"
+                style={{
+                  background: 'linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary) / 0.8) 100%)',
+                }}
               >
-                Start today
+                Let's Go! 🚀
               </Button>
             </div>
             
