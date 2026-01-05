@@ -5,11 +5,14 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Brain, Zap, Battery, Palette, Moon, Sun, Leaf, Cpu, Home, Briefcase, User, Target, Trophy, Heart, Sparkles } from 'lucide-react';
 import { useLocation } from 'wouter';
+import { toast } from 'sonner';
 
 export default function Onboarding() {
   const [, setLocation] = useLocation();
   const [step, setStep] = useState<'intro' | 'enemy' | 'context' | 'vibe'>('intro');
   const [showDashie, setShowDashie] = useState(false);
+  const [email, setEmail] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const setFlavor = useStore((state) => state.setFlavor);
   const setTheme = useStore((state) => state.setTheme);
   const setContext = useStore((state) => state.setContext);
@@ -29,6 +32,30 @@ export default function Onboarding() {
     setTheme(theme);
     startApp();
     setLocation('/dash');
+  };
+
+  const handleEmailSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !email.includes('@')) {
+      toast.error('Please enter a valid email');
+      return;
+    }
+    setIsSubmitting(true);
+    try {
+      const response = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      if (!response.ok) throw new Error('Subscription failed');
+      toast.success('You are on the list! Check your email.');
+      setEmail('');
+    } catch (error) {
+      console.error('Email subscription error:', error);
+      toast.error('Something went wrong. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -302,7 +329,7 @@ export default function Onboarding() {
               transition={{ delay: 0.75, duration: 0.6 }}
               className="py-2"
             >
-              <div className="max-w-md mx-auto space-y-2">
+              <form onSubmit={handleEmailSubmit} className="max-w-md mx-auto space-y-2">
                 <p className="text-sm font-semibold" style={{ color: 'hsl(var(--foreground) / 0.8)' }}>
                   📧 Get notified when we add new features
                 </p>
@@ -310,28 +337,50 @@ export default function Onboarding() {
                   <input
                     type="email"
                     placeholder="your@email.com"
-                    className="flex-1 px-4 py-2 rounded-lg border-2 border-primary/20 focus:border-primary focus:outline-none text-sm"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    disabled={isSubmitting}
+                    className="flex-1 px-4 py-2 rounded-lg border-2 border-primary/20 focus:border-primary focus:outline-none text-sm disabled:opacity-50"
                     style={{ backgroundColor: 'hsl(var(--background))', color: 'hsl(var(--foreground))' }}
                   />
                   <Button
+                    type="submit"
                     size="sm"
-                    className="px-6 font-semibold"
+                    disabled={isSubmitting}
+                    className="px-6 font-semibold disabled:opacity-50"
                     style={{
                       background: 'hsl(var(--primary))',
                       color: 'hsl(var(--primary-foreground))'
                     }}
                   >
-                    Notify Me
+                    {isSubmitting ? '...' : 'Notify Me'}
                   </Button>
                 </div>
                 <p className="text-xs" style={{ color: 'hsl(var(--foreground) / 0.6)' }}>
                   No spam. Unsubscribe anytime. We respect your inbox.
                 </p>
-              </div>
+              </form>
+            </motion.div>
+            
+            {/* Skip to How It Works */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8, duration: 0.6 }}
+              className="flex justify-center py-1"
+            >
+              <a
+                href="#how-it-works"
+                className="text-xs font-medium underline hover:opacity-75 transition-opacity"
+                style={{ color: 'hsl(var(--primary))' }}
+              >
+                Skip to How It Works ↓
+              </a>
             </motion.div>
             
             {/* How It Works Section */}
             <motion.div
+              id="how-it-works"
               className="space-y-4 py-4"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
