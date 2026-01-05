@@ -143,9 +143,10 @@ export default function Onboarding() {
                   repeat: Infinity,
                   ease: "easeInOut"
                 }}
-                className="w-24 h-24 md:w-28 md:h-28 object-contain mb-2"
+                className="w-24 h-24 md:w-28 md:h-28 object-contain mb-2 bg-transparent"
                 style={{
-                  filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.15))'
+                  filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.15))',
+                  backgroundColor: 'transparent'
                 }}
               />
               
