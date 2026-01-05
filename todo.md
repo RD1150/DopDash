@@ -27,3 +27,6 @@
 
 ## Completed
 - [x] Enhance landing page with value proposition and feature highlights
+
+## Current Task
+- [x] Simplify landing page - remove feature cards, emphasize pain point
