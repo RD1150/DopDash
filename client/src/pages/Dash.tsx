@@ -23,6 +23,7 @@ import BrainDump from '@/components/BrainDump';
 import SoundMixer from '@/components/SoundMixer';
 import Questlines from '@/components/Questlines';
 import OnboardingChecklist from '@/components/OnboardingChecklist';
+import DashieSlide from '@/components/DashieSlide';
 import { Timer, CircleDashed, StickyNote, Volume2, Map } from 'lucide-react';
 import {
   DropdownMenu,
@@ -58,10 +59,12 @@ export default function Dash() {
   const [lastActionTime, setLastActionTime] = useState(0);
   const [showLootBox, setShowLootBox] = useState(false);
   const [showBossBattle, setShowBossBattle] = useState(false);
-  const [showBubblePop, setShowBubblePop] = useState(false);
+  const [showWeeklyReview, setShowWeeklyReview] = useState(false);
   const [showBrainDump, setShowBrainDump] = useState(false);
   const [showSoundMixer, setShowSoundMixer] = useState(false);
   const [showQuestlines, setShowQuestlines] = useState(false);
+  const [showDashieSlide, setShowDashieSlide] = useState(false);
+  const [showBubblePop, setShowBubblePop] = useState(false);
   const [isAddingTask, setIsAddingTask] = useState(false);
   const [newTaskText, setNewTaskText] = useState('');
   const [newTaskCategory, setNewTaskCategory] = useState<'focus' | 'energy' | 'momentum'>('focus');
@@ -191,10 +194,13 @@ export default function Dash() {
       haptics.success();
       addCoins(1); // Earn 1 coin per task
 
-      // Random Reward (10% chance)
+      // Ra      // Loot box chance
       if (Math.random() < 0.1) {
         setTimeout(() => setShowLootBox(true), 500);
       }
+      
+      // Trigger Dashie slide animation
+      setShowDashieSlide(true);
     }
     
     toggleAction(id);
@@ -345,6 +351,7 @@ export default function Dash() {
         {showBossBattle && <BossBattle onClose={() => setShowBossBattle(false)} />}
         {showBubblePop && <BubblePop onClose={() => setShowBubblePop(false)} />}
       </AnimatePresence>
+      <DashieSlide show={showDashieSlide} onComplete={() => setShowDashieSlide(false)} />
       <WeeklyReview />
       <BrainDump isOpen={showBrainDump} onClose={() => setShowBrainDump(false)} />
       <SoundMixer isOpen={showSoundMixer} onClose={() => setShowSoundMixer(false)} />

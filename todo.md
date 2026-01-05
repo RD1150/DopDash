@@ -44,5 +44,5 @@
 - [x] Set up pricing: $29.99 lifetime only (no monthly)
 
 ## Next Features
-- [ ] Dashie slide animation for task completions
+- [x] Dashie slide animation for task completions
 - [ ] Publish app and connect dopaminedasher.com domain
