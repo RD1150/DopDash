@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
+import confetti from 'canvas-confetti';
 
 export default function Onboarding() {
   const [step, setStep] = useState<'intro' | 'flavor' | 'context' | 'theme'>('intro');
@@ -24,6 +25,18 @@ export default function Onboarding() {
     localStorage.setItem('dashie_context', selectedContext);
     localStorage.setItem('dashie_theme', theme);
     window.location.href = '/dash'
+  };
+
+  const triggerConfetti = () => {
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: ['#22c55e', '#14b8a6', '#f59e0b', '#ec4899', '#8b5cf6'],
+      gravity: 0.8,
+      scalar: 1.2,
+      drift: 0
+    });
   };
 
   return (
@@ -98,7 +111,10 @@ export default function Onboarding() {
             >
               <Button 
                 size="lg"
-                onClick={() => setStep('flavor')}
+                onClick={() => {
+                  triggerConfetti();
+                  setTimeout(() => setStep('flavor'), 300);
+                }}
                 className="text-lg px-12 py-8 rounded-2xl"
               >
                 Start Your First Win (Free) 🚀

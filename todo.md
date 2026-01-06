@@ -140,3 +140,9 @@
 
 ## Fix Dashie Size - Completed
 - [x] Reduce Dashie to appropriate size (w-24/h-24 md:w-28/h-28)
+
+
+## Current Sprint - Landing Page Polish
+- [x] Add confetti burst animation on CTA click
+- [x] Create 192x192px mobile app icon
+- [x] Prepare launch announcement posts for social media
