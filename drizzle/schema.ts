@@ -136,3 +136,89 @@ export const dailyAffirmations = mysqlTable("dailyAffirmations", {
 
 export type DailyAffirmation = typeof dailyAffirmations.$inferSelect;
 export type InsertDailyAffirmation = typeof dailyAffirmations.$inferInsert;
+
+/**
+ * Habits for daily/recurring activities (medication, exercise, etc.)
+ */
+export const habits = mysqlTable("habits", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  
+  name: text("name").notNull(),
+  description: text("description"),
+  frequency: mysqlEnum("frequency", ["daily", "weekly", "custom"]).default("daily").notNull(),
+  targetCount: int("targetCount").default(1).notNull(), // e.g., 3 for "3x daily"
+  
+  // Streak tracking
+  currentStreak: int("currentStreak").notNull().default(0),
+  longestStreak: int("longestStreak").notNull().default(0),
+  lastCompletedDate: varchar("lastCompletedDate", { length: 10 }), // YYYY-MM-DD
+  
+  // Status
+  isActive: int("isActive").notNull().default(1), // 0 or 1 for boolean
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Habit = typeof habits.$inferSelect;
+export type InsertHabit = typeof habits.$inferInsert;
+
+/**
+ * Habit completions (daily log of habit completions)
+ */
+export const habitCompletions = mysqlTable("habitCompletions", {
+  id: int("id").autoincrement().primaryKey(),
+  habitId: int("habitId").notNull().references(() => habits.id, { onDelete: "cascade" }),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  
+  completedAt: timestamp("completedAt").notNull(),
+  date: varchar("date", { length: 10 }).notNull(), // YYYY-MM-DD
+  notes: text("notes"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type HabitCompletion = typeof habitCompletions.$inferSelect;
+export type InsertHabitCompletion = typeof habitCompletions.$inferInsert;
+
+/**
+ * Mood and energy tracking entries
+ */
+export const moodEntries = mysqlTable("moodEntries", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  
+  moodLevel: int("moodLevel").notNull(), // 1-5 scale: 1=Terrible, 5=Amazing
+  energyLevel: mysqlEnum("energyLevel", ["low", "medium", "high"]).notNull(),
+  notes: text("notes"),
+  
+  date: varchar("date", { length: 10 }).notNull(), // YYYY-MM-DD
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type MoodEntry = typeof moodEntries.$inferSelect;
+export type InsertMoodEntry = typeof moodEntries.$inferInsert;
+
+/**
+ * Daily user statistics (aggregated data for analytics)
+ */
+export const userStats = mysqlTable("userStats", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  
+  date: varchar("date", { length: 10 }).notNull(), // YYYY-MM-DD
+  tasksCompleted: int("tasksCompleted").notNull().default(0),
+  habitsCompleted: int("habitsCompleted").notNull().default(0),
+  currentStreak: int("currentStreak").notNull().default(0),
+  
+  // Mood averages for the day
+  moodAverage: int("moodAverage"), // Average mood level (1-5)
+  energyAverage: varchar("energyAverage", { length: 20 }), // Most common energy level
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type UserStats = typeof userStats.$inferSelect;
+export type InsertUserStats = typeof userStats.$inferInsert;

@@ -1,6 +1,6 @@
-import { eq, and, desc } from "drizzle-orm";
+import { eq, and, desc, gte } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, userProfiles, InsertUserProfile, tasks, InsertTask, journalEntries, InsertJournalEntry, dailyAffirmations, InsertDailyAffirmation } from "../drizzle/schema";
+import { InsertUser, users, userProfiles, InsertUserProfile, tasks, InsertTask, journalEntries, InsertJournalEntry, dailyAffirmations, InsertDailyAffirmation, habits, InsertHabit, habitCompletions, InsertHabitCompletion, moodEntries, InsertMoodEntry, userStats, InsertUserStats } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -179,4 +179,180 @@ export async function createDailyAffirmation(affirmation: InsertDailyAffirmation
   if (!db) throw new Error("Database not available");
 
   await db.insert(dailyAffirmations).values(affirmation);
+}
+
+// ============ HABIT FUNCTIONS ============
+
+export async function getUserHabits(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+
+  return await db.select().from(habits)
+    .where(and(eq(habits.userId, userId), eq(habits.isActive, 1)))
+    .orderBy(desc(habits.createdAt));
+}
+
+export async function createHabit(habit: InsertHabit) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const result = await db.insert(habits).values(habit);
+  return result;
+}
+
+export async function updateHabit(habitId: number, userId: number, updates: Partial<InsertHabit>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db.update(habits).set(updates).where(and(eq(habits.id, habitId), eq(habits.userId, userId)));
+}
+
+export async function deleteHabit(habitId: number, userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db.update(habits).set({ isActive: 0 }).where(and(eq(habits.id, habitId), eq(habits.userId, userId)));
+}
+
+export async function getHabitCompletions(habitId: number, userId: number, days: number = 30) {
+  const db = await getDb();
+  if (!db) return [];
+
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - days);
+  const startDateStr = startDate.toISOString().split('T')[0];
+
+  return await db.select().from(habitCompletions)
+    .where(and(
+      eq(habitCompletions.habitId, habitId),
+      eq(habitCompletions.userId, userId),
+      gte(habitCompletions.date, startDateStr)
+    ))
+    .orderBy(desc(habitCompletions.date));
+}
+
+export async function completeHabit(habitId: number, userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const today = new Date().toISOString().split('T')[0];
+  
+  const existing = await db.select().from(habitCompletions)
+    .where(and(
+      eq(habitCompletions.habitId, habitId),
+      eq(habitCompletions.userId, userId),
+      eq(habitCompletions.date, today)
+    ))
+    .limit(1);
+
+  if (existing.length > 0) {
+    return { alreadyCompleted: true };
+  }
+
+  await db.insert(habitCompletions).values({
+    habitId,
+    userId,
+    completedAt: new Date(),
+    date: today,
+  });
+
+  const habit = await db.select().from(habits).where(eq(habits.id, habitId)).limit(1);
+  if (habit.length > 0) {
+    const h = habit[0];
+    const newStreak = (h.currentStreak || 0) + 1;
+    const longestStreak = Math.max(newStreak, h.longestStreak || 0);
+    
+    await db.update(habits).set({
+      currentStreak: newStreak,
+      longestStreak: longestStreak,
+      lastCompletedDate: today,
+    }).where(eq(habits.id, habitId));
+  }
+
+  return { success: true };
+}
+
+// ============ MOOD FUNCTIONS ============
+
+export async function createMoodEntry(entry: InsertMoodEntry) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db.insert(moodEntries).values(entry);
+}
+
+export async function getTodayMoodEntry(userId: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+
+  const today = new Date().toISOString().split('T')[0];
+  const result = await db.select().from(moodEntries)
+    .where(and(eq(moodEntries.userId, userId), eq(moodEntries.date, today)))
+    .limit(1);
+
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getMoodHistory(userId: number, days: number = 30) {
+  const db = await getDb();
+  if (!db) return [];
+
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - days);
+  const startDateStr = startDate.toISOString().split('T')[0];
+
+  return await db.select().from(moodEntries)
+    .where(and(
+      eq(moodEntries.userId, userId),
+      gte(moodEntries.date, startDateStr)
+    ))
+    .orderBy(desc(moodEntries.date));
+}
+
+// ============ ANALYTICS FUNCTIONS ============
+
+export async function getUserStats(userId: number, date: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+
+  const result = await db.select().from(userStats)
+    .where(and(eq(userStats.userId, userId), eq(userStats.date, date)))
+    .limit(1);
+
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getStatsHistory(userId: number, days: number = 30) {
+  const db = await getDb();
+  if (!db) return [];
+
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - days);
+  const startDateStr = startDate.toISOString().split('T')[0];
+
+  return await db.select().from(userStats)
+    .where(and(
+      eq(userStats.userId, userId),
+      gte(userStats.date, startDateStr)
+    ))
+    .orderBy(desc(userStats.date));
+}
+
+export async function updateUserStats(userId: number, date: string, updates: Partial<InsertUserStats>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const existing = await getUserStats(userId, date);
+  
+  if (existing) {
+    await db.update(userStats).set(updates).where(
+      and(eq(userStats.userId, userId), eq(userStats.date, date))
+    );
+  } else {
+    await db.insert(userStats).values({
+      userId,
+      date,
+      ...updates,
+    });
+  }
 }

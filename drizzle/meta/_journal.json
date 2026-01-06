@@ -15,6 +15,13 @@
       "when": 1767588053043,
       "tag": "0001_lumpy_grim_reaper",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1767666071853,
+      "tag": "0002_gorgeous_sister_grimm",
+      "breakpoints": true
     }
   ]
 }
