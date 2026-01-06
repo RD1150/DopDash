@@ -179,7 +179,7 @@ export default function Onboarding() {
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.6 }}
-              className="space-y-2 max-w-lg"
+              className="space-y-3 max-w-lg"
             >
               <p className="text-base font-semibold text-foreground/90 leading-relaxed">
                 Staring at your to-do list for 20 minutes and doing nothing?
@@ -187,11 +187,6 @@ export default function Onboarding() {
               <p className="text-sm leading-relaxed" style={{ color: 'hsl(var(--foreground) / 0.8)' }}>
                 Break free from task paralysis. Dopamine Dasher turns overwhelming projects into 2-5 minute wins. No judgment. No guilt. Just instant dopamine hits that actually get you moving.
               </p>
-              <div className="flex flex-wrap gap-2 justify-center pt-2">
-                <span className="px-3 py-1 bg-primary/10 text-primary text-sm rounded-full">✨ Instant gratification</span>
-                <span className="px-3 py-1 bg-primary/10 text-primary text-sm rounded-full">🎮 Gamified rewards</span>
-                <span className="px-3 py-1 bg-primary/10 text-primary text-sm rounded-full">🧠 ADHD-designed</span>
-              </div>
             </motion.div>
 
             {/* CTA Button */}
@@ -199,7 +194,7 @@ export default function Onboarding() {
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.5, duration: 0.6 }}
-              className="pt-1"
+              className="pt-6"
             >
               <Button 
                 size="lg"
@@ -221,47 +216,15 @@ export default function Onboarding() {
               </p>
             </motion.div>
 
-            {/* Email Signup */}
-            <motion.form
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.6, duration: 0.6 }}
-              onSubmit={handleEmailSubmit}
-              className="space-y-1 w-full max-w-sm"
-            >
-              <p className="text-sm font-medium" style={{ color: 'hsl(var(--foreground) / 0.7)' }}>
-                📧 Get notified when we add new features
-              </p>
-              <div className="flex gap-2">
-                <input
-                  type="email"
-                  placeholder="your@email.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="flex-1 px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm"
-                  disabled={isSubmitting}
-                />
-                <Button 
-                  type="submit"
-                  variant="outline"
-                  size="sm"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? '...' : 'Notify Me'}
-                </Button>
-              </div>
-              <p className="text-xs" style={{ color: 'hsl(var(--foreground) / 0.6)' }}>
-                No spam. Unsubscribe anytime. We respect your inbox.
-              </p>
-            </motion.form>
+
 
             {/* Skip link */}
             <motion.a
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.7, duration: 0.6 }}
+              transition={{ delay: 0.6, duration: 0.6 }}
               href="#how-it-works"
-              className="text-xs font-medium underline hover:opacity-75 transition-opacity"
+              className="text-xs font-medium underline hover:opacity-75 transition-opacity pt-4"
               style={{ color: 'hsl(var(--primary))' }}
             >
               Skip to How It Works ↓
