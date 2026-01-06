@@ -205,3 +205,11 @@
 - [x] Build Streak Counter UI with milestone celebrations
 - [x] Create Task Template Library (community-driven)
 - [x] Implement Smart Task Suggestions (mood/energy-based)
+
+
+## CBT Integration - Mood-Task Correlation
+- [x] Add mood check UI on Dash screen (1-5 emoji scale)
+- [x] Add mood tracking database and API endpoints
+- [x] Display mood improvement feedback after task completion
+- [x] Add mood-task correlation chart to analytics dashboard
+- [ ] Test mood check feature end-to-end

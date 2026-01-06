@@ -6,6 +6,14 @@ export type Flavor = 'calm' | 'playful' | 'matter-of-fact' | 'celebratory';
 export type Theme = 'default' | 'ocean' | 'sunset' | 'lavender' | 'cottagecore' | 'cyberpunk';
 export type Context = 'nest' | 'grind' | 'self' | 'family';
 
+export type MoodEntry = {
+  date: string;
+  beforeMood: number; // 1-5
+  afterMood: number; // 1-5
+  taskCompleted: boolean;
+  improvement: number; // afterMood - beforeMood
+};
+
 export type MicroAction = {
   id: string;
   text: string;
@@ -68,6 +76,9 @@ interface AppState {
     customize_theme: boolean;
     boss_battle: boolean;
   };
+  moodHistory: MoodEntry[];
+  currentMoodBefore: number | null; // 1-5, set before task selection
+  moodCheckEnabled: boolean;
 
   // Actions
   startApp: () => void;
@@ -105,6 +116,9 @@ interface AppState {
   setOnboardingChecklist: (key: string, value: boolean) => void;
   dismissOnboardingChecklist: () => void;
   rateDifficulty: (taskId: string, difficulty: 'easy' | 'medium' | 'hard') => void;
+  setMoodBefore: (mood: number) => void;
+  recordMoodAfter: (mood: number) => void;
+  setMoodCheckEnabled: (enabled: boolean) => void;
 }
 
 const BADGES_LIBRARY: Badge[] = [
@@ -196,6 +210,9 @@ export const useStore = create<AppState>()(
         customize_theme: false,
         boss_battle: false,
       },
+      moodHistory: [],
+      currentMoodBefore: null,
+      moodCheckEnabled: true,
 
       startApp: () => set({ hasStarted: true }),
       completeTutorial: () => set({ hasSeenTutorial: true }),
@@ -481,6 +498,33 @@ export const useStore = create<AppState>()(
             [taskId]: difficulty
           }
         });
+      },
+      setMoodBefore: (mood: number) => {
+        set({ currentMoodBefore: Math.max(1, Math.min(5, mood)) });
+      },
+      recordMoodAfter: (mood: number) => {
+        const { currentMoodBefore, moodHistory } = get();
+        if (currentMoodBefore === null) return;
+        
+        const afterMood = Math.max(1, Math.min(5, mood));
+        const improvement = afterMood - currentMoodBefore;
+        const today = new Date().toISOString().split('T')[0];
+        
+        const newEntry: MoodEntry = {
+          date: today,
+          beforeMood: currentMoodBefore,
+          afterMood: afterMood,
+          taskCompleted: true,
+          improvement: improvement
+        };
+        
+        set({
+          moodHistory: [...moodHistory, newEntry],
+          currentMoodBefore: null
+        });
+      },
+      setMoodCheckEnabled: (enabled: boolean) => {
+        set({ moodCheckEnabled: enabled });
       }
     }),
     {

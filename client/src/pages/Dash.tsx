@@ -26,6 +26,7 @@ import OnboardingChecklist from '@/components/OnboardingChecklist';
 import DashieSlide from '@/components/DashieSlide';
 import MilestoneCelebration from '@/components/MilestoneCelebration';
 import TaskBreakdown from '@/components/TaskBreakdown';
+import MoodCheck from '@/components/MoodCheck';
 import { Timer, CircleDashed, StickyNote, Volume2, Map } from 'lucide-react';
 import {
   DropdownMenu,
@@ -66,6 +67,7 @@ export default function Dash() {
   const [showSoundMixer, setShowSoundMixer] = useState(false);
   const [showQuestlines, setShowQuestlines] = useState(false);
   const [showTaskBreakdown, setShowTaskBreakdown] = useState(false);
+  const [showMoodCheck, setShowMoodCheck] = useState(false);
 
   const [showBubblePop, setShowBubblePop] = useState(false);
   const [isAddingTask, setIsAddingTask] = useState(false);
@@ -197,12 +199,15 @@ export default function Dash() {
       haptics.success();
       addCoins(1); // Earn 1 coin per task
 
-      // Ra      // Loot box chance
+      // Loot box chance
       if (Math.random() < 0.1) {
         setTimeout(() => setShowLootBox(true), 500);
       }
       
-
+      // Show mood check after task completion (with slight delay)
+      if (moodCheckEnabled) {
+        setTimeout(() => setShowMoodCheck(true), 800);
+      }
     }
     
     toggleAction(id);
@@ -315,7 +320,8 @@ export default function Dash() {
     }, 1000);
   };
 
-  const completedCount = actions.filter(a => a.completed).length;
+  const completedCount = actions.filter((a) => a.completed).length;
+  const moodCheckEnabled = useStore((state) => state.moodCheckEnabled);
   const progress = Math.round((completedCount / 3) * 100);
 
   // Determine mascot pose based on progress
@@ -365,6 +371,7 @@ export default function Dash() {
       <SoundMixer isOpen={showSoundMixer} onClose={() => setShowSoundMixer(false)} />
       <Questlines isOpen={showQuestlines} onClose={() => setShowQuestlines(false)} />
       <TaskBreakdown isOpen={showTaskBreakdown} onClose={() => setShowTaskBreakdown(false)} />
+      <MoodCheck isOpen={showMoodCheck} onClose={() => setShowMoodCheck(false)} />
       <BodyDouble />
       <div className="flex flex-col h-full">
         {/* Header */}

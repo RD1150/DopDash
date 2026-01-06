@@ -383,11 +383,6 @@ export default function Onboarding() {
                   quote: "No judgment, no guilt—just wins. That's what I needed. Finally feels like an app built FOR me, not against me.",
                   author: 'Maya P.',
                   role: 'Student with ADHD'
-                },
-                {
-                  quote: "My therapist recommended this. I'm using it daily. The streaks keep me motivated without the shame spiral I get from other apps.",
-                  author: 'Alex R.',
-                  role: 'Marketing Manager'
                 }
               ].map((testimonial, idx) => (
                 <TestimonialCard key={idx} {...testimonial} />

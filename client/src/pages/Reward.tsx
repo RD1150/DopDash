@@ -12,11 +12,15 @@ const REWARD_MESSAGES = {
   celebratory: "Nice work — you did it."
 };
 
+const MOOD_EMOJIS = ['😢', '😕', '😐', '🙂', '😄'];
+
 export default function Reward() {
   const [, setLocation] = useLocation();
   const flavor = useStore((state) => state.flavor);
+  const moodHistory = useStore((state) => state.moodHistory);
   
   const message = REWARD_MESSAGES[flavor];
+  const lastMoodEntry = moodHistory[moodHistory.length - 1];
 
   return (
     <Layout className="justify-center items-center text-center">
@@ -49,12 +53,50 @@ export default function Reward() {
           >
             {message}
           </motion.h2>
+          
+          {/* Mood Improvement Display */}
+          {lastMoodEntry && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1, duration: 0.8 }}
+              className={`mt-6 p-4 rounded-xl border-2 ${
+                lastMoodEntry.improvement > 0
+                  ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800'
+                  : lastMoodEntry.improvement < 0
+                  ? 'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800'
+                  : 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800'
+              }`}
+            >
+              <p className="text-sm font-medium text-muted-foreground mb-2">Your mood:</p>
+              <div className="flex items-center justify-center gap-3">
+                <span className="text-3xl">{MOOD_EMOJIS[lastMoodEntry.beforeMood - 1]}</span>
+                <span className="text-muted-foreground">→</span>
+                <span className="text-3xl">{MOOD_EMOJIS[lastMoodEntry.afterMood - 1]}</span>
+              </div>
+              {lastMoodEntry.improvement > 0 && (
+                <p className="text-sm font-semibold text-green-600 dark:text-green-400 mt-2 text-center">
+                  ✨ Tasks work! Your mood improved.
+                </p>
+              )}
+              {lastMoodEntry.improvement < 0 && (
+                <p className="text-sm text-orange-600 dark:text-orange-400 mt-2 text-center">
+                  Your mood shifted. That's okay.
+                </p>
+              )}
+              {lastMoodEntry.improvement === 0 && (
+                <p className="text-sm text-blue-600 dark:text-blue-400 mt-2 text-center">
+                  You're holding steady. Keep going.
+                </p>
+              )}
+            </motion.div>
+          )}
         </div>
 
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 1 }}
+          transition={{ delay: lastMoodEntry ? 2 : 1.5, duration: 1 }}
           className="pt-8 space-y-4"
         >
           <Button 
