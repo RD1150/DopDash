@@ -93,6 +93,7 @@ interface AppState {
   expandedTaskId: string | null; // Currently expanded task for subtask view
   microTryMode: boolean; // 2-minute low-commitment mode
   microTryTaskId: string | null; // ID of task in micro-try mode
+  momentumMode: boolean; // Auto-continue from 2-min to 15-min if active
 
   // Actions
   startApp: () => void;
@@ -144,6 +145,7 @@ interface AppState {
   startMicroTry: (taskId: string) => void;
   endMicroTry: () => void;
   continueMicroTry: () => void;
+  setMomentumMode: (enabled: boolean) => void;
 }
 
 const BADGES_LIBRARY: Badge[] = [
@@ -243,6 +245,7 @@ export const useStore = create<AppState>()(
       expandedTaskId: null,
       microTryMode: false,
       microTryTaskId: null,
+      momentumMode: false,
 
       startApp: () => set({ hasStarted: true }),
       completeTutorial: () => set({ hasSeenTutorial: true }),
@@ -625,6 +628,9 @@ export const useStore = create<AppState>()(
       },
       continueMicroTry: () => {
         set({ microTryMode: false });
+      },
+      setMomentumMode: (enabled: boolean) => {
+        set({ momentumMode: enabled });
       }
     }),
     {

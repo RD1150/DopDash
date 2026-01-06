@@ -18,10 +18,13 @@ export default function FocusMode({ isOpen, onClose, taskName, onComplete }: Foc
   const microTryMode = useStore((state) => state.microTryMode);
   const continueMicroTry = useStore((state) => state.continueMicroTry);
   const endMicroTry = useStore((state) => state.endMicroTry);
+  const momentumMode = useStore((state) => state.momentumMode);
   
   const [timeLeft, setTimeLeft] = useState(15 * 60); // 15 minutes
   const [isActive, setIsActive] = useState(false);
   const [showMicroTryPrompt, setShowMicroTryPrompt] = useState(false);
+  const [lastActivityTime, setLastActivityTime] = useState(Date.now());
+  const [userIsActive, setUserIsActive] = useState(false);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -52,9 +55,45 @@ export default function FocusMode({ isOpen, onClose, taskName, onComplete }: Foc
     if (microTryMode && timeLeft === 0) {
       setIsActive(false);
       soundManager.playSuccess();
-      setShowMicroTryPrompt(true);
+      
+      // If Momentum mode is enabled and user is active, auto-continue
+      if (momentumMode && userIsActive) {
+        continueMicroTry();
+        setTimeLeft(15 * 60);
+        setIsActive(true);
+      } else {
+        setShowMicroTryPrompt(true);
+      }
     }
-  }, [microTryMode, timeLeft]);
+  }, [microTryMode, timeLeft, momentumMode, userIsActive, continueMicroTry]);
+
+  // Activity detection
+  useEffect(() => {
+    const handleActivity = () => {
+      setLastActivityTime(Date.now());
+      setUserIsActive(true);
+    };
+
+    if (isOpen && isActive) {
+      window.addEventListener('keydown', handleActivity);
+      window.addEventListener('mousemove', handleActivity);
+      window.addEventListener('touchstart', handleActivity);
+
+      // Check if user has been inactive for more than 3 seconds
+      const inactivityTimer = setInterval(() => {
+        if (Date.now() - lastActivityTime > 3000) {
+          setUserIsActive(false);
+        }
+      }, 1000);
+
+      return () => {
+        window.removeEventListener('keydown', handleActivity);
+        window.removeEventListener('mousemove', handleActivity);
+        window.removeEventListener('touchstart', handleActivity);
+        clearInterval(inactivityTimer);
+      };
+    }
+  }, [isOpen, isActive, lastActivityTime]);
 
   const handleStopAnytime = () => {
     soundManager.playPop();
@@ -76,6 +115,12 @@ export default function FocusMode({ isOpen, onClose, taskName, onComplete }: Foc
     setShowMicroTryPrompt(false);
     onComplete();
     onClose();
+  };
+
+  const handleMicroTryContinueAuto = () => {
+    continueMicroTry();
+    setTimeLeft(15 * 60);
+    setIsActive(true);
   };
 
   const formatTime = (seconds: number) => {
@@ -153,6 +198,9 @@ export default function FocusMode({ isOpen, onClose, taskName, onComplete }: Foc
             <div className="text-7xl font-mono font-bold tabular-nums tracking-tight text-primary">
               {formatTime(timeLeft)}
             </div>
+            {momentumMode && microTryMode && isActive && (
+              <p className="text-xs text-primary/70 animate-pulse">Momentum mode active ✨</p>
+            )}
           </div>
 
           {/* Ambient Sounds */}

@@ -262,3 +262,13 @@
 - [x] Celebrate 2-minute attempt regardless of continuation
 - [x] Track "micro-tries" separately from full completions
 - [x] Test Micro-Try flow end-to-end
+
+
+## Momentum Mode - Auto-Continue Feature
+- [x] Add momentumMode toggle to store state
+- [x] Add Momentum mode toggle to Settings page
+- [x] Implement activity detection (keyboard/mouse/touch in FocusMode)
+- [x] Auto-continue from 2-min to 15-min if active
+- [x] Skip MicroTryPrompt when Momentum mode enabled and user is active
+- [x] Show subtle indicator when auto-continuing (e.g., "Momentum activated ✨")
+- [x] Test Momentum mode with activity detection

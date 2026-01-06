@@ -38,6 +38,8 @@ export default function SettingsPage() {
   const emergencyMode = useStore((state) => state.emergencyMode);
   const setEmergencyMode = useStore((state) => state.setEmergencyMode);
   const streak = useStore((state) => state.streak);
+  const momentumMode = useStore((state) => state.momentumMode);
+  const setMomentumMode = useStore((state) => state.setMomentumMode);
 
   const handleNotificationToggle = async (checked: boolean) => {
     if (checked) {
@@ -158,6 +160,23 @@ export default function SettingsPage() {
                 <Switch 
                   checked={zenMode}
                   onCheckedChange={setZenMode}
+                />
+              </div>
+
+              {/* Momentum Mode */}
+              <div className="p-4 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-lg text-amber-600 dark:text-amber-400">
+                    <Sparkles className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="font-medium">Momentum Mode</p>
+                    <p className="text-sm text-muted-foreground">Auto-continue from 2 to 15 min if active</p>
+                  </div>
+                </div>
+                <Switch 
+                  checked={momentumMode}
+                  onCheckedChange={setMomentumMode}
                 />
               </div>
 
