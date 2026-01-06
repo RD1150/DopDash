@@ -148,3 +148,4 @@
 - [x] Prepare launch announcement posts for social media
 - [x] Remove background color from landing page (clean white/transparent)
 - [x] Convert value proposition to scannable bullet points
+- [x] Add "Hi! I'm Dashie" greeting below mascot

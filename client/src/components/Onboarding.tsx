@@ -51,24 +51,29 @@ export default function Onboarding() {
             className="min-h-screen flex flex-col items-center justify-center px-6 py-12"
           >
             {/* Dashie - Large and prominent */}
-            <motion.img
-              src="/images/mascot/hero.png"
-              alt="Dashie"
-              animate={{ 
-                y: [0, -15, 0],
-                rotate: [0, 2, -2, 0]
-              }}
-              transition={{ 
-                duration: 3,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-              className="w-32 h-32 md:w-40 md:h-40 object-contain mb-16"
-              style={{
-                filter: 'drop-shadow(0 12px 24px rgba(0,0,0,0.15))',
-                backgroundColor: 'transparent'
-              }}
-            />
+            <div className="flex flex-col items-center mb-16">
+              <motion.img
+                src="/images/mascot/hero.png"
+                alt="Dashie"
+                animate={{ 
+                  y: [0, -15, 0],
+                  rotate: [0, 2, -2, 0]
+                }}
+                transition={{ 
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                className="w-32 h-32 md:w-40 md:h-40 object-contain mb-3"
+                style={{
+                  filter: 'drop-shadow(0 12px 24px rgba(0,0,0,0.15))',
+                  backgroundColor: 'transparent'
+                }}
+              />
+              <p className="text-lg md:text-xl font-semibold" style={{ color: 'hsl(var(--primary))' }}>
+                Hi! I'm Dashie 👋
+              </p>
+            </div>
 
             {/* Title - Large, clear, centered */}
             <h1 className="text-5xl md:text-6xl font-bold text-center mb-8" style={{
