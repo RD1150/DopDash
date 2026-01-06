@@ -1,8 +1,10 @@
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useStore } from "@/lib/store";
 import NotFound from "@/pages/NotFound";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { registerServiceWorker } from "@/lib/serviceWorker";
+import FriendTrialOnboarding from "@/components/FriendTrialOnboarding";
 import Dash from "@/pages/Dash";
 import FlavorSelector from "@/pages/FlavorSelector";
 import Reward from "@/pages/Reward";
@@ -42,6 +44,20 @@ function Router() {
 
 function App() {
   const theme = useStore((state) => state.theme);
+  const showOnboardingChecklist = useStore((state) => state.showOnboardingChecklist);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
+  // Register Service Worker for offline support
+  useEffect(() => {
+    registerServiceWorker();
+  }, []);
+
+  // Show onboarding on first visit
+  useEffect(() => {
+    if (showOnboardingChecklist) {
+      setShowOnboarding(true);
+    }
+  }, [showOnboardingChecklist]);
 
   useEffect(() => {
     // Remove all theme classes
@@ -52,6 +68,7 @@ function App() {
     }
   }, [theme]);
 
+
   return (
     <ErrorBoundary>
       <ThemeProvider
@@ -61,6 +78,10 @@ function App() {
         <TooltipProvider>
           <Toaster />
           <Router />
+          <FriendTrialOnboarding
+            isOpen={showOnboarding}
+            onComplete={() => setShowOnboarding(false)}
+          />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>

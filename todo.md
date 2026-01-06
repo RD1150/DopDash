@@ -272,3 +272,37 @@
 - [x] Skip MicroTryPrompt when Momentum mode enabled and user is active
 - [x] Show subtle indicator when auto-continuing (e.g., "Momentum activated ✨")
 - [x] Test Momentum mode with activity detection
+
+
+## Friend Trial Preparation - 5 Critical Features
+
+### 1. Onboarding/Tutorial
+- [x] Create interactive onboarding flow (2-minute walkthrough)
+- [x] Show Micro-Try → Mood check → Stats flow
+- [x] Add tooltips for Momentum mode, Energy selector, Surprise Me
+- [x] Include "This is how ADHD brains work" messaging
+- [x] Skip button for returning users
+
+### 2. Data Export/Privacy
+- [x] Add privacy statement in Settings (data is local, never sent)
+- [x] Implement "Export my data" button (JSON download)
+- [x] Export includes: mood history, completion history, stats
+- [x] Add data deletion option (clear all data)
+
+### 3. Offline Support
+- [x] Create Service Worker for offline functionality
+- [x] Cache app shell and static assets
+- [x] Sync data when back online
+- [x] Show offline indicator when disconnected
+
+### 4. Quick Win Suggestions
+- [x] Add "5-minute tasks" quick filter button
+- [x] Add "I have 2 minutes" button (auto-selects easy tasks)
+- [x] Add "Just give me something" button (random task, no thinking)
+- [x] Show task duration estimates (if available)
+
+### 5. Accountability/Sharing
+- [x] Add "Share stats" button (generates shareable image)
+- [x] Create weekly summary card (tasks completed, mood improvement)
+- [x] Optional: weekly summary email integration
+- [x] Add social proof messaging ("X friends using Dopamine Dasher")

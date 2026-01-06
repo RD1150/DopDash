@@ -15,6 +15,8 @@ import ChangeYourVibe from '@/components/ChangeYourVibe';
 import { usePremium, isPremiumTheme } from '@/hooks/usePremium';
 import { Crown } from 'lucide-react';
 import { toast } from 'sonner';
+import DataExport from '@/components/DataExport';
+import StatsSharing from '@/components/StatsSharing';
 
 export default function SettingsPage() {
   const [, setLocation] = useLocation();
@@ -389,6 +391,18 @@ export default function SettingsPage() {
                 <ChevronLeft className="w-5 h-5 rotate-180 text-muted-foreground" />
               </div>
             </div>
+          </section>
+
+          {/* Data Export & Privacy */}
+          <section className="space-y-4">
+            <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Data & Privacy</h2>
+            <DataExport />
+          </section>
+
+          {/* Stats Sharing */}
+          <section className="space-y-4">
+            <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Share Your Progress</h2>
+            <StatsSharing />
           </section>
 
           {/* Danger Zone (Reset) */}

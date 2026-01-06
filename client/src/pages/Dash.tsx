@@ -31,6 +31,7 @@ import EnergySelector from '@/components/EnergySelector';
 import SurpriseMe from '@/components/SurpriseMe';
 import TaskBreakdownModal from '@/components/TaskBreakdownModal';
 import ContextSwitchValidator from '@/components/ContextSwitchValidator';
+import QuickWinSuggestions from '@/components/QuickWinSuggestions';
 import { Timer, CircleDashed, StickyNote, Volume2, Map } from 'lucide-react';
 import {
   DropdownMenu,
