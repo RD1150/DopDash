@@ -192,3 +192,10 @@
 ## Bug Fixes - Current Sprint
 - [x] Fix context-aware task templates (Nest organized by room: Kitchen, Bathroom, Bedroom, Living Area)
 - [x] Add hierarchical subtasks to main tasks for easier ADHD navigation
+
+
+## Current Sprint - Task Flow Improvement
+- [x] Implement context-aware category system (Nest/Grind/Self show different categories)
+- [x] Remove redundant category selection after context choice
+- [x] Update task templates with category metadata
+- [x] Update UI to automatically navigate to context categories
