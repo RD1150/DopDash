@@ -40,7 +40,7 @@ export default function Onboarding() {
   };
 
   return (
-    <div className="relative w-full bg-background">
+    <div className="relative w-full">
       <AnimatePresence mode="wait">
         {step === 'intro' && (
           <motion.div

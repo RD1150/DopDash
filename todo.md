@@ -130,7 +130,7 @@
 - [x] Fix container/viewport so "Dopamine Dasher" title and all content is visible
 - [x] Ensure proper scrolling or scaling to fit all content on screen
 
-## Launch Preparation - Current
+## Launch Preparation - In Progress
 - [ ] Write Mailchimp account recovery email
 - [ ] Provide ConvertKit integration step-by-step guide
 - [ ] Write launch posts for Reddit (r/ADHD)
@@ -146,3 +146,4 @@
 - [x] Add confetti burst animation on CTA click
 - [x] Create 192x192px mobile app icon
 - [x] Prepare launch announcement posts for social media
+- [x] Remove background color from landing page (clean white/transparent)
