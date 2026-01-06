@@ -243,3 +243,13 @@
 - [x] Add mascot validation messages for context switches
 - [x] Show "You're switching, not failing" messaging
 - [ ] Test context switching flows
+
+
+## Timer UX - Stop Anytime with Dashie Encouragement
+- [x] Create DashieEncouragementModal component with encouraging messages
+- [x] Add "Stop Anytime" button to FocusMode (prominent, not hidden)
+- [x] Show elapsed time instead of countdown in timer display
+- [x] Add pause/resume logic to store for session persistence
+- [x] Display Dashie message when user stops (no shame, celebrate partial progress)
+- [x] Allow users to resume from where they stopped
+- [x] Test stop anytime flow and messaging

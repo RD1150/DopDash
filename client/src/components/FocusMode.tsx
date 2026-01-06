@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import Mascot from '@/components/Mascot';
-import { Play, Pause, X, CheckCircle2, CloudRain, Trees, Waves } from 'lucide-react';
+import { Play, Pause, X, CheckCircle2, CloudRain, Trees, Waves, StopCircle } from 'lucide-react';
 import { soundManager } from '@/lib/sound';
+import DashieEncouragementModal from '@/components/DashieEncouragementModal';
 
 interface FocusModeProps {
   isOpen: boolean;
@@ -15,12 +16,15 @@ interface FocusModeProps {
 export default function FocusMode({ isOpen, onClose, taskName, onComplete }: FocusModeProps) {
   const [timeLeft, setTimeLeft] = useState(15 * 60); // 15 minutes
   const [isActive, setIsActive] = useState(false);
+  const [showEncouragement, setShowEncouragement] = useState(false);
+  const [elapsedTime, setElapsedTime] = useState(0);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isActive && timeLeft > 0) {
       interval = setInterval(() => {
         setTimeLeft((prev) => prev - 1);
+        setElapsedTime((prev) => prev + 1);
       }, 1000);
     } else if (timeLeft === 0) {
       setIsActive(false);
@@ -33,8 +37,25 @@ export default function FocusMode({ isOpen, onClose, taskName, onComplete }: Foc
     if (isOpen) {
       setTimeLeft(15 * 60);
       setIsActive(false);
+      setElapsedTime(0);
     }
   }, [isOpen]);
+
+  const handleStopAnytime = () => {
+    setIsActive(false);
+    setShowEncouragement(true);
+    soundManager.playPop();
+  };
+
+  const handleResumeFromEncouragement = () => {
+    setShowEncouragement(false);
+    setIsActive(true);
+  };
+
+  const handleCloseEncouragement = () => {
+    setShowEncouragement(false);
+    onClose();
+  };
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -136,27 +157,40 @@ export default function FocusMode({ isOpen, onClose, taskName, onComplete }: Foc
           </div>
 
           {/* Controls */}
-          <div className="flex gap-4 justify-center">
-            <Button
-              size="lg"
-              variant={isActive ? "secondary" : "default"}
-              className="rounded-full w-16 h-16 p-0"
-              onClick={toggleTimer}
-            >
-              {isActive ? <Pause className="w-8 h-8" /> : <Play className="w-8 h-8 ml-1" />}
-            </Button>
+          <div className="flex flex-col gap-4 items-center">
+            <div className="flex gap-4 justify-center">
+              <Button
+                size="lg"
+                variant={isActive ? "secondary" : "default"}
+                className="rounded-full w-16 h-16 p-0"
+                onClick={toggleTimer}
+              >
+                {isActive ? <Pause className="w-8 h-8" /> : <Play className="w-8 h-8 ml-1" />}
+              </Button>
+              
+              <Button
+                size="lg"
+                variant="outline"
+                className="rounded-full h-16 px-8 gap-2 border-2 border-primary/20 hover:bg-primary/5 hover:border-primary"
+                onClick={() => {
+                  onComplete();
+                  onClose();
+                }}
+              >
+                <CheckCircle2 className="w-6 h-6 text-primary" />
+                Done!
+              </Button>
+            </div>
             
+            {/* Stop Anytime Button */}
             <Button
-              size="lg"
-              variant="outline"
-              className="rounded-full h-16 px-8 gap-2 border-2 border-primary/20 hover:bg-primary/5 hover:border-primary"
-              onClick={() => {
-                onComplete();
-                onClose();
-              }}
+              size="sm"
+              variant="ghost"
+              className="gap-2 text-muted-foreground hover:text-foreground"
+              onClick={handleStopAnytime}
             >
-              <CheckCircle2 className="w-6 h-6 text-primary" />
-              Done!
+              <StopCircle className="w-4 h-4" />
+              Stop anytime
             </Button>
           </div>
           
@@ -165,6 +199,15 @@ export default function FocusMode({ isOpen, onClose, taskName, onComplete }: Foc
           </p>
         </div>
       </motion.div>
+      
+      {/* Encouragement Modal */}
+      <DashieEncouragementModal
+        isOpen={showEncouragement}
+        onClose={handleCloseEncouragement}
+        onResume={handleResumeFromEncouragement}
+        elapsedTime={elapsedTime}
+        taskName={taskName}
+      />
     </AnimatePresence>
   );
 }
