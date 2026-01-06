@@ -4,7 +4,8 @@ import { Button } from '@/components/ui/button';
 import Mascot from '@/components/Mascot';
 import { Play, Pause, X, CheckCircle2, CloudRain, Trees, Waves, StopCircle } from 'lucide-react';
 import { soundManager } from '@/lib/sound';
-import DashieEncouragementModal from '@/components/DashieEncouragementModal';
+import { useStore } from '@/lib/store';
+import MicroTryPrompt from '@/components/MicroTryPrompt';
 
 interface FocusModeProps {
   isOpen: boolean;
@@ -14,17 +15,19 @@ interface FocusModeProps {
 }
 
 export default function FocusMode({ isOpen, onClose, taskName, onComplete }: FocusModeProps) {
+  const microTryMode = useStore((state) => state.microTryMode);
+  const continueMicroTry = useStore((state) => state.continueMicroTry);
+  const endMicroTry = useStore((state) => state.endMicroTry);
+  
   const [timeLeft, setTimeLeft] = useState(15 * 60); // 15 minutes
   const [isActive, setIsActive] = useState(false);
-  const [showEncouragement, setShowEncouragement] = useState(false);
-  const [elapsedTime, setElapsedTime] = useState(0);
+  const [showMicroTryPrompt, setShowMicroTryPrompt] = useState(false);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isActive && timeLeft > 0) {
       interval = setInterval(() => {
         setTimeLeft((prev) => prev - 1);
-        setElapsedTime((prev) => prev + 1);
       }, 1000);
     } else if (timeLeft === 0) {
       setIsActive(false);
@@ -35,25 +38,43 @@ export default function FocusMode({ isOpen, onClose, taskName, onComplete }: Foc
 
   useEffect(() => {
     if (isOpen) {
-      setTimeLeft(15 * 60);
+      if (microTryMode) {
+        setTimeLeft(2 * 60);
+      } else {
+        setTimeLeft(15 * 60);
+      }
       setIsActive(false);
-      setElapsedTime(0);
     }
-  }, [isOpen]);
+  }, [isOpen, microTryMode]);
+
+  // Handle micro-try timer reaching 2 minutes
+  useEffect(() => {
+    if (microTryMode && timeLeft === 0) {
+      setIsActive(false);
+      soundManager.playSuccess();
+      setShowMicroTryPrompt(true);
+    }
+  }, [microTryMode, timeLeft]);
 
   const handleStopAnytime = () => {
-    setIsActive(false);
-    setShowEncouragement(true);
     soundManager.playPop();
+    if (microTryMode) {
+      endMicroTry();
+    }
+    onClose();
   };
 
-  const handleResumeFromEncouragement = () => {
-    setShowEncouragement(false);
+  const handleMicroTryContinue = () => {
+    continueMicroTry();
+    setShowMicroTryPrompt(false);
+    setTimeLeft(15 * 60); // Reset to full 15 minutes
     setIsActive(true);
   };
 
-  const handleCloseEncouragement = () => {
-    setShowEncouragement(false);
+  const handleMicroTryStop = () => {
+    endMicroTry();
+    setShowMicroTryPrompt(false);
+    onComplete();
     onClose();
   };
 
@@ -127,8 +148,11 @@ export default function FocusMode({ isOpen, onClose, taskName, onComplete }: Foc
           </div>
 
           {/* Timer */}
-          <div className="text-7xl font-mono font-bold tabular-nums tracking-tight text-primary">
-            {formatTime(timeLeft)}
+          <div className="text-center space-y-2 mb-4">
+            <p className="text-sm text-muted-foreground">{microTryMode ? 'Try for 2 minutes' : 'Time remaining'}</p>
+            <div className="text-7xl font-mono font-bold tabular-nums tracking-tight text-primary">
+              {formatTime(timeLeft)}
+            </div>
           </div>
 
           {/* Ambient Sounds */}
@@ -193,19 +217,14 @@ export default function FocusMode({ isOpen, onClose, taskName, onComplete }: Foc
               Stop anytime
             </Button>
           </div>
-          
-          <p className="text-sm text-muted-foreground">
-            We're doing this together. Just 15 minutes.
-          </p>
         </div>
       </motion.div>
       
-      {/* Encouragement Modal */}
-      <DashieEncouragementModal
-        isOpen={showEncouragement}
-        onClose={handleCloseEncouragement}
-        onResume={handleResumeFromEncouragement}
-        elapsedTime={elapsedTime}
+      {/* Micro-Try Prompt */}
+      <MicroTryPrompt
+        isOpen={showMicroTryPrompt}
+        onContinue={handleMicroTryContinue}
+        onStop={handleMicroTryStop}
         taskName={taskName}
       />
     </AnimatePresence>

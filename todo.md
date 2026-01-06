@@ -245,11 +245,20 @@
 - [ ] Test context switching flows
 
 
-## Timer UX - Stop Anytime with Dashie Encouragement
-- [x] Create DashieEncouragementModal component with encouraging messages
-- [x] Add "Stop Anytime" button to FocusMode (prominent, not hidden)
-- [x] Show elapsed time instead of countdown in timer display
-- [x] Add pause/resume logic to store for session persistence
-- [x] Display Dashie message when user stops (no shame, celebrate partial progress)
-- [x] Allow users to resume from where they stopped
-- [x] Test stop anytime flow and messaging
+## Timer UX - Stop Anytime (Clean Exit)
+- [x] Add "Stop Anytime" button to FocusMode (simple, clean exit)
+- [ ] Remove DashieEncouragementModal (was adding friction)
+- [ ] Simplify stop to instant close (no modal, no friction)
+- [ ] Move encouragement to Reward screen (post-completion only)
+- [ ] Test simplified stop flow
+
+
+## Fear of Failure - Micro-Try Feature
+- [x] Add microTryMode state to store (2-min vs full timer)
+- [x] Create MicroTryPrompt component (decision after 2 minutes)
+- [x] Update Dash task buttons to show "Try for 2 min" option
+- [x] Update FocusMode to support 2-minute entry point
+- [x] At 2 minutes, show "Keep going?" prompt (guilt-free exit)
+- [x] Celebrate 2-minute attempt regardless of continuation
+- [x] Track "micro-tries" separately from full completions
+- [x] Test Micro-Try flow end-to-end

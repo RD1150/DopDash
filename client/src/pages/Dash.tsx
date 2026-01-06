@@ -634,11 +634,12 @@ export default function Dash() {
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
+                                useStore.getState().startMicroTry(action.id);
                                 setFocusTask({ id: action.id, text: action.text });
                               }}
                               className="p-2 text-muted-foreground hover:text-primary"
-                              aria-label="Focus mode"
-                              title="Start Focus Mode"
+                              aria-label="Try for 2 minutes"
+                              title="Try for 2 Minutes"
                             >
                               <Timer className="w-4 h-4" />
                             </button>

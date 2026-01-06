@@ -91,6 +91,8 @@ interface AppState {
   currentEnergyLevel: number | null; // 1-5 scale
   parallelTasks: string[]; // IDs of tasks in progress (for context switching)
   expandedTaskId: string | null; // Currently expanded task for subtask view
+  microTryMode: boolean; // 2-minute low-commitment mode
+  microTryTaskId: string | null; // ID of task in micro-try mode
 
   // Actions
   startApp: () => void;
@@ -139,6 +141,9 @@ interface AppState {
   toggleSubtask: (parentTaskId: string, subtaskId: string) => void;
   getTasksByEnergyLevel: (energyLevel: number) => MicroAction[];
   getRandomTask: () => MicroAction | null;
+  startMicroTry: (taskId: string) => void;
+  endMicroTry: () => void;
+  continueMicroTry: () => void;
 }
 
 const BADGES_LIBRARY: Badge[] = [
@@ -236,6 +241,8 @@ export const useStore = create<AppState>()(
       currentEnergyLevel: null,
       parallelTasks: [],
       expandedTaskId: null,
+      microTryMode: false,
+      microTryTaskId: null,
 
       startApp: () => set({ hasStarted: true }),
       completeTutorial: () => set({ hasSeenTutorial: true }),
@@ -609,6 +616,15 @@ export const useStore = create<AppState>()(
         const incompleteTasks = todaysActions.filter(a => !a.completed);
         if (incompleteTasks.length === 0) return null;
         return incompleteTasks[Math.floor(Math.random() * incompleteTasks.length)];
+      },
+      startMicroTry: (taskId: string) => {
+        set({ microTryMode: true, microTryTaskId: taskId });
+      },
+      endMicroTry: () => {
+        set({ microTryMode: false, microTryTaskId: null });
+      },
+      continueMicroTry: () => {
+        set({ microTryMode: false });
       }
     }),
     {
