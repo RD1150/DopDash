@@ -19,6 +19,15 @@ export type MicroAction = {
   text: string;
   category: 'focus' | 'energy' | 'momentum';
   completed: boolean;
+  difficulty?: 'easy' | 'medium' | 'hard';
+  subtasks?: SubTask[];
+  parentTaskId?: string; // If this is a subtask
+};
+
+export type SubTask = {
+  id: string;
+  text: string;
+  completed: boolean;
 };
 
 export type Badge = {
@@ -79,6 +88,9 @@ interface AppState {
   moodHistory: MoodEntry[];
   currentMoodBefore: number | null; // 1-5, set before task selection
   moodCheckEnabled: boolean;
+  currentEnergyLevel: number | null; // 1-5 scale
+  parallelTasks: string[]; // IDs of tasks in progress (for context switching)
+  expandedTaskId: string | null; // Currently expanded task for subtask view
 
   // Actions
   startApp: () => void;
@@ -119,6 +131,14 @@ interface AppState {
   setMoodBefore: (mood: number) => void;
   recordMoodAfter: (mood: number) => void;
   setMoodCheckEnabled: (enabled: boolean) => void;
+  setEnergyLevel: (level: number) => void;
+  addParallelTask: (taskId: string) => void;
+  removeParallelTask: (taskId: string) => void;
+  setExpandedTask: (taskId: string | null) => void;
+  addSubtasks: (parentTaskId: string, subtasks: SubTask[]) => void;
+  toggleSubtask: (parentTaskId: string, subtaskId: string) => void;
+  getTasksByEnergyLevel: (energyLevel: number) => MicroAction[];
+  getRandomTask: () => MicroAction | null;
 }
 
 const BADGES_LIBRARY: Badge[] = [
@@ -213,6 +233,9 @@ export const useStore = create<AppState>()(
       moodHistory: [],
       currentMoodBefore: null,
       moodCheckEnabled: true,
+      currentEnergyLevel: null,
+      parallelTasks: [],
+      expandedTaskId: null,
 
       startApp: () => set({ hasStarted: true }),
       completeTutorial: () => set({ hasSeenTutorial: true }),
@@ -525,6 +548,67 @@ export const useStore = create<AppState>()(
       },
       setMoodCheckEnabled: (enabled: boolean) => {
         set({ moodCheckEnabled: enabled });
+      },
+      setEnergyLevel: (level: number) => {
+        set({ currentEnergyLevel: Math.max(1, Math.min(5, level)) });
+      },
+      addParallelTask: (taskId: string) => {
+        const { parallelTasks } = get();
+        if (!parallelTasks.includes(taskId)) {
+          set({ parallelTasks: [...parallelTasks, taskId] });
+        }
+      },
+      removeParallelTask: (taskId: string) => {
+        const { parallelTasks } = get();
+        set({ parallelTasks: parallelTasks.filter(id => id !== taskId) });
+      },
+      setExpandedTask: (taskId: string | null) => {
+        set({ expandedTaskId: taskId });
+      },
+      addSubtasks: (parentTaskId: string, subtasks: SubTask[]) => {
+        const { todaysActions } = get();
+        const newActions = todaysActions.map(action =>
+          action.id === parentTaskId
+            ? { ...action, subtasks }
+            : action
+        );
+        set({ todaysActions: newActions });
+      },
+      toggleSubtask: (parentTaskId: string, subtaskId: string) => {
+        const { todaysActions } = get();
+        const newActions = todaysActions.map(action => {
+          if (action.id === parentTaskId && action.subtasks) {
+            return {
+              ...action,
+              subtasks: action.subtasks.map(st =>
+                st.id === subtaskId ? { ...st, completed: !st.completed } : st
+              )
+            };
+          }
+          return action;
+        });
+        set({ todaysActions: newActions });
+      },
+      getTasksByEnergyLevel: (energyLevel: number) => {
+        const { todaysActions, taskDifficultyRatings } = get();
+        const difficultyMap: Record<number, Array<'easy' | 'medium' | 'hard'>> = {
+          1: ['easy'],
+          2: ['easy', 'medium'],
+          3: ['easy', 'medium', 'hard'],
+          4: ['medium', 'hard'],
+          5: ['hard']
+        };
+        const targetDifficulties = difficultyMap[Math.max(1, Math.min(5, energyLevel))] || ['easy'];
+        return todaysActions.filter(action => {
+          const difficulty = action.difficulty || taskDifficultyRatings[action.id] || 'medium';
+          return targetDifficulties.includes(difficulty);
+        });
+      },
+      getRandomTask: () => {
+        const { todaysActions } = get();
+        const incompleteTasks = todaysActions.filter(a => !a.completed);
+        if (incompleteTasks.length === 0) return null;
+        return incompleteTasks[Math.floor(Math.random() * incompleteTasks.length)];
       }
     }),
     {

@@ -213,3 +213,33 @@
 - [x] Display mood improvement feedback after task completion
 - [x] Add mood-task correlation chart to analytics dashboard
 - [ ] Test mood check feature end-to-end
+
+
+## Timer UX - ADHD-Friendly Redesign
+- [ ] Change timer from countdown to elapsed time display
+- [ ] Add shame-free "Stop anytime" button (small, not prominent)
+- [ ] Update messaging to celebrate partial progress
+- [ ] Reward partial timer completion (e.g., 2 min of 5 min = still a win)
+- [ ] Test timer exit flows and partial completion rewards
+
+
+## ADHD Tax Reduction - Feature 1: Decision Fatigue Elimination
+- [x] Add "Surprise Me" button to randomly pick a task
+- [x] Implement energy-level selector (1-5 scale)
+- [x] Filter tasks by energy level (easy tasks for low energy)
+- [x] Smart task suggestions based on energy + context
+- [ ] Test decision fatigue reduction
+
+## ADHD Tax Reduction - Feature 2: Execution Friction
+- [x] Add one-click task breakdown (AI-powered sub-tasks)
+- [x] Show sub-task progress within a task
+- [x] Celebrate micro-wins (each sub-task completion)
+- [ ] Add ambient reward feedback during task execution
+- [ ] Test execution loop and micro-wins
+
+## ADHD Tax Reduction - Feature 3: Context Switching
+- [x] Add guilt-free task switching without streak penalty
+- [x] Implement parallel task tracking (2-3 tasks in progress)
+- [x] Add mascot validation messages for context switches
+- [x] Show "You're switching, not failing" messaging
+- [ ] Test context switching flows

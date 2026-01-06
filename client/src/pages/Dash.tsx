@@ -27,6 +27,10 @@ import DashieSlide from '@/components/DashieSlide';
 import MilestoneCelebration from '@/components/MilestoneCelebration';
 import TaskBreakdown from '@/components/TaskBreakdown';
 import MoodCheck from '@/components/MoodCheck';
+import EnergySelector from '@/components/EnergySelector';
+import SurpriseMe from '@/components/SurpriseMe';
+import TaskBreakdownModal from '@/components/TaskBreakdownModal';
+import ContextSwitchValidator from '@/components/ContextSwitchValidator';
 import { Timer, CircleDashed, StickyNote, Volume2, Map } from 'lucide-react';
 import {
   DropdownMenu,
@@ -68,6 +72,12 @@ export default function Dash() {
   const [showQuestlines, setShowQuestlines] = useState(false);
   const [showTaskBreakdown, setShowTaskBreakdown] = useState(false);
   const [showMoodCheck, setShowMoodCheck] = useState(false);
+  const [showEnergySelector, setShowEnergySelector] = useState(false);
+  const [showTaskBreakdownModal, setShowTaskBreakdownModal] = useState(false);
+  const [selectedTaskForBreakdown, setSelectedTaskForBreakdown] = useState<string | null>(null);
+  const [showContextSwitch, setShowContextSwitch] = useState(false);
+  const [contextSwitchFrom, setContextSwitchFrom] = useState<string | null>(null);
+  const [contextSwitchTo, setContextSwitchTo] = useState<string | null>(null);
 
   const [showBubblePop, setShowBubblePop] = useState(false);
   const [isAddingTask, setIsAddingTask] = useState(false);
@@ -322,6 +332,9 @@ export default function Dash() {
 
   const completedCount = actions.filter((a) => a.completed).length;
   const moodCheckEnabled = useStore((state) => state.moodCheckEnabled);
+  const currentEnergyLevel = useStore((state) => state.currentEnergyLevel);
+  const parallelTasks = useStore((state) => state.parallelTasks);
+  const expandedTaskId = useStore((state) => state.expandedTaskId);
   const progress = Math.round((completedCount / 3) * 100);
 
   // Determine mascot pose based on progress
@@ -372,6 +385,27 @@ export default function Dash() {
       <Questlines isOpen={showQuestlines} onClose={() => setShowQuestlines(false)} />
       <TaskBreakdown isOpen={showTaskBreakdown} onClose={() => setShowTaskBreakdown(false)} />
       <MoodCheck isOpen={showMoodCheck} onClose={() => setShowMoodCheck(false)} />
+      <TaskBreakdownModal
+        isOpen={showTaskBreakdownModal}
+        onClose={() => {
+          setShowTaskBreakdownModal(false);
+          setSelectedTaskForBreakdown(null);
+        }}
+        taskId={selectedTaskForBreakdown || ''}
+        taskText={actions.find(a => a.id === selectedTaskForBreakdown)?.text || ''}
+      />
+      <ContextSwitchValidator
+        isOpen={showContextSwitch}
+        onClose={() => {
+          setShowContextSwitch(false);
+          setContextSwitchFrom(null);
+          setContextSwitchTo(null);
+        }}
+        fromTaskId={contextSwitchFrom || ''}
+        toTaskId={contextSwitchTo || ''}
+        fromTaskText={actions.find(a => a.id === contextSwitchFrom)?.text || ''}
+        toTaskText={actions.find(a => a.id === contextSwitchTo)?.text || ''}
+      />
       <BodyDouble />
       <div className="flex flex-col h-full">
         {/* Header */}
@@ -405,10 +439,14 @@ export default function Dash() {
                       <BrainCircuit className="w-4 h-4 text-purple-500" />
                       <span>Break It Down (AI)</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setShowBrainDump(true)} className="gap-2 cursor-pointer">
-                      <Sparkles className="w-4 h-4 text-yellow-500" />
-                      <span>Quick Win (Minor)</span>
-                    </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setShowEnergySelector(true)} className="gap-2 cursor-pointer">
+                    <Zap className="w-4 h-4 text-purple-500" />
+                    <span>Check Energy Level</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setShowBrainDump(true)} className="gap-2 cursor-pointer">
+                    <Sparkles className="w-4 h-4 text-yellow-500" />
+                    <span>Quick Win (Minor)</span>
+                  </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setShowBossBattle(true)} className="gap-2 cursor-pointer">
                       <Sword className="w-4 h-4 text-red-500" />
                       <span>Slay a Monster (Major)</span>
@@ -584,6 +622,18 @@ export default function Dash() {
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
+                                setSelectedTaskForBreakdown(action.id);
+                                setShowTaskBreakdownModal(true);
+                              }}
+                              className="p-2 text-muted-foreground hover:text-primary"
+                              aria-label="Break down task"
+                              title="Break Into Steps"
+                            >
+                              <BrainCircuit className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
                                 setFocusTask({ id: action.id, text: action.text });
                               }}
                               className="p-2 text-muted-foreground hover:text-primary"
@@ -629,6 +679,27 @@ export default function Dash() {
                 )}
               </motion.div>
             ))}
+
+            {/* Energy Selector Modal */}
+            {showEnergySelector && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-card rounded-2xl p-6 shadow-sm border border-border mb-4"
+              >
+                <EnergySelector
+                  onSelect={() => setShowEnergySelector(false)}
+                />
+                <div className="mt-4">
+                  <SurpriseMe
+                    onTaskSelected={(taskId) => {
+                      setShowEnergySelector(false);
+                      // Optionally focus on the selected task
+                    }}
+                  />
+                </div>
+              </motion.div>
+            )}
 
             {/* Add Custom Task Button */}
             {isAddingTask ? (
