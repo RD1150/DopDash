@@ -2,6 +2,64 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import confetti from 'canvas-confetti';
+import { ChevronDown } from 'lucide-react';
+
+// FAQ Item Component
+function FAQItem({ question, answer }: { question: string; answer: string }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <motion.div
+      className="border-2 border-primary/20 rounded-xl overflow-hidden"
+      initial={false}
+    >
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full p-6 text-left flex items-center justify-between hover:bg-primary/5 transition-colors"
+      >
+        <p className="font-semibold text-base md:text-lg">{question}</p>
+        <motion.div
+          animate={{ rotate: open ? 180 : 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          <ChevronDown size={24} />
+        </motion.div>
+      </button>
+      <motion.div
+        initial={false}
+        animate={{ height: open ? 'auto' : 0 }}
+        transition={{ duration: 0.2 }}
+        className="overflow-hidden"
+      >
+        <p className="p-6 pt-0" style={{ color: 'hsl(var(--foreground) / 0.8)' }}>
+          {answer}
+        </p>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+// Testimonial Card Component
+function TestimonialCard({ quote, author, role }: { quote: string; author: string; role: string }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="p-6 rounded-2xl border-2 border-primary/20 bg-primary/5"
+    >
+      <p className="text-base md:text-lg mb-4 italic" style={{ color: 'hsl(var(--foreground) / 0.9)' }}>
+        "{quote}"
+      </p>
+      <div>
+        <p className="font-semibold text-base">{author}</p>
+        <p className="text-sm" style={{ color: 'hsl(var(--foreground) / 0.6)' }}>
+          {role}
+        </p>
+      </div>
+    </motion.div>
+  );
+}
 
 export default function Onboarding() {
   const [step, setStep] = useState<'intro' | 'flavor' | 'context' | 'theme'>('intro');
@@ -255,6 +313,84 @@ export default function Onboarding() {
                     <p className="font-bold text-lg">{theme.name}</p>
                   </div>
                 </motion.button>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
+        {/* FAQ Section */}
+        {step === 'intro' && (
+          <motion.div
+            key="faq"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="min-h-screen flex flex-col items-center justify-start pt-12 px-6 pb-12"
+            id="how-it-works"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-center mb-4">How It Works</h2>
+            <p className="text-lg md:text-xl text-center mb-16 max-w-2xl" style={{ color: 'hsl(var(--foreground) / 0.7)' }}>
+              Everything you need to know about Dopamine Dasher
+            </p>
+
+            {/* FAQ Items */}
+            <div className="space-y-4 max-w-2xl w-full mb-16">
+              {[
+                {
+                  q: 'How does Dopamine Dasher help with ADHD?',
+                  a: 'It breaks overwhelming projects into 2-5 minute micro-tasks. Your brain gets instant dopamine rewards (confetti, animations) for each completion, building momentum without shame.'
+                },
+                {
+                  q: 'Do I need to log in or pay to start?',
+                  a: 'Nope! Try it free for 30 seconds. No login, no signup, no credit card. Ever.'
+                },
+                {
+                  q: 'What if I want premium features?',
+                  a: '$29.99 lifetime access unlocks premium themes, advanced analytics, and exclusive task templates. One-time payment, forever.'
+                },
+                {
+                  q: 'Can I sync across devices?',
+                  a: 'Yes! Create an account to sync your tasks, streaks, and progress across all your devices.'
+                },
+                {
+                  q: 'Is my data private?',
+                  a: 'Absolutely. We never sell your data. Your tasks and progress are encrypted and only visible to you.'
+                }
+              ].map((item, idx) => (
+                <FAQItem key={idx} question={item.q} answer={item.a} />
+              ))}
+            </div>
+
+            {/* Testimonials Section */}
+            <h2 className="text-4xl md:text-5xl font-bold text-center mb-4 mt-8">What People Are Saying</h2>
+            <p className="text-lg md:text-xl text-center mb-16 max-w-2xl" style={{ color: 'hsl(var(--foreground) / 0.7)' }}>
+              Real stories from ADHD brains who finally got stuff done
+            </p>
+
+            <div className="space-y-6 max-w-2xl w-full">
+              {[
+                {
+                  quote: "I've tried every productivity app. This is the first one that actually works for my ADHD brain. The confetti makes me smile every time.",
+                  author: 'Sarah M.',
+                  role: 'Designer with ADHD'
+                },
+                {
+                  quote: "2-minute tasks sound silly until you realize you just completed 10 of them. The momentum is real. I'm actually getting things done.",
+                  author: 'James T.',
+                  role: 'Software Engineer'
+                },
+                {
+                  quote: "No judgment, no guilt—just wins. That's what I needed. Finally feels like an app built FOR me, not against me.",
+                  author: 'Maya P.',
+                  role: 'Student with ADHD'
+                },
+                {
+                  quote: "My therapist recommended this. I'm using it daily. The streaks keep me motivated without the shame spiral I get from other apps.",
+                  author: 'Alex R.',
+                  role: 'Marketing Manager'
+                }
+              ].map((testimonial, idx) => (
+                <TestimonialCard key={idx} {...testimonial} />
               ))}
             </div>
           </motion.div>

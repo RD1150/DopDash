@@ -149,3 +149,9 @@
 - [x] Remove background color from landing page (clean white/transparent)
 - [x] Convert value proposition to scannable bullet points
 - [x] Add "Hi! I'm Dashie" greeting below mascot
+
+
+## Next Sprint - Landing Page Expansion
+- [x] Add FAQ section with collapsible questions
+- [x] Add static testimonials section (3-4 quotes)
+- [x] Create 30-second video demo walkthrough
