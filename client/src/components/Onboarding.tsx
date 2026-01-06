@@ -94,13 +94,16 @@ export default function Onboarding() {
               Staring at your to-do list for 20 minutes and doing nothing?
             </p>
 
-            {/* Value Prop - Clear, spacious */}
-            <p className="text-base md:text-lg text-center mb-16 max-w-2xl" style={{
+            {/* Value Prop - Bullets for scannability */}
+            <div className="text-base md:text-lg text-center mb-16 max-w-2xl space-y-3" style={{
               color: 'hsl(var(--foreground) / 0.8)',
               lineHeight: '1.8'
             }}>
-              Break free from task paralysis. Turn overwhelming projects into 2-5 minute wins. No judgment. No guilt. Just instant dopamine hits that actually get you moving.
-            </p>
+              <p>✅ Break free from task paralysis</p>
+              <p>✅ Turn overwhelming projects into 2-5 minute wins</p>
+              <p>✅ No judgment. No guilt.</p>
+              <p>✅ Just instant dopamine hits that get you moving</p>
+            </div>
 
             {/* CTA Button - Huge and prominent */}
             <motion.div
