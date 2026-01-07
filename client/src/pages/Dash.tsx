@@ -85,7 +85,10 @@ export default function Dash() {
   const [newTaskText, setNewTaskText] = useState('');
   const [newTaskCategory, setNewTaskCategory] = useState<'focus' | 'energy' | 'momentum'>('focus');
   const [isListening, setIsListening] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<'focus' | 'energy' | 'momentum' | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<'focus' | 'energy' | 'momentum' | null>(() => {
+    const saved = localStorage.getItem('selectedCategory');
+    return (saved as 'focus' | 'energy' | 'momentum' | null) || null;
+  });
   const inputRef = useRef<HTMLInputElement>(null);
   const newTaskInputRef = useRef<HTMLInputElement>(null);
   
@@ -94,10 +97,20 @@ export default function Dash() {
     ? actions.filter(a => a.category === selectedCategory)
     : actions;
   
+  // Check if current category is empty
+  const isCategoryEmpty = selectedCategory && filteredActions.length === 0;
+  
   // Count tasks per category
   const focusCount = actions.filter(a => a.category === 'focus').length;
   const energyCount = actions.filter(a => a.category === 'energy').length;
   const momentumCount = actions.filter(a => a.category === 'momentum').length;
+  
+  // Empty state messages
+  const emptyStateMessages: Record<string, string> = {
+    focus: 'No focus tasks yet—add one to get started!',
+    energy: 'No energy tasks yet—add one to get started!',
+    momentum: 'No momentum tasks yet—add one to get started!'
+  };
   
   // Category color and styling config
   const categoryConfig = {
@@ -127,6 +140,15 @@ export default function Dash() {
       resetDay();
     }
   }, [actions.length, resetDay]);
+
+  // Persist category selection to localStorage
+  useEffect(() => {
+    if (selectedCategory) {
+      localStorage.setItem('selectedCategory', selectedCategory);
+    } else {
+      localStorage.removeItem('selectedCategory');
+    }
+  }, [selectedCategory]);
 
   // Night Mode Schedule
   useEffect(() => {
@@ -643,8 +665,43 @@ export default function Dash() {
           </div>
         </header>
 
+        {/* Empty State */}
+        <AnimatePresence mode="wait">
+        {isCategoryEmpty && (
+          <motion.div
+            key="empty-state"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="flex-1 flex items-center justify-center"
+          >
+            <div className="text-center">
+              <p className="text-lg font-medium text-muted-foreground mb-4">
+                {emptyStateMessages[selectedCategory || 'focus']}
+              </p>
+              <button
+                onClick={() => setIsAddingTask(true)}
+                className="px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity"
+              >
+                Add Task
+              </button>
+            </div>
+          </motion.div>
+        )}
+        </AnimatePresence>
+        
         {/* Actions List */}
-        <div className="flex-1 space-y-6">
+        <AnimatePresence mode="wait">
+        {!isCategoryEmpty && (
+        <motion.div
+          key="actions-list"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          className="flex-1 space-y-6"
+        >
           <AnimatePresence>
             {filteredActions.map((action, index) => (
               <motion.div
@@ -903,7 +960,9 @@ export default function Dash() {
               </motion.button>
             )}
           </AnimatePresence>
-        </div>
+        </motion.div>
+        )}
+        </AnimatePresence>
 
         {focusTask && (
           <FocusMode 
