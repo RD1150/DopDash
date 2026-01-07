@@ -94,6 +94,10 @@ interface AppState {
   microTryMode: boolean; // 2-minute low-commitment mode
   microTryTaskId: string | null; // ID of task in micro-try mode
   momentumMode: boolean; // Auto-continue from 2-min to 15-min if active
+  bodyDoubleModeEnabled: boolean; // Virtual co-working with friends
+  microWinsJournal: Array<{ id: string; taskId: string; entry: string; timestamp: string }>; // Journal entries
+  referralCode: string; // Unique referral code for user
+  referredFriends: string[]; // IDs of friends who joined via referral
 
   // Actions
   startApp: () => void;
@@ -146,6 +150,10 @@ interface AppState {
   endMicroTry: () => void;
   continueMicroTry: () => void;
   setMomentumMode: (enabled: boolean) => void;
+  setBodyDoubleModeEnabled: (enabled: boolean) => void;
+  addMicroWinJournalEntry: (taskId: string, entry: string) => void;
+  generateReferralCode: () => string;
+  addReferredFriend: (friendId: string) => void;
 }
 
 const BADGES_LIBRARY: Badge[] = [
@@ -246,6 +254,10 @@ export const useStore = create<AppState>()(
       microTryMode: false,
       microTryTaskId: null,
       momentumMode: false,
+      bodyDoubleModeEnabled: false,
+      microWinsJournal: [],
+      referralCode: Math.random().toString(36).substring(2, 10).toUpperCase(),
+      referredFriends: [],
 
       startApp: () => set({ hasStarted: true }),
       completeTutorial: () => set({ hasSeenTutorial: true }),
@@ -631,6 +643,31 @@ export const useStore = create<AppState>()(
       },
       setMomentumMode: (enabled: boolean) => {
         set({ momentumMode: enabled });
+      },
+      setBodyDoubleModeEnabled: (enabled: boolean) => {
+        set({ bodyDoubleModeEnabled: enabled });
+      },
+      addMicroWinJournalEntry: (taskId: string, entry: string) => {
+        const newEntry = {
+          id: Math.random().toString(36).substring(7),
+          taskId,
+          entry,
+          timestamp: new Date().toISOString(),
+        };
+        set((state) => ({ microWinsJournal: [...state.microWinsJournal, newEntry] }));
+      },
+      generateReferralCode: () => {
+        const code = Math.random().toString(36).substring(2, 10).toUpperCase();
+        set({ referralCode: code });
+        return code;
+      },
+      addReferredFriend: (friendId: string) => {
+        set((state) => {
+          if (!state.referredFriends.includes(friendId)) {
+            return { referredFriends: [...state.referredFriends, friendId] };
+          }
+          return state;
+        });
       }
     }),
     {

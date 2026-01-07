@@ -306,3 +306,33 @@
 - [x] Create weekly summary card (tasks completed, mood improvement)
 - [x] Optional: weekly summary email integration
 - [x] Add social proof messaging ("X friends using Dopamine Dasher")
+
+
+## Community & Network Features
+
+### 1. Body Double Mode - Virtual Co-Working
+- [x] Create BodyDoubleMode component with toggle in Settings
+- [x] Show list of friends currently in focus mode
+- [x] Display friend names/streaks in real-time
+- [x] Add "Join co-working session" button
+- [x] Show "You're not alone" messaging during focus
+- [x] Celebrate friend completions with notifications
+- [x] Track co-working sessions separately
+
+### 2. Micro-Wins Journal - Confidence Building
+- [x] Create MicroWinsJournal component
+- [x] After task completion, show optional "What did you do?" prompt
+- [x] Store 1-2 sentence journal entries with timestamps
+- [x] Display journal entries on Stats/Journal page
+- [x] Show "You've done X things this week" proof list
+- [x] Add "Proof of progress" section (combat imposter syndrome)
+- [x] Allow export of journal entries
+
+### 3. Invite Friends & Referral System
+- [x] Generate unique referral code per user
+- [x] Create "Invite Friends" page with shareable link
+- [x] Show referral stats (how many friends joined)
+- [x] Add referral rewards (bonus coins/badges)
+- [x] Track referred friends and their progress
+- [x] Show "X friends are using Dopamine Dasher" social proof
+- [x] Simple copy-to-clipboard share link

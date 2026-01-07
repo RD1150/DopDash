@@ -17,6 +17,8 @@ import { Crown } from 'lucide-react';
 import { toast } from 'sonner';
 import DataExport from '@/components/DataExport';
 import StatsSharing from '@/components/StatsSharing';
+import InviteFriends from '@/components/InviteFriends';
+import BodyDoubleMode from '@/components/BodyDoubleMode';
 
 export default function SettingsPage() {
   const [, setLocation] = useLocation();
@@ -403,6 +405,18 @@ export default function SettingsPage() {
           <section className="space-y-4">
             <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Share Your Progress</h2>
             <StatsSharing />
+          </section>
+
+          {/* Community Features */}
+          <section className="space-y-4">
+            <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Community</h2>
+            <BodyDoubleMode />
+          </section>
+
+          {/* Invite Friends */}
+          <section className="space-y-4">
+            <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Invite Friends</h2>
+            <InviteFriends />
           </section>
 
           {/* Danger Zone (Reset) */}
