@@ -387,3 +387,9 @@
 - [x] Ensure onboarding context selection initializes the correct category picker
 - [x] Test full flow: Onboarding → Dash shows correct categories
 - [x] Verify theme selection doesn't affect category routing (theme is visual only)
+
+## Category Filter Visual Enhancements
+- [x] Add distinct colors to each category (Focus/Energy/Momentum)
+- [x] Add category icons and visual branding
+- [x] Add task count badges to show tasks per category
+- [x] Test category filters with visual updates

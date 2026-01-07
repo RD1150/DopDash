@@ -94,6 +94,33 @@ export default function Dash() {
     ? actions.filter(a => a.category === selectedCategory)
     : actions;
   
+  // Count tasks per category
+  const focusCount = actions.filter(a => a.category === 'focus').length;
+  const energyCount = actions.filter(a => a.category === 'energy').length;
+  const momentumCount = actions.filter(a => a.category === 'momentum').length;
+  
+  // Category color and styling config
+  const categoryConfig = {
+    focus: {
+      color: 'from-blue-500 to-blue-600',
+      bgInactive: 'bg-blue-50 dark:bg-blue-950',
+      textInactive: 'text-blue-700 dark:text-blue-300',
+      badge: 'bg-blue-200 dark:bg-blue-800 text-blue-900 dark:text-blue-100'
+    },
+    energy: {
+      color: 'from-amber-500 to-amber-600',
+      bgInactive: 'bg-amber-50 dark:bg-amber-950',
+      textInactive: 'text-amber-700 dark:text-amber-300',
+      badge: 'bg-amber-200 dark:bg-amber-800 text-amber-900 dark:text-amber-100'
+    },
+    momentum: {
+      color: 'from-emerald-500 to-emerald-600',
+      bgInactive: 'bg-emerald-50 dark:bg-emerald-950',
+      textInactive: 'text-emerald-700 dark:text-emerald-300',
+      badge: 'bg-emerald-200 dark:bg-emerald-800 text-emerald-900 dark:text-emerald-100'
+    }
+  };
+  
   // Ensure we have actions if page is loaded directly
   useEffect(() => {
     if (actions.length === 0) {
@@ -566,33 +593,52 @@ export default function Dash() {
               )}
             >
               All
+              <span className="ml-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-primary/20">{actions.length}</span>
             </button>
             <button
               onClick={() => setSelectedCategory('focus')}
               className={cn(
                 "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap",
-                selectedCategory === 'focus' ? "bg-primary text-primary-foreground shadow-md" : "bg-accent/50 text-muted-foreground hover:bg-accent"
+                selectedCategory === 'focus' 
+                  ? `bg-gradient-to-r ${categoryConfig.focus.color} text-white shadow-md` 
+                  : `${categoryConfig.focus.bgInactive} ${categoryConfig.focus.textInactive} hover:opacity-80`
               )}
             >
               <BrainCircuit className="w-4 h-4" /> Focus
+              <span className={cn(
+                "ml-1 px-2 py-0.5 rounded-full text-xs font-semibold",
+                selectedCategory === 'focus' ? "bg-white/30" : categoryConfig.focus.badge
+              )}>{focusCount}</span>
             </button>
             <button
               onClick={() => setSelectedCategory('energy')}
               className={cn(
                 "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap",
-                selectedCategory === 'energy' ? "bg-primary text-primary-foreground shadow-md" : "bg-accent/50 text-muted-foreground hover:bg-accent"
+                selectedCategory === 'energy' 
+                  ? `bg-gradient-to-r ${categoryConfig.energy.color} text-white shadow-md` 
+                  : `${categoryConfig.energy.bgInactive} ${categoryConfig.energy.textInactive} hover:opacity-80`
               )}
             >
               <Zap className="w-4 h-4" /> Energy
+              <span className={cn(
+                "ml-1 px-2 py-0.5 rounded-full text-xs font-semibold",
+                selectedCategory === 'energy' ? "bg-white/30" : categoryConfig.energy.badge
+              )}>{energyCount}</span>
             </button>
             <button
               onClick={() => setSelectedCategory('momentum')}
               className={cn(
                 "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap",
-                selectedCategory === 'momentum' ? "bg-primary text-primary-foreground shadow-md" : "bg-accent/50 text-muted-foreground hover:bg-accent"
+                selectedCategory === 'momentum' 
+                  ? `bg-gradient-to-r ${categoryConfig.momentum.color} text-white shadow-md` 
+                  : `${categoryConfig.momentum.bgInactive} ${categoryConfig.momentum.textInactive} hover:opacity-80`
               )}
             >
               <RefreshCw className="w-4 h-4" /> Momentum
+              <span className={cn(
+                "ml-1 px-2 py-0.5 rounded-full text-xs font-semibold",
+                selectedCategory === 'momentum' ? "bg-white/30" : categoryConfig.momentum.badge
+              )}>{momentumCount}</span>
             </button>
           </div>
         </header>
