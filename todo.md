@@ -381,3 +381,9 @@
 - [x] Apply selected theme (Cyberpunk/Cottagecore/Ocean) to chosen context
 - [x] Ensure Shop displays correct themed items for selected category
 - [x] Test full onboarding flow: Flavor → Context → Theme → Correct items shown
+
+## Context-Based Category Routing
+- [x] Update Dash to show context-specific categories on load (Nest/Grind/Self)
+- [x] Ensure onboarding context selection initializes the correct category picker
+- [x] Test full flow: Onboarding → Dash shows correct categories
+- [x] Verify theme selection doesn't affect category routing (theme is visual only)

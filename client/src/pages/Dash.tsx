@@ -85,8 +85,14 @@ export default function Dash() {
   const [newTaskText, setNewTaskText] = useState('');
   const [newTaskCategory, setNewTaskCategory] = useState<'focus' | 'energy' | 'momentum'>('focus');
   const [isListening, setIsListening] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<'focus' | 'energy' | 'momentum' | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const newTaskInputRef = useRef<HTMLInputElement>(null);
+  
+  // Filter actions by selected category
+  const filteredActions = selectedCategory 
+    ? actions.filter(a => a.category === selectedCategory)
+    : actions;
   
   // Ensure we have actions if page is loaded directly
   useEffect(() => {
@@ -549,12 +555,52 @@ export default function Dash() {
               <Users className="w-4 h-4" /> Family
             </button>
           </div>
+          
+          {/* Category Filter Tabs */}
+          <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+            <button
+              onClick={() => setSelectedCategory(null)}
+              className={cn(
+                "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap",
+                selectedCategory === null ? "bg-primary text-primary-foreground shadow-md" : "bg-accent/50 text-muted-foreground hover:bg-accent"
+              )}
+            >
+              All
+            </button>
+            <button
+              onClick={() => setSelectedCategory('focus')}
+              className={cn(
+                "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap",
+                selectedCategory === 'focus' ? "bg-primary text-primary-foreground shadow-md" : "bg-accent/50 text-muted-foreground hover:bg-accent"
+              )}
+            >
+              <BrainCircuit className="w-4 h-4" /> Focus
+            </button>
+            <button
+              onClick={() => setSelectedCategory('energy')}
+              className={cn(
+                "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap",
+                selectedCategory === 'energy' ? "bg-primary text-primary-foreground shadow-md" : "bg-accent/50 text-muted-foreground hover:bg-accent"
+              )}
+            >
+              <Zap className="w-4 h-4" /> Energy
+            </button>
+            <button
+              onClick={() => setSelectedCategory('momentum')}
+              className={cn(
+                "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap",
+                selectedCategory === 'momentum' ? "bg-primary text-primary-foreground shadow-md" : "bg-accent/50 text-muted-foreground hover:bg-accent"
+              )}
+            >
+              <RefreshCw className="w-4 h-4" /> Momentum
+            </button>
+          </div>
         </header>
 
         {/* Actions List */}
         <div className="flex-1 space-y-6">
           <AnimatePresence>
-            {actions.map((action, index) => (
+            {filteredActions.map((action, index) => (
               <motion.div
                 key={action.id}
                 initial={{ opacity: 0, y: 20 }}
