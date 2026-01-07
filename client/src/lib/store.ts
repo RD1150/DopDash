@@ -49,20 +49,15 @@ interface AppState {
   todaysActions: MicroAction[];
   streak: number;
   lastCompletedDate: string | null;
-  history: string[]; // Array of ISO date strings (YYYY-MM-DD)
+  history: string[];
   hasSeenTutorial: boolean;
   badges: Badge[];
   notificationsEnabled: boolean;
   coins: number;
-  inventory: string[]; // IDs of owned items
+  inventory: string[];
   customAccessories: CustomAccessory[];
-  equippedCustomAccessory: string | null; // ID of equipped custom accessory
-  equippedItems: {
-    hat?: string;
-    glasses?: string;
-    accessory?: string;
-  };
-  
+  equippedCustomAccessory: string | null;
+  equippedItems: Record<string, string | undefined>;
   bodyDoubleActive: boolean;
   bodyDoubleTask: string | null;
   bodyDoubleStartTime: number | null;
@@ -71,33 +66,27 @@ interface AppState {
   vacationMode: boolean;
   vacationDaysRemaining: number;
   lastAffirmationDate: string | null;
-  savedTasks: Omit<MicroAction, 'completed' | 'id'>[];
+  savedTasks: Array<{ text: string; category: 'focus' | 'energy' | 'momentum' }>;
   emergencyMode: boolean;
   brainDump: string;
   activeQuest: string | null;
-  taskDifficultyRatings: Record<string, 'easy' | 'medium' | 'hard'>; // Track user's difficulty ratings
+  taskDifficultyRatings: Record<string, 'easy' | 'medium' | 'hard'>;
   questProgress: number;
   showOnboardingChecklist: boolean;
-  onboardingChecklist: {
-    first_task: boolean;
-    pet_mascot: boolean;
-    check_streak: boolean;
-    customize_theme: boolean;
-    boss_battle: boolean;
-  };
+  onboardingChecklist: Record<string, boolean>;
   moodHistory: MoodEntry[];
-  currentMoodBefore: number | null; // 1-5, set before task selection
+  currentMoodBefore: number | null;
   moodCheckEnabled: boolean;
-  currentEnergyLevel: number | null; // 1-5 scale
-  parallelTasks: string[]; // IDs of tasks in progress (for context switching)
-  expandedTaskId: string | null; // Currently expanded task for subtask view
-  microTryMode: boolean; // 2-minute low-commitment mode
-  microTryTaskId: string | null; // ID of task in micro-try mode
-  momentumMode: boolean; // Auto-continue from 2-min to 15-min if active
-  bodyDoubleModeEnabled: boolean; // Virtual co-working with friends
-  microWinsJournal: Array<{ id: string; taskId: string; entry: string; timestamp: string }>; // Journal entries
-  referralCode: string; // Unique referral code for user
-  referredFriends: string[]; // IDs of friends who joined via referral
+  currentEnergyLevel: number | null;
+  parallelTasks: string[];
+  expandedTaskId: string | null;
+  microTryMode: boolean;
+  microTryTaskId: string | null;
+  momentumMode: boolean;
+  bodyDoubleModeEnabled: boolean;
+  microWinsJournal: any[];
+  referralCode: string;
+  referredFriends: string[];
 
   // Actions
   startApp: () => void;
@@ -202,13 +191,38 @@ const TASK_PACKS: Record<Context, Omit<MicroAction, 'completed'>[]> = {
 
 const DEFAULT_ACTIONS = TASK_PACKS.self;
 
+// Initialize state from onboarding selections
+const getInitialState = () => {
+  const savedContext = localStorage.getItem('dashie_context');
+  const savedTheme = localStorage.getItem('dashie_theme');
+  
+  const contextMap: Record<string, Context> = {
+    'The Nest': 'nest',
+    'The Grind': 'grind',
+    'The Self': 'self',
+  };
+  
+  const themeMap: Record<string, Theme> = {
+    'Cottagecore': 'cottagecore',
+    'Cyberpunk': 'cyberpunk',
+    'Ocean': 'ocean',
+  };
+  
+  return {
+    context: (savedContext && contextMap[savedContext]) ? contextMap[savedContext] : 'self',
+    theme: (savedTheme && themeMap[savedTheme]) ? themeMap[savedTheme] : 'default',
+  };
+};
+
+const initialState = getInitialState();
+
 export const useStore = create<AppState>()(
   persist(
     (set, get) => ({
       hasStarted: false,
       flavor: 'calm',
-      theme: 'default',
-      context: 'self',
+      theme: initialState.theme,
+      context: initialState.context,
       zenMode: false,
       soundTheme: 'default',
       todaysActions: [],
@@ -265,7 +279,6 @@ export const useStore = create<AppState>()(
       setFlavor: (flavor: Flavor) => set({ flavor }),
       setTheme: (theme: Theme) => set({ theme }),
       setContext: (context: Context) => {
-        // When context changes, refresh actions immediately
         const pack = TASK_PACKS[context];
         const shuffled = [...pack].sort(() => 0.5 - Math.random());
         const selected = shuffled.slice(0, 3).map(a => ({ ...a, completed: false }));
@@ -294,121 +307,126 @@ export const useStore = create<AppState>()(
         if (allCompleted && lastCompletedDate !== today) {
           newStreak += 1;
           newLastCompletedDate = today;
-          // Add today to history if not already there
           const todayISO = new Date().toISOString().split('T')[0];
           if (!newHistory.includes(todayISO)) {
             newHistory = [...newHistory, todayISO];
           }
         }
 
-          // XP Logic: 10 XP per task
-          const currentXp = get().xp;
-          const currentLevel = get().level;
-          const newXp = isCompleting ? currentXp + 10 : currentXp;
-          
-          // Level up every 100 XP
-          const newLevel = Math.floor(newXp / 100) + 1;
-
-          set({ 
+        if (isCompleting) {
+          set({
             todaysActions: newActions,
             streak: newStreak,
             lastCompletedDate: newLastCompletedDate,
+            coins: coins + 1,
             history: newHistory,
-            coins: isCompleting ? coins + 1 : coins,
-            xp: newXp,
-            level: newLevel
           });
-        
-        // Check badges after state update
-        get().checkBadges();
+        } else {
+          set({ todaysActions: newActions });
+        }
       },
 
       resetDay: () => {
         const { context } = get();
-        const pack = TASK_PACKS[context] || TASK_PACKS.self;
+        const pack = TASK_PACKS[context];
         const shuffled = [...pack].sort(() => 0.5 - Math.random());
         const selected = shuffled.slice(0, 3).map(a => ({ ...a, completed: false }));
         set({ todaysActions: selected });
       },
 
-      updateActionText: (id, text) => {
-        set((state) => ({
-          todaysActions: state.todaysActions.map((a) =>
-            a.id === id ? { ...a, text } : a
-          ),
-        }));
+      checkStreak: () => {
+        const { lastCompletedDate, streak } = get();
+        const today = new Date().toDateString();
+        const yesterday = new Date(Date.now() - 86400000).toDateString();
+
+        if (lastCompletedDate !== today && lastCompletedDate !== yesterday) {
+          set({ streak: 0 });
+        }
+      },
+
+      updateActionText: (id: string, text: string) => {
+        const { todaysActions } = get();
+        const updated = todaysActions.map((a) =>
+          a.id === id ? { ...a, text } : a
+        );
+        set({ todaysActions: updated });
+      },
+
+      checkBadges: () => {
+        const { badges, streak } = get();
+        const updated = badges.map((badge) => {
+          if (badge.id === 'first_step' && streak >= 1 && !badge.unlocked) {
+            return { ...badge, unlocked: true, unlockedDate: new Date().toISOString() };
+          }
+          if (badge.id === 'streak_3' && streak >= 3 && !badge.unlocked) {
+            return { ...badge, unlocked: true, unlockedDate: new Date().toISOString() };
+          }
+          if (badge.id === 'streak_7' && streak >= 7 && !badge.unlocked) {
+            return { ...badge, unlocked: true, unlockedDate: new Date().toISOString() };
+          }
+          return badge;
+        });
+        set({ badges: updated });
       },
 
       setNotificationsEnabled: (enabled: boolean) => set({ notificationsEnabled: enabled }),
 
-      addCoins: (amount: number) => set((state) => ({ coins: state.coins + amount })),
-
       purchaseItem: (itemId: string, cost: number) => {
         const { coins, inventory } = get();
-        if (coins >= cost && !inventory.includes(itemId)) {
+        if (coins >= cost) {
           set({
             coins: coins - cost,
-            inventory: [...inventory, itemId]
+            inventory: [...inventory, itemId],
           });
           return true;
         }
         return false;
       },
 
-      equipItem: (slot, itemId) => {
-        set((state) => ({
-          equippedItems: {
-            ...state.equippedItems,
-            [slot]: itemId
-          }
-        }));
-      },
-
-      setCustomAccessory: (accessory) => {
-        set((state) => ({
-          customAccessories: [...state.customAccessories, accessory],
-          equippedCustomAccessory: accessory.id // Auto-equip new creation
-        }));
-      },
-
-      equipCustomAccessory: (id) => {
-        set({ equippedCustomAccessory: id });
-      },
-
-      swapAction: (id) => {
-        const { todaysActions, context } = get();
-        const pack = TASK_PACKS[context] || TASK_PACKS.self;
-        
-        // Find a new random action that isn't currently in the list
-        const currentIds = todaysActions.map(a => a.id);
-        const available = pack.filter(a => !currentIds.includes(a.id));
-        
-        if (available.length === 0) return; // No more unique actions
-        
-        const randomNew = available[Math.floor(Math.random() * available.length)];
-        
+      equipItem: (slot: 'hat' | 'glasses' | 'accessory', itemId: string | undefined) => {
+        const { equippedItems } = get();
         set({
-          todaysActions: todaysActions.map(a => 
-            a.id === id ? { ...randomNew, completed: false } : a
-          )
+          equippedItems: {
+            ...equippedItems,
+            [slot]: itemId,
+          },
         });
       },
 
-      startBodyDouble: (userTask) => {
-        const mascotTasks = [
-          "Polishing my shell",
-          "Organizing pixels",
-          "Sharpening sword",
-          "Sorting inventory",
-          "Practicing jumps",
-          "Updating map"
-        ];
-        const randomMascotTask = mascotTasks[Math.floor(Math.random() * mascotTasks.length)];
-        
+      addCoins: (amount: number) => {
+        const { coins } = get();
+        set({ coins: coins + amount });
+      },
+
+      setCustomAccessory: (accessory: CustomAccessory) => {
+        const { customAccessories } = get();
+        set({ customAccessories: [...customAccessories, accessory] });
+      },
+
+      equipCustomAccessory: (id: string | null) => {
+        set({ equippedCustomAccessory: id });
+      },
+
+      swapAction: (id: string) => {
+        const { todaysActions, context } = get();
+        const pack = TASK_PACKS[context];
+        const available = pack.filter(
+          (p) => !todaysActions.find((a) => a.id === p.id)
+        );
+        if (available.length === 0) return;
+
+        const random = available[Math.floor(Math.random() * available.length)];
+        const updated = todaysActions.map((a) =>
+          a.id === id ? { ...random, completed: false } : a
+        );
+        set({ todaysActions: updated });
+      },
+
+      startBodyDouble: (userTask: string) => {
         set({
           bodyDoubleActive: true,
-          bodyDoubleTask: randomMascotTask,
-          bodyDoubleStartTime: Date.now()
+          bodyDoubleTask: userTask,
+          bodyDoubleStartTime: Date.now(),
         });
       },
 
@@ -416,189 +434,150 @@ export const useStore = create<AppState>()(
         set({
           bodyDoubleActive: false,
           bodyDoubleTask: null,
-          bodyDoubleStartTime: null
+          bodyDoubleStartTime: null,
         });
       },
 
-      checkBadges: () => {
-        const { badges, history, streak, todaysActions } = get();
-        const now = new Date();
-        const hour = now.getHours();
-        const day = now.getDay(); // 0 = Sunday, 6 = Saturday
-        const allCompleted = todaysActions.every(a => a.completed) && todaysActions.length > 0;
-        
-        let newBadges = [...badges];
-        let badgeEarned = false;
-
-        const unlock = (id: string) => {
-          const badgeIndex = newBadges.findIndex(b => b.id === id);
-          if (badgeIndex !== -1 && !newBadges[badgeIndex].unlocked) {
-            newBadges[badgeIndex] = { ...newBadges[badgeIndex], unlocked: true, unlockedDate: new Date().toISOString() };
-            badgeEarned = true;
-          }
-        };
-
-        if (history.length >= 1) unlock('first_step');
-        if (streak >= 3) unlock('streak_3');
-        if (streak >= 7) unlock('streak_7');
-        
-        if (allCompleted) {
-          if (hour < 12) unlock('early_bird');
-          if (hour >= 20) unlock('night_owl');
-          if (day === 0 || day === 6) unlock('weekend_warrior');
-        }
-
-        if (badgeEarned) {
-          set({ badges: newBadges });
-          // Could trigger a toast or sound here if we had access to those functions, 
-          // but store is pure logic. Components can listen to changes.
-        }
+      setVacationMode: (days: number) => {
+        set({
+          vacationMode: true,
+          vacationDaysRemaining: days,
+        });
       },
 
-      checkStreak: () => {
-        const { lastCompletedDate, streak, vacationMode, vacationDaysRemaining } = get();
-        if (!lastCompletedDate) return;
-
-        const last = new Date(lastCompletedDate);
-        const today = new Date();
-        const diffTime = Math.abs(today.getTime() - last.getTime());
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-
-        // If vacation mode is active, decrement days and don't reset streak
-        if (vacationMode && vacationDaysRemaining > 0) {
-          // Check if a day has actually passed since last check/decrement
-          // For simplicity in this prototype, we'll just trust the user toggled it on
-          // In a real app, we'd track "lastVacationCheck"
-          return;
-        }
-
-        // If vacation mode expired
-        if (vacationMode && vacationDaysRemaining <= 0) {
-          set({ vacationMode: false });
-        }
-
-        // If more than 2 days passed (yesterday is fine), reset streak? 
-        // Spec says: "Missing days do NOT scold or reset aggressively"
-        // So maybe we just keep it or handle it very gently. 
-        // For now, let's just leave it as is to be supportive.
+      cancelVacationMode: () => {
+        set({
+          vacationMode: false,
+          vacationDaysRemaining: 0,
+        });
       },
 
-      setVacationMode: (days: number) => set({ vacationMode: true, vacationDaysRemaining: days }),
-      cancelVacationMode: () => set({ vacationMode: false, vacationDaysRemaining: 0 }),
-      setLastAffirmationDate: (date: string) => set({ lastAffirmationDate: date }),
-      addAction: (text: string, category = 'focus') => {
-        const { todaysActions } = get();
+      setLastAffirmationDate: (date: string) => {
+        set({ lastAffirmationDate: date });
+      },
+
+      addAction: (text: string, category: 'focus' | 'energy' | 'momentum' = 'momentum') => {
         const newAction: MicroAction = {
-          id: `custom-${Date.now()}`,
+          id: Math.random().toString(36).substring(7),
           text,
           category,
-          completed: false
+          completed: false,
         };
+        const { todaysActions } = get();
         set({ todaysActions: [...todaysActions, newAction] });
       },
-      saveTask: (text, category) => {
+
+      saveTask: (text: string, category: 'focus' | 'energy' | 'momentum') => {
         const { savedTasks } = get();
-        if (!savedTasks.some(t => t.text === text)) {
-          set({ savedTasks: [...savedTasks, { text, category }] });
-        }
+        set({ savedTasks: [...savedTasks, { text, category }] });
       },
-      removeSavedTask: (text) => {
+
+      removeSavedTask: (text: string) => {
         const { savedTasks } = get();
-        set({ savedTasks: savedTasks.filter(t => t.text !== text) });
+        set({ savedTasks: savedTasks.filter((t) => t.text !== text) });
       },
-      setEmergencyMode: (enabled) => {
-        if (enabled) {
-          // Clear everything and set one tiny task
-          set({ 
-            emergencyMode: true,
-            todaysActions: [{ id: 'emergency-1', text: 'Just breathe', category: 'energy', completed: false }]
-          });
-        } else {
-          // Restore normal flow (reset day to current context)
-          const { context } = get();
-          const pack = TASK_PACKS[context] || TASK_PACKS.self;
-          const shuffled = [...pack].sort(() => 0.5 - Math.random());
-          const selected = shuffled.slice(0, 3).map(a => ({ ...a, completed: false }));
-          set({ emergencyMode: false, todaysActions: selected });
-        }
+
+      setEmergencyMode: (enabled: boolean) => {
+        set({ emergencyMode: enabled });
       },
-      setBrainDump: (text) => set({ brainDump: text }),
-      startQuest: (questId) => set({ activeQuest: questId, questProgress: 0 }),
-      advanceQuest: () => set((state) => ({ questProgress: state.questProgress + 1 })),
-      quitQuest: () => set({ activeQuest: null, questProgress: 0 }),
-      setOnboardingChecklist: (key, value) => {
-        set((state) => ({
+
+      setBrainDump: (text: string) => {
+        set({ brainDump: text });
+      },
+
+      startQuest: (questId: string) => {
+        set({ activeQuest: questId, questProgress: 0 });
+      },
+
+      advanceQuest: () => {
+        const { questProgress } = get();
+        set({ questProgress: questProgress + 1 });
+      },
+
+      quitQuest: () => {
+        set({ activeQuest: null, questProgress: 0 });
+      },
+
+      setOnboardingChecklist: (key: string, value: boolean) => {
+        const { onboardingChecklist } = get();
+        set({
           onboardingChecklist: {
-            ...state.onboardingChecklist,
+            ...onboardingChecklist,
             [key]: value,
           },
-        }));
+        });
       },
-      dismissOnboardingChecklist: () => set({ showOnboardingChecklist: false }),
-      rateDifficulty: (taskId, difficulty) => {
+
+      dismissOnboardingChecklist: () => {
+        set({ showOnboardingChecklist: false });
+      },
+
+      rateDifficulty: (taskId: string, difficulty: 'easy' | 'medium' | 'hard') => {
         const { taskDifficultyRatings } = get();
         set({
           taskDifficultyRatings: {
             ...taskDifficultyRatings,
-            [taskId]: difficulty
-          }
+            [taskId]: difficulty,
+          },
         });
       },
+
       setMoodBefore: (mood: number) => {
-        set({ currentMoodBefore: Math.max(1, Math.min(5, mood)) });
+        set({ currentMoodBefore: mood });
       },
+
       recordMoodAfter: (mood: number) => {
-        const { currentMoodBefore, moodHistory } = get();
+        const { moodHistory, currentMoodBefore } = get();
         if (currentMoodBefore === null) return;
-        
-        const afterMood = Math.max(1, Math.min(5, mood));
-        const improvement = afterMood - currentMoodBefore;
-        const today = new Date().toISOString().split('T')[0];
-        
-        const newEntry: MoodEntry = {
-          date: today,
+
+        const entry: MoodEntry = {
+          date: new Date().toISOString(),
           beforeMood: currentMoodBefore,
-          afterMood: afterMood,
+          afterMood: mood,
           taskCompleted: true,
-          improvement: improvement
+          improvement: mood - currentMoodBefore,
         };
-        
+
         set({
-          moodHistory: [...moodHistory, newEntry],
-          currentMoodBefore: null
+          moodHistory: [...moodHistory, entry],
+          currentMoodBefore: null,
         });
       },
+
       setMoodCheckEnabled: (enabled: boolean) => {
         set({ moodCheckEnabled: enabled });
       },
+
       setEnergyLevel: (level: number) => {
-        set({ currentEnergyLevel: Math.max(1, Math.min(5, level)) });
+        set({ currentEnergyLevel: level });
       },
+
       addParallelTask: (taskId: string) => {
         const { parallelTasks } = get();
         if (!parallelTasks.includes(taskId)) {
           set({ parallelTasks: [...parallelTasks, taskId] });
         }
       },
+
       removeParallelTask: (taskId: string) => {
         const { parallelTasks } = get();
-        set({ parallelTasks: parallelTasks.filter(id => id !== taskId) });
+        set({ parallelTasks: parallelTasks.filter((id) => id !== taskId) });
       },
+
       setExpandedTask: (taskId: string | null) => {
         set({ expandedTaskId: taskId });
       },
+
       addSubtasks: (parentTaskId: string, subtasks: SubTask[]) => {
         const { todaysActions } = get();
-        const newActions = todaysActions.map(action =>
-          action.id === parentTaskId
-            ? { ...action, subtasks }
-            : action
+        const updated = todaysActions.map((action) =>
+          action.id === parentTaskId ? { ...action, subtasks } : action
         );
-        set({ todaysActions: newActions });
+        set({ todaysActions: updated });
       },
+
       toggleSubtask: (parentTaskId: string, subtaskId: string) => {
-        const { todaysActions } = get();
-        const newActions = todaysActions.map(action => {
+        const newActions = get().todaysActions.map(action => {
           if (action.id === parentTaskId && action.subtasks) {
             return {
               ...action,
@@ -611,6 +590,7 @@ export const useStore = create<AppState>()(
         });
         set({ todaysActions: newActions });
       },
+
       getTasksByEnergyLevel: (energyLevel: number) => {
         const { todaysActions, taskDifficultyRatings } = get();
         const difficultyMap: Record<number, Array<'easy' | 'medium' | 'hard'>> = {
@@ -626,27 +606,34 @@ export const useStore = create<AppState>()(
           return targetDifficulties.includes(difficulty);
         });
       },
+
       getRandomTask: () => {
         const { todaysActions } = get();
         const incompleteTasks = todaysActions.filter(a => !a.completed);
         if (incompleteTasks.length === 0) return null;
         return incompleteTasks[Math.floor(Math.random() * incompleteTasks.length)];
       },
+
       startMicroTry: (taskId: string) => {
         set({ microTryMode: true, microTryTaskId: taskId });
       },
+
       endMicroTry: () => {
         set({ microTryMode: false, microTryTaskId: null });
       },
+
       continueMicroTry: () => {
         set({ microTryMode: false });
       },
+
       setMomentumMode: (enabled: boolean) => {
         set({ momentumMode: enabled });
       },
+
       setBodyDoubleModeEnabled: (enabled: boolean) => {
         set({ bodyDoubleModeEnabled: enabled });
       },
+
       addMicroWinJournalEntry: (taskId: string, entry: string) => {
         const newEntry = {
           id: Math.random().toString(36).substring(7),
@@ -656,11 +643,13 @@ export const useStore = create<AppState>()(
         };
         set((state) => ({ microWinsJournal: [...state.microWinsJournal, newEntry] }));
       },
+
       generateReferralCode: () => {
         const code = Math.random().toString(36).substring(2, 10).toUpperCase();
         set({ referralCode: code });
         return code;
       },
+
       addReferredFriend: (friendId: string) => {
         set((state) => {
           if (!state.referredFriends.includes(friendId)) {

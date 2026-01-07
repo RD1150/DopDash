@@ -82,6 +82,7 @@ export default function Onboarding() {
     localStorage.setItem('dashie_flavor', selectedFlavor);
     localStorage.setItem('dashie_context', selectedContext);
     localStorage.setItem('dashie_theme', theme);
+    localStorage.setItem('dashie_category_theme', `${selectedContext}_${theme}`);
     window.location.href = '/dash'
   };
 

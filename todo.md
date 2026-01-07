@@ -374,3 +374,10 @@
 - [x] Updates in real-time as state changes
 - [x] Positioned at top of each page
 - [x] Shows "status at a glance" without scrolling
+
+
+## Bug Fix - Onboarding Theme Application
+- [x] Fix Onboarding to store context (Grind/Self/Home) properly
+- [x] Apply selected theme (Cyberpunk/Cottagecore/Ocean) to chosen context
+- [x] Ensure Shop displays correct themed items for selected category
+- [x] Test full onboarding flow: Flavor → Context → Theme → Correct items shown
