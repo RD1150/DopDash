@@ -336,3 +336,41 @@
 - [x] Track referred friends and their progress
 - [x] Show "X friends are using Dopamine Dasher" social proof
 - [x] Simple copy-to-clipboard share link
+
+
+## Navigation UI Nuances - ADHD Friction Reduction
+
+### 1. Persistent Bottom Navigation Bar
+- [x] Create BottomNav component with 4 main routes (Dash, Stats, Shop, Settings)
+- [x] Show current page highlighted with color/icon change
+- [x] Always visible, accessible from any page
+- [x] Smooth transitions between pages
+- [x] Mobile-optimized sizing
+
+### 2. Breadcrumb/Context Trail
+- [x] Implement breadcrumb system showing page hierarchy
+- [x] Display at top of each page (e.g., "Dash > Task > Subtasks")
+- [x] One-tap navigation back to any level
+- [x] Show current page highlighted
+- [x] Collapse on mobile if needed
+
+### 3. Quick Action Floating Button
+- [x] Create FAB (floating action button) with "+" icon
+- [x] Always visible, persistent across all pages
+- [x] Opens menu: "New Task | Try for 2 Min | Random Task"
+- [x] Positioned bottom-right (above bottom nav)
+- [x] Smooth animation on open/close
+
+### 4. Smooth Page Transitions
+- [x] Add Framer Motion animations between page changes
+- [x] Slide in from left/right based on navigation direction
+- [x] Fade transitions for modal-like pages
+- [x] Maintains visual continuity
+- [x] Reduces jarring jumps
+
+### 5. Sticky Header with Key Info
+- [x] Create sticky header that stays visible while scrolling
+- [x] Display: Coin count | Streak | Current energy level
+- [x] Updates in real-time as state changes
+- [x] Positioned at top of each page
+- [x] Shows "status at a glance" without scrolling

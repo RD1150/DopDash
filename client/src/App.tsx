@@ -17,6 +17,8 @@ import Stats from "./pages/Stats";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import BottomNav from "@/components/BottomNav";
+import QuickActionButton from "@/components/QuickActionButton";
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
@@ -78,6 +80,8 @@ function App() {
         <TooltipProvider>
           <Toaster />
           <Router />
+          <BottomNav />
+          <QuickActionButton />
           <FriendTrialOnboarding
             isOpen={showOnboarding}
             onComplete={() => setShowOnboarding(false)}
