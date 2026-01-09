@@ -417,3 +417,4 @@
 - [x] Fix task loading to use selected context from onboarding
 - [x] Test that each context shows correct tasks
 - [x] Verify Grind context shows correct Grind tasks (g1, g3, g5)
+- [x] Verified fix is working - users now land on correct context (Self/Grind/Nest)
