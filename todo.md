@@ -405,3 +405,9 @@
 - [x] Create filter presets (Show only 5-min tasks, high-priority only, etc.)
 - [x] Test category stats and filter presets
 - [x] Verify reduced decision fatigue
+
+## Navigation & Onboarding Reset
+- [x] Add Reset Onboarding button in Settings
+- [x] Add Change Context button on Dash
+- [x] Test both navigation options
+- [x] Verify users can return to onboarding or switch context

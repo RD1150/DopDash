@@ -478,9 +478,18 @@ export default function Dash() {
         <header className="pt-8 pb-8 space-y-4">
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-3xl font-bold text-primary">Today’s Dash</h1>
+              <div className="flex items-center gap-3">
+                <h1 className="text-3xl font-bold text-primary">Today's Dash</h1>
+                <button
+                  onClick={() => setLocation('/settings')}
+                  className="px-3 py-1 rounded-lg text-xs font-medium bg-muted/50 text-muted-foreground hover:bg-muted transition-colors"
+                  title="Change context or reset onboarding"
+                >
+                  Change Context
+                </button>
+              </div>
               <div className="flex items-center gap-3 mt-1">
-                <p className="text-muted-foreground">Just start. That’s enough.</p>
+                <p className="text-muted-foreground">Just start. That's enough.</p>
                 {!zenMode && (
                   <>
                     <div className="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 px-3 py-0.5 rounded-full text-sm font-bold flex items-center gap-1">

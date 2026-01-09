@@ -420,7 +420,21 @@ export default function SettingsPage() {
           </section>
 
           {/* Danger Zone (Reset) */}
-          <section className="pt-8">
+          <section className="pt-8 space-y-3">
+            <Button 
+              onClick={() => {
+                if (confirm('Reset onboarding? You\'ll be able to choose your flavor, context, and theme again.')) {
+                  useStore.getState().startApp();
+                  localStorage.removeItem('selectedCategory');
+                  localStorage.removeItem('selectedPreset');
+                  setLocation('/');
+                }
+              }}
+              variant="ghost" 
+              className="w-full text-muted-foreground hover:text-primary hover:bg-primary/5"
+            >
+              Reset Onboarding
+            </Button>
             <Button 
               variant="ghost" 
               className="w-full text-muted-foreground hover:text-destructive hover:bg-destructive/5"
