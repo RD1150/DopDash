@@ -399,3 +399,9 @@
 - [x] Add empty state messaging for categories with no tasks
 - [x] Add smooth animations for category transitions
 - [x] Test all three enhancements
+
+## Category Stats & Filter Presets
+- [x] Add category stats display in header (e.g., "3 tasks in Focus today")
+- [x] Create filter presets (Show only 5-min tasks, high-priority only, etc.)
+- [x] Test category stats and filter presets
+- [x] Verify reduced decision fatigue

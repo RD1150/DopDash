@@ -89,13 +89,23 @@ export default function Dash() {
     const saved = localStorage.getItem('selectedCategory');
     return (saved as 'focus' | 'energy' | 'momentum' | null) || null;
   });
+  const [selectedPreset, setSelectedPreset] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const newTaskInputRef = useRef<HTMLInputElement>(null);
   
-  // Filter actions by selected category
-  const filteredActions = selectedCategory 
+  // Filter actions by selected category and preset
+  let filteredActions = selectedCategory 
     ? actions.filter(a => a.category === selectedCategory)
     : actions;
+  
+  // Apply preset filters (visual presets for now - can be enhanced with task properties)
+  if (selectedPreset === 'quick-wins') {
+    filteredActions = filteredActions.slice(0, 3);
+  } else if (selectedPreset === 'high-priority') {
+    filteredActions = filteredActions.slice(0, 2);
+  } else if (selectedPreset === 'urgent') {
+    filteredActions = filteredActions.slice(0, 1);
+  }
   
   // Check if current category is empty
   const isCategoryEmpty = selectedCategory && filteredActions.length === 0;
@@ -605,6 +615,21 @@ export default function Dash() {
             </button>
           </div>
           
+          {/* Category Stats */}
+          {selectedCategory && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+              className="text-sm font-medium text-muted-foreground px-4 py-2 bg-accent/30 rounded-lg"
+            >
+              {selectedCategory === 'focus' && focusCount} task(s) in Focus
+              {selectedCategory === 'energy' && energyCount} task(s) in Energy
+              {selectedCategory === 'momentum' && momentumCount} task(s) in Momentum
+            </motion.div>
+          )}
+          
           {/* Category Filter Tabs */}
           <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
             <button
@@ -661,6 +686,37 @@ export default function Dash() {
                 "ml-1 px-2 py-0.5 rounded-full text-xs font-semibold",
                 selectedCategory === 'momentum' ? "bg-white/30" : categoryConfig.momentum.badge
               )}>{momentumCount}</span>
+            </button>
+          </div>
+          
+          {/* Filter Presets */}
+          <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+            <button
+              onClick={() => setSelectedPreset(selectedPreset === 'quick-wins' ? null : 'quick-wins')}
+              className={cn(
+                "px-3 py-1 rounded-full text-xs font-medium transition-colors",
+                selectedPreset === 'quick-wins' ? "bg-primary text-primary-foreground" : "bg-muted/50 text-muted-foreground hover:bg-muted"
+              )}
+            >
+              Quick Wins (3)
+            </button>
+            <button
+              onClick={() => setSelectedPreset(selectedPreset === 'high-priority' ? null : 'high-priority')}
+              className={cn(
+                "px-3 py-1 rounded-full text-xs font-medium transition-colors",
+                selectedPreset === 'high-priority' ? "bg-primary text-primary-foreground" : "bg-muted/50 text-muted-foreground hover:bg-muted"
+              )}
+            >
+              Top 2
+            </button>
+            <button
+              onClick={() => setSelectedPreset(selectedPreset === 'urgent' ? null : 'urgent')}
+              className={cn(
+                "px-3 py-1 rounded-full text-xs font-medium transition-colors",
+                selectedPreset === 'urgent' ? "bg-primary text-primary-foreground" : "bg-muted/50 text-muted-foreground hover:bg-muted"
+              )}
+            >
+              Focus on 1
             </button>
           </div>
         </header>
