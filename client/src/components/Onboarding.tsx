@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import confetti from 'canvas-confetti';
 import { ChevronDown } from 'lucide-react';
+import { useStore } from '@/lib/store';
 
 // FAQ Item Component
 function FAQItem({ question, answer }: { question: string; answer: string }) {
@@ -66,6 +67,9 @@ export default function Onboarding() {
   const [selectedFlavor, setSelectedFlavor] = useState<string>('');
   const [selectedContext, setSelectedContext] = useState<string>('');
   const [selectedTheme, setSelectedTheme] = useState<string>('');
+  const setContextStore = useStore((state) => state.setContext);
+  const setThemeStore = useStore((state) => state.setTheme);
+  const setFlavorStore = useStore((state) => state.setFlavor);
 
   const handleFlavorSelect = (flavor: string) => {
     setSelectedFlavor(flavor);
@@ -74,16 +78,27 @@ export default function Onboarding() {
 
   const handleContextSelect = (context: string) => {
     setSelectedContext(context);
+    localStorage.setItem('dashie_context_temp', context);
     setStep('theme');
   };
 
   const handleThemeSelect = (theme: string) => {
     setSelectedTheme(theme);
+    const finalContext = localStorage.getItem('dashie_context_temp') || 'The Self';
+    const contextMap: Record<string, any> = { 'The Nest': 'nest', 'The Grind': 'grind', 'The Self': 'self' };
+    const themeMap: Record<string, any> = { 'Cottagecore': 'cottagecore', 'Cyberpunk': 'cyberpunk', 'Ocean': 'ocean' };
+    // Clear old storage to prevent persist middleware from loading stale state
+    localStorage.removeItem('dopamine-dasher-storage');
+    
+    setFlavorStore(selectedFlavor as any);
+    setContextStore(contextMap[finalContext] || 'self');
+    setThemeStore(themeMap[theme] || 'default');
     localStorage.setItem('dashie_flavor', selectedFlavor);
-    localStorage.setItem('dashie_context', selectedContext);
+    localStorage.setItem('dashie_context', finalContext);
     localStorage.setItem('dashie_theme', theme);
-    localStorage.setItem('dashie_category_theme', `${selectedContext}_${theme}`);
-    window.location.href = '/dash'
+    localStorage.setItem('dashie_category_theme', `${finalContext}_${theme}`);
+    localStorage.removeItem('dashie_context_temp');
+    setTimeout(() => { window.location.href = '/dash'; }, 500);
   };
 
   const triggerConfetti = () => {

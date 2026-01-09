@@ -193,8 +193,10 @@ const DEFAULT_ACTIONS = TASK_PACKS.self;
 
 // Initialize state from onboarding selections
 const getInitialState = () => {
-  const savedContext = localStorage.getItem('dashie_context');
-  const savedTheme = localStorage.getItem('dashie_theme');
+  // Try to read from the new persist storage first
+  const persistedState = JSON.parse(localStorage.getItem('dopamine-dasher-storage') || '{}').state;
+  const savedContext = persistedState?.context ? (Object.entries({ 'nest': 'The Nest', 'grind': 'The Grind', 'self': 'The Self' }).find(([k]) => k === persistedState.context)?.[1]) : localStorage.getItem('dashie_context');
+  const savedTheme = persistedState?.theme ? (Object.entries({ 'cottagecore': 'Cottagecore', 'cyberpunk': 'Cyberpunk', 'ocean': 'Ocean' }).find(([k]) => k === persistedState.theme)?.[1]) : localStorage.getItem('dashie_theme');
   
   const contextMap: Record<string, Context> = {
     'The Nest': 'nest',
@@ -208,9 +210,17 @@ const getInitialState = () => {
     'Ocean': 'ocean',
   };
   
+  const context = (savedContext && contextMap[savedContext]) ? contextMap[savedContext] : 'self';
+  const theme = (savedTheme && themeMap[savedTheme]) ? themeMap[savedTheme] : 'default';
+  
+  const pack = TASK_PACKS[context];
+  const shuffled = [...pack].sort(() => 0.5 - Math.random());
+  const todaysActions = shuffled.slice(0, 3).map(a => ({ ...a, completed: false }));
+  
   return {
-    context: (savedContext && contextMap[savedContext]) ? contextMap[savedContext] : 'self',
-    theme: (savedTheme && themeMap[savedTheme]) ? themeMap[savedTheme] : 'default',
+    context,
+    theme,
+    todaysActions,
   };
 };
 
@@ -225,7 +235,7 @@ export const useStore = create<AppState>()(
       context: initialState.context,
       zenMode: false,
       soundTheme: 'default',
-      todaysActions: [],
+      todaysActions: initialState.todaysActions,
       streak: 0,
       lastCompletedDate: null,
       history: [],

@@ -411,3 +411,9 @@
 - [x] Add Change Context button on Dash
 - [x] Test both navigation options
 - [x] Verify users can return to onboarding or switch context
+
+## Bug Fix - Context-Based Task Loading
+- [x] Investigate why tasks aren't filtering by selected context
+- [x] Fix task loading to use selected context from onboarding
+- [x] Test that each context shows correct tasks
+- [x] Verify Grind context shows correct Grind tasks (g1, g3, g5)
