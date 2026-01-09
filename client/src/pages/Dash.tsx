@@ -56,7 +56,17 @@ export default function Dash() {
   const context = useStore((state) => state.context);
   const setContext = useStore((state) => state.setContext);
   const swapAction = useStore((state) => state.swapAction);
+  const streakCount = useStore((state) => state.streakCount);
+  const streakMultiplier = useStore((state) => state.streakMultiplier);
+  const brainDumpBacklog = useStore((state) => state.brainDumpBacklog);
+  const addToBrainDump = useStore((state) => state.addToBrainDump);
+  const removeFromBrainDump = useStore((state) => state.removeFromBrainDump);
+  const moveBrainDumpToToday = useStore((state) => state.moveBrainDumpToToday);
+  const dailyChallenges = useStore((state) => state.dailyChallenges);
+  const generateDailyChallenges = useStore((state) => state.generateDailyChallenges);
+  const updateChallengeProgress = useStore((state) => state.updateChallengeProgress);
   const setOnboardingChecklist = useStore((state) => state.setOnboardingChecklist);
+  const moodCheckEnabled = useStore((state) => state.moodCheckEnabled);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState('');
   const [magicMode, setMagicMode] = useState(false);
@@ -79,6 +89,7 @@ export default function Dash() {
   const [showContextSwitch, setShowContextSwitch] = useState(false);
   const [contextSwitchFrom, setContextSwitchFrom] = useState<string | null>(null);
   const [contextSwitchTo, setContextSwitchTo] = useState<string | null>(null);
+  const [showStreakBadge, setShowStreakBadge] = useState(false);
 
   const [showBubblePop, setShowBubblePop] = useState(false);
   const [isAddingTask, setIsAddingTask] = useState(false);
@@ -90,9 +101,26 @@ export default function Dash() {
     return (saved as 'focus' | 'energy' | 'momentum' | null) || null;
   });
   const [selectedPreset, setSelectedPreset] = useState<string | null>(null);
+  const [showBrainDumpModal, setShowBrainDumpModal] = useState(false);
+  const [brainDumpInput, setBrainDumpInput] = useState('');
+  const [brainDumpCategory, setBrainDumpCategory] = useState<'focus' | 'energy' | 'momentum'>('focus');
   const inputRef = useRef<HTMLInputElement>(null);
   const newTaskInputRef = useRef<HTMLInputElement>(null);
   
+  // Initialize daily challenges on component mount
+  useEffect(() => {
+    generateDailyChallenges();
+  }, [generateDailyChallenges]);
+
+  // Show streak badge when multiplier is active
+  useEffect(() => {
+    if (streakMultiplier === 2) {
+      setShowStreakBadge(true);
+      const timer = setTimeout(() => setShowStreakBadge(false), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [streakMultiplier]);
+
   // Filter actions by selected category and preset
   let filteredActions = selectedCategory 
     ? actions.filter(a => a.category === selectedCategory)
@@ -398,7 +426,6 @@ export default function Dash() {
   };
 
   const completedCount = actions.filter((a) => a.completed).length;
-  const moodCheckEnabled = useStore((state) => state.moodCheckEnabled);
   const currentEnergyLevel = useStore((state) => state.currentEnergyLevel);
   const parallelTasks = useStore((state) => state.parallelTasks);
   const expandedTaskId = useStore((state) => state.expandedTaskId);
@@ -500,6 +527,16 @@ export default function Dash() {
                       <div className="animate-bounce bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 px-3 py-0.5 rounded-full text-sm font-bold flex items-center gap-1">
                         <span>🔥</span> {comboCount}x COMBO!
                       </div>
+                    )}
+                    {showStreakBadge && streakMultiplier === 2 && (
+                      <motion.div
+                        initial={{ scale: 0, rotate: -180 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        exit={{ scale: 0 }}
+                        className="bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 px-3 py-0.5 rounded-full text-sm font-bold flex items-center gap-1"
+                      >
+                        <span>⚡</span> 2x STREAK!
+                      </motion.div>
                     )}
                   </>
                 )}

@@ -492,3 +492,24 @@
 - [x] Award bonus coins (50-100) for completing challenges
 - [x] Reset challenges at midnight
 - [x] Test challenge generation, tracking, and rewards
+
+
+## UI Implementation - Streak Multiplier Badge
+- [ ] Add visual streak multiplier badge to Dash
+- [ ] Display "2x Streak!" when multiplier is active
+- [ ] Add celebratory animation when streak reaches 3
+- [ ] Test badge displays correctly
+
+## UI Implementation - Brain Dump Modal
+- [ ] Add "Brain Dump" button to Dash
+- [ ] Create modal for quick task entry
+- [ ] Show backlog count badge on button
+- [ ] Add "Move to Today" buttons for each backlog item
+- [ ] Test brain dump capture and management
+
+## UI Implementation - Daily Challenges Widget
+- [ ] Display challenge cards on Dash
+- [ ] Show progress bars for each challenge
+- [ ] Display bonus coin indicators
+- [ ] Show completion status
+- [ ] Test challenges display and update correctly
