@@ -273,7 +273,12 @@ export default function Dash() {
       
       setLastActionTime(now);
       haptics.success();
-      addCoins(1); // Earn 1 coin per task
+      
+      // Update streak count and apply multiplier
+      const completedCount = actions.filter(a => a.completed).length + 1;
+      useStore.getState().updateStreakCount(completedCount);
+      
+      addCoins(1); // Earn 1 coin per task (multiplier applied in store)
 
       // Loot box chance
       if (Math.random() < 0.1) {

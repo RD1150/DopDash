@@ -444,3 +444,51 @@
 - [x] Play sound when task is marked complete
 - [x] Add volume control in Settings
 - [x] Test sound plays on task completion
+
+
+## Feature 4: Task Streak Multipliers
+- [x] Track consecutive task completions in store state
+- [x] Apply 2x coin multiplier when completing 3 tasks in a row
+- [x] Display streak multiplier badge on UI (e.g., "2x Streak!")
+- [x] Reset streak counter if user doesn't complete a task within 24 hours
+- [x] Test streak multiplier calculation and display
+
+## Feature 5: Brain Dump Quick Capture
+- [x] Add "Brain Dump" button to Dash page
+- [x] Create modal for quick task entry without adding to today's list
+- [x] Store brain dump tasks in separate backlog in store
+- [x] Show backlog count badge on button
+- [x] Allow users to move backlog tasks to today's list
+- [x] Test brain dump capture and backlog management
+
+## Feature 6: Daily Challenge Missions
+- [x] Create daily challenges (e.g., "Complete 2 Focus tasks", "Earn 10 coins")
+- [x] Generate 1-3 random challenges daily
+- [x] Display challenges on Dash with progress bars
+- [x] Award bonus coins (50-100) for completing challenges
+- [x] Reset challenges at midnight
+- [x] Test challenge generation, tracking, and rewards
+
+
+## Feature 4: Task Streak Multipliers
+- [x] Track consecutive task completions in store state
+- [x] Apply 2x coin multiplier when completing 3 tasks in a row
+- [x] Display streak multiplier badge on UI (e.g., "2x Streak!")
+- [x] Reset streak counter if user doesn't complete a task within 24 hours
+- [x] Test streak multiplier calculation and display
+
+## Feature 5: Brain Dump Quick Capture
+- [x] Add "Brain Dump" button to Dash page
+- [x] Create modal for quick task entry without adding to today's list
+- [x] Store brain dump tasks in separate backlog in store
+- [x] Show backlog count badge on button
+- [x] Allow users to move backlog tasks to today's list
+- [x] Test brain dump capture and backlog management
+
+## Feature 6: Daily Challenge Missions
+- [x] Create daily challenges (e.g., "Complete 2 Focus tasks", "Earn 10 coins")
+- [x] Generate 1-3 random challenges daily
+- [x] Display challenges on Dash with progress bars
+- [x] Award bonus coins (50-100) for completing challenges
+- [x] Reset challenges at midnight
+- [x] Test challenge generation, tracking, and rewards

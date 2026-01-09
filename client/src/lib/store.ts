@@ -88,6 +88,11 @@ interface AppState {
   microWinsJournal: any[];
   referralCode: string;
   referredFriends: string[];
+  streakCount: number; // Consecutive tasks completed today
+  streakMultiplier: number; // 1x or 2x based on streak
+  brainDumpBacklog: Array<{ text: string; category: 'focus' | 'energy' | 'momentum' }>;
+  dailyChallenges: Array<{ id: string; title: string; type: 'tasks' | 'coins'; target: number; progress: number; bonus: number; completed: boolean }>;
+  dailyChallengesDate: string | null;
 
   // Actions
   startApp: () => void;
@@ -106,6 +111,12 @@ interface AppState {
   purchaseItem: (itemId: string, cost: number) => boolean;
   equipItem: (slot: 'hat' | 'glasses' | 'accessory', itemId: string | undefined) => void;
   addCoins: (amount: number) => void;
+  updateStreakCount: (count: number) => void;
+  addToBrainDump: (task: { text: string; category: 'focus' | 'energy' | 'momentum' }) => void;
+  removeFromBrainDump: (index: number) => void;
+  moveBrainDumpToToday: (index: number) => void;
+  generateDailyChallenges: () => void;
+  updateChallengeProgress: (challengeId: string, progress: number) => void;
   setCustomAccessory: (accessory: CustomAccessory) => void;
   equipCustomAccessory: (id: string | null) => void;
   swapAction: (id: string) => void;
@@ -283,6 +294,11 @@ export const useStore = create<AppState>()(
       microWinsJournal: [],
       referralCode: Math.random().toString(36).substring(2, 10).toUpperCase(),
       referredFriends: [],
+      streakCount: 0,
+      streakMultiplier: 1,
+      brainDumpBacklog: [],
+      dailyChallenges: [],
+      dailyChallengesDate: null,
 
       startApp: () => set({ hasStarted: true }),
       completeTutorial: () => set({ hasSeenTutorial: true }),
@@ -405,8 +421,66 @@ export const useStore = create<AppState>()(
       },
 
       addCoins: (amount: number) => {
-        const { coins } = get();
-        set({ coins: coins + amount });
+        const { coins, streakMultiplier } = get();
+        const finalAmount = amount * streakMultiplier;
+        set({ coins: coins + finalAmount });
+      },
+
+      updateStreakCount: (count: number) => {
+        const multiplier = count >= 3 ? 2 : 1;
+        set({ streakCount: count, streakMultiplier: multiplier });
+      },
+
+      addToBrainDump: (task: { text: string; category: 'focus' | 'energy' | 'momentum' }) => {
+        const { brainDumpBacklog } = get();
+        set({ brainDumpBacklog: [...brainDumpBacklog, task] });
+      },
+
+      removeFromBrainDump: (index: number) => {
+        const { brainDumpBacklog } = get();
+        set({ brainDumpBacklog: brainDumpBacklog.filter((_, i) => i !== index) });
+      },
+
+      moveBrainDumpToToday: (index: number) => {
+        const { brainDumpBacklog, todaysActions } = get();
+        const task = brainDumpBacklog[index];
+        if (task) {
+          const newAction: MicroAction = {
+            id: `brain-${Date.now()}`,
+            text: task.text,
+            category: task.category,
+            completed: false,
+          };
+          set({
+            todaysActions: [...todaysActions, newAction],
+            brainDumpBacklog: brainDumpBacklog.filter((_, i) => i !== index),
+          });
+        }
+      },
+
+      generateDailyChallenges: () => {
+        const today = new Date().toDateString();
+        const { dailyChallengesDate } = get();
+        if (dailyChallengesDate === today) return;
+
+        const challenges = [
+          { id: 'focus-2', title: 'Focus Master', type: 'tasks' as const, target: 2, progress: 0, bonus: 50, completed: false },
+          { id: 'energy-1', title: 'Energy Boost', type: 'tasks' as const, target: 1, progress: 0, bonus: 30, completed: false },
+          { id: 'coins-10', title: 'Coin Collector', type: 'coins' as const, target: 10, progress: 0, bonus: 100, completed: false },
+        ];
+        set({ dailyChallenges: challenges, dailyChallengesDate: today });
+      },
+
+      updateChallengeProgress: (challengeId: string, progress: number) => {
+        const { dailyChallenges, coins } = get();
+        const updated = dailyChallenges.map((c) => {
+          if (c.id === challengeId) {
+            const completed = progress >= c.target;
+            return { ...c, progress, completed };
+          }
+          return c;
+        });
+        set({ dailyChallenges: updated });
       },
 
       setCustomAccessory: (accessory: CustomAccessory) => {
