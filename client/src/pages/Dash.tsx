@@ -384,15 +384,11 @@ export default function Dash() {
     // Simulate "thinking"
     setTimeout(() => {
       const random = incomplete[Math.floor(Math.random() * incomplete.length)];
-      // Hide others visually via CSS class or state
-      // For now, we'll just highlight the chosen one
-      const el = document.getElementById(`action-${random.id}`);
-      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      el?.focus();
       haptics.success();
       
-      // Reset magic mode after a bit
-      setTimeout(() => setMagicMode(false), 2000);
+      // Open the task immediately
+      setFocusTask({ id: random.id, text: random.text });
+      setMagicMode(false);
     }, 1000);
   };
 

@@ -418,3 +418,10 @@
 - [x] Test that each context shows correct tasks
 - [x] Verify Grind context shows correct Grind tasks (g1, g3, g5)
 - [x] Verified fix is working - users now land on correct context (Self/Grind/Nest)
+
+
+## Bug Fix - "Pick for me" Button
+- [x] Fixed "Pick for me" button to actually open/start a random task
+- [x] Changed behavior from just scrolling to task → immediately opening in Focus Mode
+- [x] Added 1-second "thinking" animation before selecting task
+- [x] Verified fix works - button now properly selects random task and opens it
