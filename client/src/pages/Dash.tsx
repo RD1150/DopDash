@@ -268,7 +268,7 @@ export default function Dash() {
         }
       } else {
         setComboCount(1);
-        soundManager.playPop();
+        soundManager.playCompletion();
       }
       
       setLastActionTime(now);
@@ -822,12 +822,24 @@ export default function Dash() {
                       />
                     ) : (
                       <div className="flex items-center justify-between group/text">
-                        <p className={cn(
-                          "text-lg font-medium transition-all duration-300",
-                          action.completed ? "text-muted-foreground line-through decoration-primary/30" : "text-foreground"
-                        )}>
-                          {action.text}
-                        </p>
+                        <div className="flex-1 flex items-center justify-between gap-3">
+                          <p className={cn(
+                            "text-lg font-medium transition-all duration-300",
+                            action.completed ? "text-muted-foreground line-through decoration-primary/30" : "text-foreground"
+                          )}>
+                            {action.text}
+                          </p>
+                          {action.duration && (
+                            <span className={cn(
+                              "px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap",
+                              action.duration === 2 ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" :
+                              action.duration === 5 ? "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400" :
+                              "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+                            )}>
+                              ~{action.duration}m
+                            </span>
+                          )}
+                        </div>
                         {!action.completed && (
                           <div className="flex opacity-0 group-hover:opacity-100 transition-opacity">
                             <button
@@ -1035,6 +1047,31 @@ export default function Dash() {
               setFocusTask(null);
             }}
           />
+        )}
+
+        {/* Quick Start Presets */}
+        {!selectedCategory && (
+          <div className="py-8 px-6 bg-gradient-to-r from-primary/5 to-primary/10 rounded-2xl border border-primary/20 max-w-2xl">
+            <h3 className="text-lg font-semibold mb-4 text-center">Quick Start</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              {actions.filter(a => !a.completed).slice(0, 3).map((action) => (
+                <motion.button
+                  key={action.id}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => {
+                    setFocusTask({ id: action.id, text: action.text });
+                  }}
+                  className="p-3 rounded-lg bg-card border border-primary/20 hover:border-primary/50 transition-all text-left"
+                >
+                  <p className="text-sm font-medium line-clamp-2">{action.text}</p>
+                  {action.duration && (
+                    <p className="text-xs text-muted-foreground mt-2">~{action.duration} min</p>
+                  )}
+                </motion.button>
+              ))}
+            </div>
+          </div>
         )}
 
         {/* Magic Button & Challenge */}

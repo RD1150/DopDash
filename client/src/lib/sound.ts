@@ -115,6 +115,62 @@ class SoundManager {
     osc.stop(now + 0.1);
   }
 
+  playCompletion() {
+    if (!this.ctx) return;
+    const now = this.ctx.currentTime;
+    const theme = localStorage.getItem('dopamine-dasher-storage') 
+      ? JSON.parse(localStorage.getItem('dopamine-dasher-storage')!).state.soundTheme 
+      : 'default';
+
+    if (theme === 'nature') {
+      // Bell chime
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(1046.50, now);
+      osc.frequency.exponentialRampToValueAtTime(523.25, now + 0.5);
+      gain.gain.setValueAtTime(0.3, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+      osc.start(now);
+      osc.stop(now + 0.5);
+      return;
+    }
+
+    if (theme === 'arcade') {
+      // Victory fanfare
+      const freqs = [523.25, 659.25, 783.99];
+      freqs.forEach((freq, i) => {
+        const osc = this.ctx!.createOscillator();
+        const gain = this.ctx!.createGain();
+        osc.connect(gain);
+        gain.connect(this.ctx!.destination);
+        osc.type = 'square';
+        osc.frequency.value = freq;
+        const startTime = now + i * 0.15;
+        gain.gain.setValueAtTime(0.2, startTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, startTime + 0.3);
+        osc.start(startTime);
+        osc.stop(startTime + 0.3);
+      });
+      return;
+    }
+
+    // Default: Satisfying ding
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(1046.50, now);
+    osc.frequency.exponentialRampToValueAtTime(523.25, now + 0.4);
+    gain.gain.setValueAtTime(0.3, now);
+    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+    osc.start(now);
+    osc.stop(now + 0.4);
+  }
+
   playCombo(count: number) {
     if (!this.ctx) return;
     const now = this.ctx.currentTime;

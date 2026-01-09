@@ -20,6 +20,7 @@ export type MicroAction = {
   category: 'focus' | 'energy' | 'momentum';
   completed: boolean;
   difficulty?: 'easy' | 'medium' | 'hard';
+  duration?: 2 | 5 | 10; // Duration in minutes
   subtasks?: SubTask[];
   parentTaskId?: string; // If this is a subtask
 };
@@ -156,36 +157,36 @@ const BADGES_LIBRARY: Badge[] = [
 
 const TASK_PACKS: Record<Context, Omit<MicroAction, 'completed'>[]> = {
   nest: [
-    { id: 'n1', text: 'Put away one dish', category: 'momentum' },
-    { id: 'n2', text: 'Pick up one item from the floor', category: 'momentum' },
-    { id: 'n3', text: 'Wipe one surface', category: 'momentum' },
-    { id: 'n4', text: 'Open a window', category: 'energy' },
-    { id: 'n5', text: 'Water one plant', category: 'energy' },
-    { id: 'n6', text: 'Sort one piece of mail', category: 'focus' },
+    { id: 'n1', text: 'Put away one dish', category: 'momentum', duration: 2 },
+    { id: 'n2', text: 'Pick up one item from the floor', category: 'momentum', duration: 2 },
+    { id: 'n3', text: 'Wipe one surface', category: 'momentum', duration: 5 },
+    { id: 'n4', text: 'Open a window', category: 'energy', duration: 2 },
+    { id: 'n5', text: 'Water one plant', category: 'energy', duration: 5 },
+    { id: 'n6', text: 'Sort one piece of mail', category: 'focus', duration: 5 },
   ],
   grind: [
-    { id: 'g1', text: 'Open the document', category: 'focus' },
-    { id: 'g2', text: 'Write one sentence', category: 'focus' },
-    { id: 'g3', text: 'Read one email', category: 'focus' },
-    { id: 'g4', text: 'Close one tab', category: 'momentum' },
-    { id: 'g5', text: 'Rename one file', category: 'momentum' },
-    { id: 'g6', text: 'Stand up and stretch', category: 'energy' },
+    { id: 'g1', text: 'Open the document', category: 'focus', duration: 2 },
+    { id: 'g2', text: 'Write one sentence', category: 'focus', duration: 5 },
+    { id: 'g3', text: 'Read one email', category: 'focus', duration: 5 },
+    { id: 'g4', text: 'Close one tab', category: 'momentum', duration: 2 },
+    { id: 'g5', text: 'Rename one file', category: 'momentum', duration: 2 },
+    { id: 'g6', text: 'Stand up and stretch', category: 'energy', duration: 2 },
   ],
   self: [
-    { id: 's1', text: 'Drink a glass of water', category: 'energy' },
-    { id: 's2', text: 'Take three deep breaths', category: 'energy' },
-    { id: 's3', text: 'Step outside for a moment', category: 'energy' },
-    { id: 's4', text: 'Put on comfortable clothes', category: 'momentum' },
-    { id: 's5', text: 'Wash your face', category: 'momentum' },
-    { id: 's6', text: 'Listen to one song', category: 'focus' },
+    { id: 's1', text: 'Drink a glass of water', category: 'energy', duration: 2 },
+    { id: 's2', text: 'Take three deep breaths', category: 'energy', duration: 2 },
+    { id: 's3', text: 'Step outside for a moment', category: 'energy', duration: 5 },
+    { id: 's4', text: 'Put on comfortable clothes', category: 'momentum', duration: 5 },
+    { id: 's5', text: 'Wash your face', category: 'momentum', duration: 5 },
+    { id: 's6', text: 'Listen to one song', category: 'focus', duration: 5 },
   ],
   family: [
-    { id: 'f1', text: 'Hug someone', category: 'momentum' },
-    { id: 'f2', text: 'Put away one toy', category: 'momentum' },
-    { id: 'f3', text: 'Send one text to family', category: 'momentum' },
-    { id: 'f4', text: 'Listen for 2 minutes', category: 'focus' },
-    { id: 'f5', text: 'Plan one meal', category: 'focus' },
-    { id: 'f6', text: 'Take a deep breath before reacting', category: 'energy' },
+    { id: 'f1', text: 'Hug someone', category: 'momentum', duration: 2 },
+    { id: 'f2', text: 'Put away one toy', category: 'momentum', duration: 2 },
+    { id: 'f3', text: 'Send one text to family', category: 'momentum', duration: 5 },
+    { id: 'f4', text: 'Listen for 2 minutes', category: 'focus', duration: 2 },
+    { id: 'f5', text: 'Plan one meal', category: 'focus', duration: 10 },
+    { id: 'f6', text: 'Take a deep breath before reacting', category: 'energy', duration: 2 },
   ]
 };
 

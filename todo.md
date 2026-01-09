@@ -425,3 +425,22 @@
 - [x] Changed behavior from just scrolling to task → immediately opening in Focus Mode
 - [x] Added 1-second "thinking" animation before selecting task
 - [x] Verified fix works - button now properly selects random task and opens it
+
+
+## Feature 1: Task Duration Badges
+- [x] Add duration field to task objects (2, 5, or 10 minutes)
+- [x] Display duration badge on each task card ("~2 min", "~5 min", "~10 min")
+- [x] Color-code badges by duration (green for 2min, amber for 5min, red for 10min)
+- [x] Test duration badges display correctly
+
+## Feature 2: Quick Start Presets
+- [x] Create time-based preset logic (morning: 6am-12pm, afternoon: 12pm-6pm, evening: 6pm-11pm)
+- [x] Create "Quick Start" section showing 3 pre-selected tasks for current time
+- [x] Add "Start Now" button to each preset task
+- [x] Test presets update based on time of day
+
+## Feature 3: Completion Celebration Sounds
+- [x] Add satisfying completion sound (ding/whoosh) to soundManager
+- [x] Play sound when task is marked complete
+- [x] Add volume control in Settings
+- [x] Test sound plays on task completion
