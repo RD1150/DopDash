@@ -308,6 +308,19 @@ export default function Dash() {
       
       addCoins(1); // Earn 1 coin per task (multiplier applied in store)
 
+      // Update challenge progress for focus tasks
+      const focusTasks = actions.filter(a => a.category === 'focus' && a.completed).length + 1;
+      useStore.getState().updateChallengeProgress('focus-2', focusTasks);
+      
+      // Trigger confetti if challenge completed
+      if (focusTasks >= 2) {
+        canvasConfetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+      }
+
       // Loot box chance
       if (Math.random() < 0.1) {
         setTimeout(() => setShowLootBox(true), 500);
@@ -540,13 +553,28 @@ export default function Dash() {
                     )}
                   </>
                 )}
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" className="gap-2">
-                      <Plus className="w-4 h-4" />
-                      New Mission
-                    </Button>
-                  </DropdownMenuTrigger>
+                <div className="flex gap-2 items-center">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="gap-2 relative"
+                    onClick={() => setShowBrainDumpModal(true)}
+                  >
+                    <BrainCircuit className="w-4 h-4" />
+                    Brain Dump
+                    {brainDumpBacklog.length > 0 && (
+                      <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                        {brainDumpBacklog.length}
+                      </span>
+                    )}
+                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="sm" className="gap-2">
+                        <Plus className="w-4 h-4" />
+                        New Mission
+                      </Button>
+                    </DropdownMenuTrigger>
                   <DropdownMenuContent align="start" className="w-56">
                     <DropdownMenuItem onClick={() => setShowTaskBreakdown(true)} className="gap-2 cursor-pointer">
                       <BrainCircuit className="w-4 h-4 text-purple-500" />
@@ -570,6 +598,7 @@ export default function Dash() {
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
+                </div>
               </div>
             </div>
             
@@ -675,6 +704,34 @@ export default function Dash() {
               {selectedCategory === 'energy' && energyCount} task(s) in Energy
               {selectedCategory === 'momentum' && momentumCount} task(s) in Momentum
             </motion.div>
+          )}
+          
+          {/* Daily Challenges Widget */}
+          {dailyChallenges.length > 0 && (
+            <div className="mb-4 p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+              <h3 className="font-bold text-sm mb-3 flex items-center gap-2">
+                <span>🎯</span> Daily Challenges
+              </h3>
+              <div className="space-y-2">
+                {dailyChallenges.map((challenge) => (
+                  <div key={challenge.id} className="bg-white dark:bg-slate-800 p-3 rounded">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-medium text-sm">{challenge.title}</span>
+                      <span className="text-xs font-bold text-yellow-600 dark:text-yellow-400">+{challenge.bonus} coins</span>
+                    </div>
+                    <div className="w-full bg-muted rounded-full h-2">
+                      <div
+                        className="bg-blue-500 h-2 rounded-full transition-all"
+                        style={{ width: `${Math.min((challenge.progress / challenge.target) * 100, 100)}%` }}
+                      />
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-1">
+                      {challenge.progress}/{challenge.target}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
           
           {/* Category Filter Tabs */}
