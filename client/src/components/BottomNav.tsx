@@ -1,11 +1,12 @@
 import { useLocation } from 'wouter';
 import { motion } from 'framer-motion';
-import { Home, BarChart3, ShoppingBag, Settings } from 'lucide-react';
+import { Home, BarChart3, ShoppingBag, Settings, Archive } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const NAV_ITEMS = [
   { path: '/dash', label: 'Dash', icon: Home },
   { path: '/stats', label: 'Stats', icon: BarChart3 },
+  { path: '/someday', label: 'Someday', icon: Archive },
   { path: '/shop', label: 'Shop', icon: ShoppingBag },
   { path: '/settings', label: 'Settings', icon: Settings },
 ];

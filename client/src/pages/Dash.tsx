@@ -32,6 +32,7 @@ import SurpriseMe from '@/components/SurpriseMe';
 import TaskBreakdownModal from '@/components/TaskBreakdownModal';
 import ContextSwitchValidator from '@/components/ContextSwitchValidator';
 import QuickWinSuggestions from '@/components/QuickWinSuggestions';
+import MoodSelector from '@/components/MoodSelector';
 import { Timer, CircleDashed, StickyNote, Volume2, Map } from 'lucide-react';
 import {
   DropdownMenu,
@@ -104,6 +105,16 @@ export default function Dash() {
   const [showBrainDumpModal, setShowBrainDumpModal] = useState(false);
   const [brainDumpInput, setBrainDumpInput] = useState('');
   const [brainDumpCategory, setBrainDumpCategory] = useState<'focus' | 'energy' | 'momentum'>('focus');
+  const [showMoodSelector, setShowMoodSelector] = useState(false);
+  const [selectedMood, setSelectedMood] = useState<'anxious' | 'bored' | 'overwhelmed' | 'energized' | null>(null);
+  const setEmotionalState = useStore((state) => state.setEmotionalState);
+  const currentEmotionalState = useStore((state) => state.currentEmotionalState);
+  
+  const handleMoodSelect = (mood: 'anxious' | 'bored' | 'overwhelmed' | 'energized') => {
+    setSelectedMood(mood);
+    setEmotionalState(mood);
+    soundManager.playCombo(1);
+  };
   const inputRef = useRef<HTMLInputElement>(null);
   const newTaskInputRef = useRef<HTMLInputElement>(null);
   
@@ -557,6 +568,19 @@ export default function Dash() {
                   <Button
                     variant="outline"
                     size="sm"
+                    className="gap-2"
+                    onClick={() => setShowMoodSelector(true)}
+                  >
+                    {currentEmotionalState ? (
+                      <span>{currentEmotionalState === 'anxious' ? '😰' : currentEmotionalState === 'bored' ? '😑' : currentEmotionalState === 'overwhelmed' ? '😵' : '⚡'}</span>
+                    ) : (
+                      <span>😊</span>
+                    )}
+                    Mood
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
                     className="gap-2 relative"
                     onClick={() => setShowBrainDumpModal(true)}
                   >
@@ -983,6 +1007,18 @@ export default function Dash() {
                             >
                               <RefreshCw className="w-4 h-4" />
                             </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                useStore.getState().archiveTask(action.id);
+                                soundManager.playPop();
+                              }}
+                              className="p-2 text-muted-foreground hover:text-amber-500"
+                              aria-label="Archive task"
+                              title="Archive to Later"
+                            >
+                              <StickyNote className="w-4 h-4" />
+                            </button>
                           </div>
                         )}
                       </div>
@@ -1258,6 +1294,14 @@ export default function Dash() {
       
       {/* Onboarding Checklist */}
       <OnboardingChecklist />
+      
+      {/* Mood Selector Modal */}
+      <MoodSelector
+        isOpen={showMoodSelector}
+        onClose={() => setShowMoodSelector(false)}
+        onSelect={handleMoodSelect}
+        currentMood={currentEmotionalState}
+      />
     </Layout>
   );
 }

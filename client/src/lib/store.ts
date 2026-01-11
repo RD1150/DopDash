@@ -93,6 +93,12 @@ interface AppState {
   brainDumpBacklog: Array<{ text: string; category: 'focus' | 'energy' | 'momentum' }>;
   dailyChallenges: Array<{ id: string; title: string; type: 'tasks' | 'coins'; target: number; progress: number; bonus: number; completed: boolean }>;
   dailyChallengesDate: string | null;
+  currentEmotionalState: 'anxious' | 'bored' | 'overwhelmed' | 'energized' | null;
+  archivedTasks: MicroAction[];
+  hyperfocusMode: boolean;
+  hyperfocusStartTime: number | null;
+  hyperfocusTaskId: string | null;
+  accountabilityPartner: string | null;
 
   // Actions
   startApp: () => void;
@@ -155,6 +161,12 @@ interface AppState {
   addMicroWinJournalEntry: (taskId: string, entry: string) => void;
   generateReferralCode: () => string;
   addReferredFriend: (friendId: string) => void;
+  setEmotionalState: (state: 'anxious' | 'bored' | 'overwhelmed' | 'energized' | null) => void;
+  archiveTask: (taskId: string) => void;
+  restoreArchivedTask: (taskId: string) => void;
+  startHyperfocus: (taskId: string) => void;
+  stopHyperfocus: () => void;
+  setAccountabilityPartner: (partnerId: string | null) => void;
 }
 
 const BADGES_LIBRARY: Badge[] = [
@@ -299,6 +311,12 @@ export const useStore = create<AppState>()(
       brainDumpBacklog: [],
       dailyChallenges: [],
       dailyChallengesDate: null,
+      currentEmotionalState: null,
+      archivedTasks: [],
+      hyperfocusMode: false,
+      hyperfocusStartTime: null,
+      hyperfocusTaskId: null,
+      accountabilityPartner: null,
 
       startApp: () => set({ hasStarted: true }),
       completeTutorial: () => set({ hasSeenTutorial: true }),
@@ -743,6 +761,41 @@ export const useStore = create<AppState>()(
           return state;
         });
       }
+      ,
+
+      setEmotionalState: (state: 'anxious' | 'bored' | 'overwhelmed' | 'energized' | null) => set({ currentEmotionalState: state }),
+
+      archiveTask: (taskId: string) => {
+        set((state) => {
+          const taskToArchive = state.todaysActions.find(a => a.id === taskId);
+          if (taskToArchive) {
+            return {
+              todaysActions: state.todaysActions.filter(a => a.id !== taskId),
+              archivedTasks: [...state.archivedTasks, taskToArchive]
+            };
+          }
+          return state;
+        });
+      },
+
+      restoreArchivedTask: (taskId: string) => {
+        set((state) => {
+          const taskToRestore = state.archivedTasks.find(a => a.id === taskId);
+          if (taskToRestore) {
+            return {
+              archivedTasks: state.archivedTasks.filter(a => a.id !== taskId),
+              todaysActions: [...state.todaysActions, { ...taskToRestore, completed: false }]
+            };
+          }
+          return state;
+        });
+      },
+
+      startHyperfocus: (taskId: string) => set({ hyperfocusMode: true, hyperfocusStartTime: Date.now(), hyperfocusTaskId: taskId }),
+
+      stopHyperfocus: () => set({ hyperfocusMode: false, hyperfocusStartTime: null, hyperfocusTaskId: null }),
+
+      setAccountabilityPartner: (partnerId: string | null) => set({ accountabilityPartner: partnerId })
     }),
     {
       name: 'dopamine-dasher-storage',

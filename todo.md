@@ -514,3 +514,18 @@
 - [x] Show completion status
 - [x] Test challenges display and update correctly
 - [x] Add confetti animation on challenge completion
+
+
+## Competitive Advantage 1: Emotional State Tracking
+- [x] Add mood selector UI (anxious, bored, overwhelmed, energized)
+- [x] Create mood-to-task matching algorithm
+- [x] Show "mood-matched" task suggestions on Dash
+- [x] Store mood data with task completion history
+- [x] Display mood analytics in Stats page
+
+## Competitive Advantage 2: Shame-Free Task Archiving
+- [x] Add "Archive to Later" button on task cards
+- [x] Create "Someday" section in navigation
+- [x] Show archived tasks with compassionate messaging
+- [x] Allow users to restore archived tasks to today
+- [x] Track archive frequency for insights
