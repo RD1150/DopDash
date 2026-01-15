@@ -567,6 +567,6 @@
 - [x] Install and configure Capacitor
 - [x] Create iOS app configuration
 - [x] Create Android app configuration
-- [ ] Set up app icons and splash screens (user to customize)
+- [x] Set up app icons and splash screens with Dashie branding
 - [ ] Generate build artifacts for App Store submission (user to build)
 - [x] Create submission guide for developer accounts
