@@ -222,3 +222,132 @@ export const userStats = mysqlTable("userStats", {
 
 export type UserStats = typeof userStats.$inferSelect;
 export type InsertUserStats = typeof userStats.$inferInsert;
+
+/**
+ * Leaderboard entries (cached for performance)
+ */
+export const leaderboardEntries = mysqlTable("leaderboardEntries", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  
+  // Current stats
+  currentStreak: int("currentStreak").notNull().default(0),
+  totalTasksCompleted: int("totalTasksCompleted").notNull().default(0),
+  totalCoins: int("totalCoins").notNull().default(0),
+  
+  // Leaderboard rank
+  globalRank: int("globalRank"),
+  weeklyRank: int("weeklyRank"),
+  
+  // Last updated
+  lastUpdated: timestamp("lastUpdated").defaultNow().onUpdateNow().notNull(),
+});
+
+export type LeaderboardEntry = typeof leaderboardEntries.$inferSelect;
+export type InsertLeaderboardEntry = typeof leaderboardEntries.$inferInsert;
+
+/**
+ * Contests and challenges
+ */
+export const contests = mysqlTable("contests", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  type: mysqlEnum("type", ["weekly", "daily", "community", "friends"]).notNull(),
+  title: text("title").notNull(),
+  description: text("description"),
+  
+  // Contest parameters
+  target: int("target").notNull(),
+  reward: int("reward").notNull(),
+  
+  // Timing
+  startDate: timestamp("startDate").notNull(),
+  endDate: timestamp("endDate").notNull(),
+  
+  // Status
+  active: int("active").notNull().default(1),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Contest = typeof contests.$inferSelect;
+export type InsertContest = typeof contests.$inferInsert;
+
+/**
+ * User contest participation and progress
+ */
+export const contestParticipation = mysqlTable("contestParticipation", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  contestId: int("contestId").notNull().references(() => contests.id, { onDelete: "cascade" }),
+  
+  // Progress
+  progress: int("progress").notNull().default(0),
+  completed: int("completed").notNull().default(0),
+  
+  // Rewards
+  rewardClaimed: int("rewardClaimed").notNull().default(0),
+  
+  joinedAt: timestamp("joinedAt").defaultNow().notNull(),
+  completedAt: timestamp("completedAt"),
+});
+
+export type ContestParticipation = typeof contestParticipation.$inferSelect;
+export type InsertContestParticipation = typeof contestParticipation.$inferInsert;
+
+/**
+ * Digital rewards (stickers, GIFs, badges)
+ */
+export const rewards = mysqlTable("rewards", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  name: text("name").notNull(),
+  description: text("description"),
+  emoji: varchar("emoji", { length: 10 }),
+  
+  // Reward type and rarity
+  type: mysqlEnum("type", ["gif", "sticker", "badge"]).notNull(),
+  rarity: mysqlEnum("rarity", ["common", "rare", "epic", "legendary"]).notNull(),
+  
+  // Cost in coins
+  cost: int("cost").notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Reward = typeof rewards.$inferSelect;
+export type InsertReward = typeof rewards.$inferInsert;
+
+/**
+ * User reward collection
+ */
+export const userRewards = mysqlTable("userRewards", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  rewardId: int("rewardId").notNull().references(() => rewards.id, { onDelete: "cascade" }),
+  
+  // Ownership
+  owned: int("owned").notNull().default(1),
+  unlockedAt: timestamp("unlockedAt").defaultNow().notNull(),
+});
+
+export type UserReward = typeof userRewards.$inferSelect;
+export type InsertUserReward = typeof userRewards.$inferInsert;
+
+/**
+ * Daily check-in records
+ */
+export const dailyCheckIns = mysqlTable("dailyCheckIns", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  
+  date: varchar("date", { length: 10 }).notNull(), // YYYY-MM-DD
+  energyLevel: mysqlEnum("energyLevel", ["low", "medium", "high"]),
+  vibe: mysqlEnum("vibe", ["anxious", "bored", "overwhelmed", "energized"]),
+  need: mysqlEnum("need", ["quick-wins", "deep-focus", "movement", "rest"]),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type DailyCheckIn = typeof dailyCheckIns.$inferSelect;
+export type InsertDailyCheckIn = typeof dailyCheckIns.$inferInsert;

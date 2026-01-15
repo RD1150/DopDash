@@ -1,6 +1,6 @@
 import { eq, and, desc, gte } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, userProfiles, InsertUserProfile, tasks, InsertTask, journalEntries, InsertJournalEntry, dailyAffirmations, InsertDailyAffirmation, habits, InsertHabit, habitCompletions, InsertHabitCompletion, moodEntries, InsertMoodEntry, userStats, InsertUserStats } from "../drizzle/schema";
+import { InsertUser, users, userProfiles, InsertUserProfile, tasks, InsertTask, journalEntries, InsertJournalEntry, dailyAffirmations, InsertDailyAffirmation, habits, InsertHabit, habitCompletions, InsertHabitCompletion, moodEntries, InsertMoodEntry, userStats, InsertUserStats, leaderboardEntries, InsertLeaderboardEntry, contests, InsertContest, contestParticipation, InsertContestParticipation, rewards, InsertReward, userRewards, InsertUserReward, dailyCheckIns, InsertDailyCheckIn } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -355,4 +355,197 @@ export async function updateUserStats(userId: number, date: string, updates: Par
       ...updates,
     });
   }
+}
+
+
+// ============ LEADERBOARD FUNCTIONS ============
+
+export async function getGlobalLeaderboard(limit: number = 100) {
+  const db = await getDb();
+  if (!db) return [];
+
+  return await db.select({
+    id: leaderboardEntries.id,
+    userId: leaderboardEntries.userId,
+    currentStreak: leaderboardEntries.currentStreak,
+    totalTasksCompleted: leaderboardEntries.totalTasksCompleted,
+    totalCoins: leaderboardEntries.totalCoins,
+    globalRank: leaderboardEntries.globalRank,
+  })
+    .from(leaderboardEntries)
+    .orderBy(desc(leaderboardEntries.totalCoins))
+    .limit(limit);
+}
+
+export async function updateLeaderboardEntry(userId: number, updates: Partial<InsertLeaderboardEntry>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const existing = await db.select().from(leaderboardEntries)
+    .where(eq(leaderboardEntries.userId, userId))
+    .limit(1);
+
+  if (existing.length > 0) {
+    await db.update(leaderboardEntries).set(updates).where(eq(leaderboardEntries.userId, userId));
+  } else {
+    await db.insert(leaderboardEntries).values({
+      userId,
+      ...updates,
+    });
+  }
+}
+
+export async function getUserLeaderboardRank(userId: number) {
+  const db = await getDb();
+  if (!db) return null;
+
+  const result = await db.select().from(leaderboardEntries)
+    .where(eq(leaderboardEntries.userId, userId))
+    .limit(1);
+
+  return result.length > 0 ? result[0] : null;
+}
+
+// ============ CONTEST FUNCTIONS ============
+
+export async function getActiveContests() {
+  const db = await getDb();
+  if (!db) return [];
+
+  return await db.select().from(contests)
+    .where(eq(contests.active, 1))
+    .orderBy(desc(contests.startDate));
+}
+
+export async function createContest(contest: InsertContest) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const result = await db.insert(contests).values(contest);
+  return result;
+}
+
+export async function getUserContestProgress(userId: number, contestId: number) {
+  const db = await getDb();
+  if (!db) return null;
+
+  const result = await db.select().from(contestParticipation)
+    .where(and(
+      eq(contestParticipation.userId, userId),
+      eq(contestParticipation.contestId, contestId)
+    ))
+    .limit(1);
+
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function updateContestProgress(userId: number, contestId: number, progress: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const existing = await getUserContestProgress(userId, contestId);
+
+  if (existing) {
+    await db.update(contestParticipation)
+      .set({ progress })
+      .where(and(
+        eq(contestParticipation.userId, userId),
+        eq(contestParticipation.contestId, contestId)
+      ));
+  } else {
+    await db.insert(contestParticipation).values({
+      userId,
+      contestId,
+      progress,
+    });
+  }
+}
+
+export async function getContestLeaderboard(contestId: number, limit: number = 100) {
+  const db = await getDb();
+  if (!db) return [];
+
+  return await db.select().from(contestParticipation)
+    .where(eq(contestParticipation.contestId, contestId))
+    .orderBy(desc(contestParticipation.progress))
+    .limit(limit);
+}
+
+// ============ REWARD FUNCTIONS ============
+
+export async function getAllRewards() {
+  const db = await getDb();
+  if (!db) return [];
+
+  return await db.select().from(rewards).orderBy(desc(rewards.cost));
+}
+
+export async function getUserRewards(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+
+  return await db.select({
+    id: userRewards.id,
+    userId: userRewards.userId,
+    rewardId: userRewards.rewardId,
+    name: rewards.name,
+    emoji: rewards.emoji,
+    type: rewards.type,
+    rarity: rewards.rarity,
+    unlockedAt: userRewards.unlockedAt,
+  })
+    .from(userRewards)
+    .innerJoin(rewards, eq(userRewards.rewardId, rewards.id))
+    .where(eq(userRewards.userId, userId))
+    .orderBy(desc(userRewards.unlockedAt));
+}
+
+export async function purchaseReward(userId: number, rewardId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db.insert(userRewards).values({
+    userId,
+    rewardId,
+  });
+}
+
+// ============ DAILY CHECK-IN FUNCTIONS ============
+
+export async function getTodayCheckIn(userId: number) {
+  const db = await getDb();
+  if (!db) return null;
+
+  const today = new Date().toISOString().split('T')[0];
+  const result = await db.select().from(dailyCheckIns)
+    .where(and(
+      eq(dailyCheckIns.userId, userId),
+      eq(dailyCheckIns.date, today)
+    ))
+    .limit(1);
+
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function createDailyCheckIn(checkIn: InsertDailyCheckIn) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db.insert(dailyCheckIns).values(checkIn);
+}
+
+export async function getCheckInHistory(userId: number, days: number = 30) {
+  const db = await getDb();
+  if (!db) return [];
+
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - days);
+  const startDateStr = startDate.toISOString().split('T')[0];
+
+  return await db.select().from(dailyCheckIns)
+    .where(and(
+      eq(dailyCheckIns.userId, userId),
+      gte(dailyCheckIns.date, startDateStr)
+    ))
+    .orderBy(desc(dailyCheckIns.date));
 }

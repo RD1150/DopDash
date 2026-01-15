@@ -544,4 +544,7 @@
 - [x] Coin Spending System (redeem coins for rewards)
 - [x] Reward Collection Display (show collected items in profile)
 - [x] Test full engagement loop end-to-end
+- [x] Backend Database Schema (leaderboards, contests, rewards, check-ins)
+- [x] tRPC Procedures (all engagement endpoints)
+- [x] Backend Tests
 - [ ] Final checkpoint and market launch

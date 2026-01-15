@@ -327,6 +327,104 @@ export const appRouter = router({
         };
       }),
   }),
+
+  // Engagement system procedures
+  engagement: router({
+    // Leaderboard
+    getGlobalLeaderboard: publicProcedure
+      .query(async () => {
+        return await db.getGlobalLeaderboard(100);
+      }),
+
+    getUserRank: protectedProcedure
+      .query(async ({ ctx }) => {
+        return await db.getUserLeaderboardRank(ctx.user.id);
+      }),
+
+    // Contests
+    getActiveContests: publicProcedure
+      .query(async () => {
+        return await db.getActiveContests();
+      }),
+
+    getContestProgress: protectedProcedure
+      .input(z.object({ contestId: z.number() }))
+      .query(async ({ ctx, input }) => {
+        return await db.getUserContestProgress(ctx.user.id, input.contestId);
+      }),
+
+    updateContestProgress: protectedProcedure
+      .input(z.object({ contestId: z.number(), progress: z.number() }))
+      .mutation(async ({ ctx, input }) => {
+        await db.updateContestProgress(ctx.user.id, input.contestId, input.progress);
+        return { success: true };
+      }),
+
+    getContestLeaderboard: publicProcedure
+      .input(z.object({ contestId: z.number() }))
+      .query(async ({ input }) => {
+        return await db.getContestLeaderboard(input.contestId);
+      }),
+
+    // Rewards
+    getAllRewards: publicProcedure
+      .query(async () => {
+        return await db.getAllRewards();
+      }),
+
+    getUserRewards: protectedProcedure
+      .query(async ({ ctx }) => {
+        return await db.getUserRewards(ctx.user.id);
+      }),
+
+    purchaseReward: protectedProcedure
+      .input(z.object({ rewardId: z.number() }))
+      .mutation(async ({ ctx, input }) => {
+        const profile = await db.getUserProfile(ctx.user.id);
+        const reward = (await db.getAllRewards()).find(r => r.id === input.rewardId);
+
+        if (!reward) throw new Error('Reward not found');
+        if (!profile || profile.coins < reward.cost) throw new Error('Not enough coins');
+
+        // Deduct coins
+        await db.updateUserProfile(ctx.user.id, {
+          coins: profile.coins - reward.cost,
+        });
+
+        // Add reward
+        await db.purchaseReward(ctx.user.id, input.rewardId);
+
+        return { success: true };
+      }),
+
+    // Daily Check-in
+    getTodayCheckIn: protectedProcedure
+      .query(async ({ ctx }) => {
+        return await db.getTodayCheckIn(ctx.user.id);
+      }),
+
+    createCheckIn: protectedProcedure
+      .input(z.object({
+        energyLevel: z.enum(['low', 'medium', 'high']),
+        vibe: z.enum(['anxious', 'bored', 'overwhelmed', 'energized']),
+        need: z.enum(['quick-wins', 'deep-focus', 'movement', 'rest']),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const today = new Date().toISOString().split('T')[0];
+        await db.createDailyCheckIn({
+          userId: ctx.user.id,
+          date: today,
+          ...input,
+        });
+        return { success: true };
+      }),
+
+    getCheckInHistory: protectedProcedure
+      .input(z.object({ days: z.number().default(30) }))
+      .query(async ({ ctx, input }) => {
+        return await db.getCheckInHistory(ctx.user.id, input.days);
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;
