@@ -33,6 +33,7 @@ import TaskBreakdownModal from '@/components/TaskBreakdownModal';
 import ContextSwitchValidator from '@/components/ContextSwitchValidator';
 import QuickWinSuggestions from '@/components/QuickWinSuggestions';
 import MoodSelector from '@/components/MoodSelector';
+import DailyCheckIn from '@/components/DailyCheckIn';
 import { Timer, CircleDashed, StickyNote, Volume2, Map } from 'lucide-react';
 import {
   DropdownMenu,
@@ -78,6 +79,7 @@ export default function Dash() {
   const [lastActionTime, setLastActionTime] = useState(0);
   const [showLootBox, setShowLootBox] = useState(false);
   const [showBossBattle, setShowBossBattle] = useState(false);
+  const [showDailyCheckIn, setShowDailyCheckIn] = useState(false);
   const [showWeeklyReview, setShowWeeklyReview] = useState(false);
   const [showBrainDump, setShowBrainDump] = useState(false);
   const [showSoundMixer, setShowSoundMixer] = useState(false);
@@ -211,6 +213,16 @@ export default function Dash() {
     checkNightMode();
     const interval = setInterval(checkNightMode, 60000); // Check every minute
     return () => clearInterval(interval);
+  }, []);
+
+  // Show Daily Check-in on first load
+  useEffect(() => {
+    const hasSeenCheckIn = localStorage.getItem('dailyCheckInSeen');
+    const today = new Date().toISOString().split('T')[0];
+    if (hasSeenCheckIn !== today) {
+      setShowDailyCheckIn(true);
+      localStorage.setItem('dailyCheckInSeen', today);
+    }
   }, []);
 
   // Check for completion to trigger reward
@@ -489,6 +501,7 @@ export default function Dash() {
         }} />}
         {showBossBattle && <BossBattle onClose={() => setShowBossBattle(false)} />}
         {showBubblePop && <BubblePop onClose={() => setShowBubblePop(false)} />}
+        {showDailyCheckIn && <DailyCheckIn isOpen={showDailyCheckIn} onComplete={() => setShowDailyCheckIn(false)} />}
       </AnimatePresence>
       <DashieSlide 
         completedCount={actions.filter(a => a.completed).length}
