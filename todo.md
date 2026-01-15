@@ -561,3 +561,12 @@
 - [x] Create seed data script for demo users - Backend ready
 - [x] Test full engagement loop - All systems operational
 - [x] Final launch checkpoint
+
+
+## Native App Wrapper (iOS & Android)
+- [x] Install and configure Capacitor
+- [x] Create iOS app configuration
+- [x] Create Android app configuration
+- [ ] Set up app icons and splash screens (user to customize)
+- [ ] Generate build artifacts for App Store submission (user to build)
+- [x] Create submission guide for developer accounts
