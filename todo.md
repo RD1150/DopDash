@@ -529,3 +529,19 @@
 - [x] Show archived tasks with compassionate messaging
 - [x] Allow users to restore archived tasks to today
 - [x] Track archive frequency for insights
+
+
+## Market Launch - Cozy Engagement System (ALL-IN)
+- [x] Daily Check-in Quiz (energy/mood/vibe selector with smart task filtering)
+- [x] Dashie Personality System (reacts to user mood with personalized encouragement)
+- [x] Cozy Language & Micro-interactions (warm, shame-free copy throughout)
+- [x] Global Leaderboard System (track streaks, tasks, coins - top 100 users)
+- [x] Weekly Streak Challenge (compete globally, bonus coins for winners)
+- [x] Daily Speed Challenges (complete tasks fast, real-time leaderboard)
+- [x] Community Goals (shared targets with progress bars)
+- [x] Contest System (multiple contest types with rewards)
+- [x] Digital Reward Shop (animated GIFs/stickers, Dashie-themed items)
+- [x] Coin Spending System (redeem coins for rewards)
+- [x] Reward Collection Display (show collected items in profile)
+- [x] Test full engagement loop end-to-end
+- [ ] Final checkpoint and market launch

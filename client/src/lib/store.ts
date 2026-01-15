@@ -99,6 +99,10 @@ interface AppState {
   hyperfocusStartTime: number | null;
   hyperfocusTaskId: string | null;
   accountabilityPartner: string | null;
+  lastCheckInDate: string | null;
+  todaysEnergyLevel: 'low' | 'medium' | 'high' | null;
+  todaysVibe: 'anxious' | 'bored' | 'overwhelmed' | 'energized' | null;
+  todaysNeed: 'quick-wins' | 'deep-focus' | 'movement' | 'rest' | null;
 
   // Actions
   startApp: () => void;
@@ -167,6 +171,9 @@ interface AppState {
   startHyperfocus: (taskId: string) => void;
   stopHyperfocus: () => void;
   setAccountabilityPartner: (partnerId: string | null) => void;
+  setDailyCheckIn: (energy: 'low' | 'medium' | 'high', vibe: 'anxious' | 'bored' | 'overwhelmed' | 'energized', need: 'quick-wins' | 'deep-focus' | 'movement' | 'rest') => void;
+  getDashieGreeting: () => string;
+  getDashieEncouragement: () => string;
 }
 
 const BADGES_LIBRARY: Badge[] = [
@@ -317,6 +324,10 @@ export const useStore = create<AppState>()(
       hyperfocusStartTime: null,
       hyperfocusTaskId: null,
       accountabilityPartner: null,
+      lastCheckInDate: null,
+      todaysEnergyLevel: null,
+      todaysVibe: null,
+      todaysNeed: null,
 
       startApp: () => set({ hasStarted: true }),
       completeTutorial: () => set({ hasSeenTutorial: true }),
@@ -795,7 +806,25 @@ export const useStore = create<AppState>()(
 
       stopHyperfocus: () => set({ hyperfocusMode: false, hyperfocusStartTime: null, hyperfocusTaskId: null }),
 
-      setAccountabilityPartner: (partnerId: string | null) => set({ accountabilityPartner: partnerId })
+      setAccountabilityPartner: (partnerId: string | null) => set({ accountabilityPartner: partnerId }),
+
+      setDailyCheckIn: (energy, vibe, need) => {
+        const today = new Date().toISOString().split('T')[0];
+        set({ 
+          lastCheckInDate: today,
+          todaysEnergyLevel: energy,
+          todaysVibe: vibe,
+          todaysNeed: need
+        });
+      },
+
+      getDashieGreeting: () => {
+        return "Hey! Ready to get some wins today?";
+      },
+
+      getDashieEncouragement: () => {
+        return "You're doing great!";
+      }
     }),
     {
       name: 'dopamine-dasher-storage',
