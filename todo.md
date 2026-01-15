@@ -548,3 +548,7 @@
 - [x] tRPC Procedures (all engagement endpoints)
 - [x] Backend Tests
 - [ ] Final checkpoint and market launch
+
+
+## Pre-Launch Polish
+- [x] Remove all "Made with Manus" branding from app
