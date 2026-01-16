@@ -62,7 +62,7 @@ export default function Home() {
             }}
           >
             <motion.img
-              src="/images/mascot/dashie-wings-dd-transparent.png"
+              src="/dashie-hero.png"
               alt="Dashie - Your task companion"
               className="w-32 h-32 md:w-40 md:h-40 object-contain"
               animate={{ y: [0, -10, 0] }}

@@ -643,3 +643,9 @@
 - [x] Add haptic feedback on task completion (already integrated)
 - [x] Final testing and bug fixes
 - [ ] PUBLISH 🚀
+
+
+## Bug Fixes - Pre-Launch
+- [ ] Regenerate Dashie hero image with solid background (no checkered transparency)
+- [ ] Clear browser cache and restart dev server
+- [ ] Verify Dashie displays correctly
