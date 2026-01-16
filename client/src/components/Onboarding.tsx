@@ -122,12 +122,13 @@ export default function Onboarding() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="min-h-screen flex flex-col items-center justify-center px-6 py-12"
+            className="min-h-screen flex flex-col items-center justify-center px-6 py-12 bg-gradient-to-b from-[#FFF9E6] to-[#FFFBF0]"
+            style={{ backgroundColor: '#FFF9E6' }}
           >
             {/* Dashie - Large and prominent */}
             <div className="flex flex-col items-center mb-16">
               <motion.img
-                src="/images/mascot/dashie-wings-dd-transparent.png"
+                src="/images/mascot/dashie-clean-bg.png"
                 alt="Dashie"
                 animate={{ 
                   y: [0, -15, 0],
