@@ -97,7 +97,7 @@ export default function StatsSharing() {
         )}
 
         <p className="text-xs text-center text-muted-foreground">
-          Built with Dopamine Dasher 🎯
+          Dopamine Dasher 🎯
         </p>
       </motion.div>
 

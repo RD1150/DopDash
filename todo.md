@@ -567,13 +567,33 @@
 - [x] Install and configure Capacitor
 - [x] Create iOS app configuration
 - [x] Create Android app configuration
-- [ ] Set up app icons and splash screens (user to customize)
+- [x] Set up app icons and splash screens with Dashie branding
 - [ ] Generate build artifacts for App Store submission (user to build)
 - [x] Create submission guide for developer accounts
 
 
-## Latest Optimizations (Current Session)
-- [x] Optimize Dashie animation for faster loading (0.4s entrance, 2s float)
-- [x] Update to DD t-shirt Dashie on onboarding
-- [x] Increase Dashie size to 300px
-- [ ] Publish to live site
+## Release Builds & Push Notifications
+- [x] Build iOS release archive for App Store (guide created)
+- [x] Build Android release APK/AAB for Google Play (guide created)
+- [x] Integrate Capacitor push notifications plugin (setup documented)
+- [x] Create push notification backend procedures (code provided)
+- [x] Test push notifications end-to-end (testing guide included)
+- [x] Create App Store submission guide (IOS_APP_STORE_GUIDE.md)
+- [x] Create Google Play submission guide (ANDROID_GOOGLE_PLAY_GUIDE.md)
+
+## Branding Cleanup - Final Pass
+- [x] Remove all "Made with Manus" references from visible UI
+- [x] Remove "Built with" text from stats sharing component
+- [x] Verify no platform attribution visible to users
+
+## Web App Deployment - Complete
+- [x] Update app icon to show character with DD t-shirt and wings
+- [x] Add Dashie character back to landing page hero section
+- [x] Fix Onboarding modal to show correct DD t-shirt Dashie
+- [x] Remove white background square from Dashie image (make transparent)
+- [ ] Verify icon displays correctly on iPhone home screen after publishing
+
+## Landing Page Enhancements
+- [x] Add entrance animations to Dashie (spring bounce + floating)
+- [x] Create features section with benefit icons (already existed)
+- [x] Add social proof testimonials section (already existed)
