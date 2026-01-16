@@ -34,6 +34,7 @@ import ContextSwitchValidator from '@/components/ContextSwitchValidator';
 import QuickWinSuggestions from '@/components/QuickWinSuggestions';
 import MoodSelector from '@/components/MoodSelector';
 import DailyCheckIn from '@/components/DailyCheckIn';
+import DashieOutfitDisplay, { TaskType } from '@/components/DashieOutfitDisplay';
 import { Timer, CircleDashed, StickyNote, Volume2, Map } from 'lucide-react';
 import {
   DropdownMenu,
@@ -93,6 +94,9 @@ export default function Dash() {
   const [contextSwitchFrom, setContextSwitchFrom] = useState<string | null>(null);
   const [contextSwitchTo, setContextSwitchTo] = useState<string | null>(null);
   const [showStreakBadge, setShowStreakBadge] = useState(false);
+  const [selectedTaskType, setSelectedTaskType] = useState<TaskType>('grind');
+  const [showOutfitDisplay, setShowOutfitDisplay] = useState(false);
+  const [completedTaskType, setCompletedTaskType] = useState<TaskType | null>(null);
 
   const [showBubblePop, setShowBubblePop] = useState(false);
   const [isAddingTask, setIsAddingTask] = useState(false);
@@ -349,6 +353,20 @@ export default function Dash() {
         setTimeout(() => setShowLootBox(true), 500);
       }
       
+      // Show Dashie outfit completion with confetti
+      setCompletedTaskType(selectedTaskType);
+      setTimeout(() => {
+        // Confetti from Dashie's butt
+        canvasConfetti({
+          particleCount: 150,
+          spread: 180,
+          origin: { x: 0.5, y: 0.85 },
+          colors: ['#A7F3D0', '#6EE7B7', '#34D399', '#FCD34D', '#FDBA74', '#FF6B6B'],
+          gravity: 0.5,
+          scalar: 1.2,
+        });
+      }, 200);
+      
       // Show mood check after task completion (with slight delay)
       if (moodCheckEnabled) {
         setTimeout(() => setShowMoodCheck(true), 800);
@@ -386,6 +404,7 @@ export default function Dash() {
       setNewTaskText('');
       setNewTaskCategory('focus');
       setIsAddingTask(false);
+      setShowOutfitDisplay(true);
       soundManager.playPop();
       haptics.success();
     }
@@ -502,6 +521,54 @@ export default function Dash() {
         {showBossBattle && <BossBattle onClose={() => setShowBossBattle(false)} />}
         {showBubblePop && <BubblePop onClose={() => setShowBubblePop(false)} />}
         {showDailyCheckIn && <DailyCheckIn isOpen={showDailyCheckIn} onComplete={() => setShowDailyCheckIn(false)} />}
+        {showOutfitDisplay && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+            onClick={() => setShowOutfitDisplay(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.8, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.8, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-white dark:bg-slate-900 rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl"
+            >
+              <h2 className="text-2xl font-bold text-center mb-6">Pick Your Mode</h2>
+              <div className="grid grid-cols-3 gap-3 mb-6">
+                {(['grind', 'housework', 'self-care'] as TaskType[]).map((type) => (
+                  <button
+                    key={type}
+                    onClick={() => setSelectedTaskType(type)}
+                    className={cn(
+                      "p-3 rounded-lg border-2 transition-all font-medium text-sm",
+                      selectedTaskType === type
+                        ? "border-primary bg-primary/10"
+                        : "border-gray-200 dark:border-gray-700 hover:border-primary/50"
+                    )}
+                  >
+                    {type === 'grind' && '📚💼'}
+                    {type === 'housework' && '🧹'}
+                    {type === 'self-care' && '🛁'}
+                    <br />
+                    <span className="text-xs">{type === 'grind' ? 'Grind' : type === 'housework' ? 'Chores' : 'Self-Care'}</span>
+                  </button>
+                ))}
+              </div>
+              <div className="flex justify-center mb-6">
+                <DashieOutfitDisplay taskType={selectedTaskType} isCompleted={false} />
+              </div>
+              <Button
+                onClick={() => setShowOutfitDisplay(false)}
+                className="w-full"
+              >
+                Let\'s Go!
+              </Button>
+            </motion.div>
+          </motion.div>
+        )}
       </AnimatePresence>
       <DashieSlide 
         completedCount={actions.filter(a => a.completed).length}

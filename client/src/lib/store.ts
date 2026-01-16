@@ -18,6 +18,7 @@ export type MicroAction = {
   id: string;
   text: string;
   category: 'focus' | 'energy' | 'momentum';
+  taskType?: 'grind' | 'housework' | 'self-care'; // Dashie outfit type
   completed: boolean;
   difficulty?: 'easy' | 'medium' | 'hard';
   duration?: 2 | 5 | 10; // Duration in minutes
