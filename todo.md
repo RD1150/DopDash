@@ -570,3 +570,13 @@
 - [x] Set up app icons and splash screens with Dashie branding
 - [ ] Generate build artifacts for App Store submission (user to build)
 - [x] Create submission guide for developer accounts
+
+
+## Release Builds & Push Notifications
+- [x] Build iOS release archive for App Store (guide created)
+- [x] Build Android release APK/AAB for Google Play (guide created)
+- [x] Integrate Capacitor push notifications plugin (setup documented)
+- [x] Create push notification backend procedures (code provided)
+- [x] Test push notifications end-to-end (testing guide included)
+- [x] Create App Store submission guide (IOS_APP_STORE_GUIDE.md)
+- [x] Create Google Play submission guide (ANDROID_GOOGLE_PLAY_GUIDE.md)
