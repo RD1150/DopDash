@@ -129,16 +129,18 @@ export default function Onboarding() {
               <motion.img
                 src="/images/mascot/dashie-wings-dd-transparent.png"
                 alt="Dashie"
+                initial={{ opacity: 0, scale: 0.5, y: 30 }}
                 animate={{ 
-                  y: [0, -15, 0],
-                  rotate: [0, 2, -2, 0]
+                  opacity: 1,
+                  scale: 1,
+                  y: [0, -8, 0]
                 }}
                 transition={{ 
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "easeInOut"
+                  opacity: { duration: 0.4 },
+                  scale: { duration: 0.4, type: "spring", stiffness: 100, damping: 15 },
+                  y: { duration: 2, repeat: Infinity, ease: "easeInOut" }
                 }}
-                className="w-32 h-32 md:w-40 md:h-40 object-contain mb-3"
+                className="w-48 h-48 md:w-64 md:h-64 object-contain mb-3"
                 style={{
                   filter: 'drop-shadow(0 12px 24px rgba(0,0,0,0.15))',
                   backgroundColor: 'transparent'
