@@ -590,4 +590,5 @@
 - [x] Update app icon to show character with DD t-shirt and wings
 - [x] Add Dashie character back to landing page hero section
 - [x] Fix Onboarding modal to show correct DD t-shirt Dashie
+- [x] Remove white background square from Dashie image (make transparent)
 - [ ] Verify icon displays correctly on iPhone home screen after publishing
