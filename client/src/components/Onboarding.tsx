@@ -128,7 +128,7 @@ export default function Onboarding() {
             {/* Dashie - Large and prominent */}
             <div className="flex flex-col items-center mb-16">
               <motion.img
-                src="/images/mascot/dashie-final.png"
+                src="/images/mascot/dashie-sticker.png"
                 alt="Dashie"
                 animate={{ 
                   y: [0, -15, 0],
