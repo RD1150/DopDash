@@ -205,6 +205,33 @@ export default function Onboarding() {
               </Button>
             </motion.div>
 
+            {/* See It In Action - Video Demo */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.6 }}
+              className="w-full max-w-sm mb-16"
+            >
+              <div className="bg-black rounded-3xl overflow-hidden shadow-2xl border-4 border-primary/20">
+                <video
+                  width="100%"
+                  height="auto"
+                  controls
+                  autoPlay
+                  muted
+                  loop
+                  className="w-full h-auto rounded-2xl"
+                  style={{ aspectRatio: '9/16' }}
+                >
+                  <source src="/videos/task-demo.mp4" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+              <p className="text-center mt-4 text-sm md:text-base" style={{ color: 'hsl(var(--foreground) / 0.7)' }}>
+                See the dopamine magic in action ✨
+              </p>
+            </motion.div>
+
             {/* Friction reducers - Clear, easy to read */}
             <div className="text-center space-y-2 mb-12">
               <p className="text-sm md:text-base" style={{ color: 'hsl(var(--foreground) / 0.7)' }}>
