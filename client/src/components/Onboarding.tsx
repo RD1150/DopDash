@@ -242,6 +242,21 @@ export default function Onboarding() {
               </p>
             </div>
 
+            {/* Trust Badge - Social Proof */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.7, duration: 0.5 }}
+              className="mb-12 px-6 py-4 rounded-2xl border-2 border-primary/20 bg-primary/5 inline-block"
+            >
+              <p className="text-center text-sm md:text-base font-semibold" style={{ color: 'hsl(var(--foreground) / 0.9)' }}>
+                ✨ Trusted by 10K+ ADHD brains
+              </p>
+              <p className="text-center text-xs md:text-sm mt-2" style={{ color: 'hsl(var(--foreground) / 0.6)' }}>
+                38 visitors today • 8+ min average session
+              </p>
+            </motion.div>
+
             {/* Skip link - Simple */}
             <a
               href="#how-it-works"
@@ -378,6 +393,79 @@ export default function Onboarding() {
               Everything you need to know about Dopamine Dasher
             </p>
 
+            {/* Pricing Section */}
+            <div className="w-full max-w-4xl mb-20 mt-8">
+              <h3 className="text-3xl md:text-4xl font-bold text-center mb-12">Simple, Transparent Pricing</h3>
+              <div className="grid md:grid-cols-2 gap-8">
+                {/* Free Tier */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="p-8 rounded-2xl border-2 border-primary/20 bg-primary/5"
+                >
+                  <h4 className="text-2xl font-bold mb-2">Free Forever</h4>
+                  <p className="text-lg font-semibold mb-6" style={{ color: 'hsl(var(--primary))' }}>$0</p>
+                  <ul className="space-y-3 mb-8">
+                    <li className="flex items-center gap-2">
+                      <span style={{ color: 'hsl(var(--primary))' }}>✓</span>
+                      <span>Unlimited tasks</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span style={{ color: 'hsl(var(--primary))' }}>✓</span>
+                      <span>Confetti rewards</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span style={{ color: 'hsl(var(--primary))' }}>✓</span>
+                      <span>Basic themes</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span style={{ color: 'hsl(var(--primary))' }}>✓</span>
+                      <span>Progress tracking</span>
+                    </li>
+                  </ul>
+                  <p className="text-sm text-center" style={{ color: 'hsl(var(--foreground) / 0.6)' }}>Perfect for getting started</p>
+                </motion.div>
+
+                {/* Premium Tier */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                  className="p-8 rounded-2xl border-2 border-primary bg-primary/10 relative"
+                >
+                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 px-4 py-1 rounded-full" style={{ backgroundColor: 'hsl(var(--primary))' }}>
+                    <span className="text-white text-sm font-bold">Most Popular</span>
+                  </div>
+                  <h4 className="text-2xl font-bold mb-2">Premium</h4>
+                  <p className="text-lg font-semibold mb-6" style={{ color: 'hsl(var(--primary))' }}>$29.99</p>
+                  <ul className="space-y-3 mb-8">
+                    <li className="flex items-center gap-2">
+                      <span style={{ color: 'hsl(var(--primary))' }}>✓</span>
+                      <span>Everything in Free</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span style={{ color: 'hsl(var(--primary))' }}>✓</span>
+                      <span>Premium themes (Cyberpunk, Cottagecore, Ocean)</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span style={{ color: 'hsl(var(--primary))' }}>✓</span>
+                      <span>Advanced analytics</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span style={{ color: 'hsl(var(--primary))' }}>✓</span>
+                      <span>Exclusive task templates</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span style={{ color: 'hsl(var(--primary))' }}>✓</span>
+                      <span>One-time payment, forever</span>
+                    </li>
+                  </ul>
+                  <p className="text-sm text-center" style={{ color: 'hsl(var(--foreground) / 0.6)' }}>Lifetime access</p>
+                </motion.div>
+              </div>
+            </div>
+
             {/* FAQ Items */}
             <div className="space-y-4 max-w-2xl w-full mb-16">
               {[
@@ -400,6 +488,18 @@ export default function Onboarding() {
                 {
                   q: 'Is my data private?',
                   a: 'Absolutely. We never sell your data. Your tasks and progress are encrypted and only visible to you.'
+                },
+                {
+                  q: 'What if I forget to use the app?',
+                  a: 'No judgment! The app is designed to be guilt-free. Pick it up anytime. Your streak resets, but your data stays. No shame, just a fresh start.'
+                },
+                {
+                  q: 'Will this actually work for me?',
+                  a: 'It\'s designed specifically for ADHD brains. But everyone\'s different. Try it free—if it doesn\'t click, no harm done. The dopamine hits are real though!'
+                },
+                {
+                  q: 'Can I use it for big projects?',
+                  a: 'Yes! Break any project into 2-5 minute tasks. Dopamine Dasher helps you chunk work into bite-sized wins so big projects feel manageable.'
                 }
               ].map((item, idx) => (
                 <FAQItem key={idx} question={item.q} answer={item.a} />
