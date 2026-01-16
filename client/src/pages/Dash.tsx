@@ -1,8 +1,9 @@
 import Layout from '@/components/Layout';
 import Mascot, { MascotPose } from '@/components/Mascot';
 import { haptics } from '@/lib/haptics';
-import { soundManager } from '@/lib/sound';
+import { soundManager } from '@/lib/soundManager';
 import { useStore } from '@/lib/store';
+import { detectTaskType, getOutfitForTaskType } from '@/lib/taskTypeDetector';
 import { cn } from '@/lib/utils';
 import canvasConfetti from 'canvas-confetti';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -353,8 +354,13 @@ export default function Dash() {
         setTimeout(() => setShowLootBox(true), 500);
       }
       
-      // Show Dashie outfit completion with confetti
-      setCompletedTaskType(selectedTaskType);
+      // Show Dashie outfit completion with confetti and sounds
+      const taskType = detectTaskType(action.text);
+      setCompletedTaskType(taskType);
+      
+      // Play celebration sound sequence
+      soundManager.playCompletionSequence();
+      
       setTimeout(() => {
         // Confetti from Dashie's butt
         canvasConfetti({
