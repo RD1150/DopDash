@@ -128,7 +128,7 @@ export default function Onboarding() {
             {/* Dashie - Large and prominent */}
             <div className="flex flex-col items-center mb-16">
               <motion.img
-                src="/images/mascot/dashie-clean-bg.png"
+                src="/images/mascot/dashie-wings-dd-transparent.png"
                 alt="Dashie"
                 animate={{ 
                   y: [0, -15, 0],
@@ -142,7 +142,8 @@ export default function Onboarding() {
                 className="w-32 h-32 md:w-40 md:h-40 object-contain mb-3"
                 style={{
                   filter: 'drop-shadow(0 12px 24px rgba(0,0,0,0.15))',
-                  backgroundColor: 'transparent'
+                  backgroundColor: 'transparent',
+                  mixBlendMode: 'multiply'
                 }}
               />
               <p className="text-lg md:text-xl font-semibold" style={{ color: 'hsl(var(--primary))' }}>
