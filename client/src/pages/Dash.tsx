@@ -618,13 +618,7 @@ export default function Dash() {
             <div>
               <div className="flex items-center gap-3">
                 <h1 className="text-3xl font-bold text-primary">Today's Dash</h1>
-                <button
-                  onClick={() => setLocation('/settings')}
-                  className="px-3 py-1 rounded-lg text-xs font-medium bg-muted/50 text-muted-foreground hover:bg-muted transition-colors"
-                  title="Change context or reset onboarding"
-                >
-                  Change Context
-                </button>
+                {/* Change Context moved to Settings menu */}
               </div>
               <div className="flex items-center gap-3 mt-1">
                 <p className="text-muted-foreground">Just start. That's enough.</p>
@@ -650,34 +644,8 @@ export default function Dash() {
                     )}
                   </>
                 )}
-                <div className="flex gap-2 items-center">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="gap-2"
-                    onClick={() => setShowMoodSelector(true)}
-                  >
-                    {currentEmotionalState ? (
-                      <span>{currentEmotionalState === 'anxious' ? '😰' : currentEmotionalState === 'bored' ? '😑' : currentEmotionalState === 'overwhelmed' ? '😵' : '⚡'}</span>
-                    ) : (
-                      <span>😊</span>
-                    )}
-                    Mood
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="gap-2 relative"
-                    onClick={() => setShowBrainDumpModal(true)}
-                  >
-                    <BrainCircuit className="w-4 h-4" />
-                    Brain Dump
-                    {brainDumpBacklog.length > 0 && (
-                      <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                        {brainDumpBacklog.length}
-                      </span>
-                    )}
-                  </Button>
+                {/* Mood and Brain Dump moved to Settings for cleaner dashboard */}
+                <div className="flex gap-2 items-center hidden">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="outline" size="sm" className="gap-2">
@@ -816,33 +784,7 @@ export default function Dash() {
             </motion.div>
           )}
           
-          {/* Daily Challenges Widget */}
-          {dailyChallenges.length > 0 && (
-            <div className="mb-4 p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-              <h3 className="font-bold text-sm mb-3 flex items-center gap-2">
-                <span>🎯</span> Daily Challenges
-              </h3>
-              <div className="space-y-2">
-                {dailyChallenges.map((challenge) => (
-                  <div key={challenge.id} className="bg-white dark:bg-slate-800 p-3 rounded">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="font-medium text-sm">{challenge.title}</span>
-                      <span className="text-xs font-bold text-yellow-600 dark:text-yellow-400">+{challenge.bonus} coins</span>
-                    </div>
-                    <div className="w-full bg-muted rounded-full h-2">
-                      <div
-                        className="bg-blue-500 h-2 rounded-full transition-all"
-                        style={{ width: `${Math.min((challenge.progress / challenge.target) * 100, 100)}%` }}
-                      />
-                    </div>
-                    <div className="text-xs text-muted-foreground mt-1">
-                      {challenge.progress}/{challenge.target}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+          {/* Daily Challenges moved to Rewards tab for cleaner dashboard */}
           
           {/* Category Filter Tabs */}
           <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">

@@ -404,6 +404,8 @@
 - [x] Integrate sounds into task completion flow
 - [x] Test sound effects and auto-detection
 - [ ] Achievement badge system with special outfits (future)
+- [x] Streamline dashboard - hide Change Context, Mood, Brain Dump, Daily Challenges
+- [x] Focus dashboard on core task functionality
 - [x] Add empty state messaging for categories with no tasks
 - [x] Add smooth animations for category transitions
 - [x] Test all three enhancements
