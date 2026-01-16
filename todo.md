@@ -597,3 +597,4 @@
 - [x] Add entrance animations to Dashie (spring bounce + floating)
 - [x] Create features section with benefit icons (already existed)
 - [x] Add social proof testimonials section (already existed)
+- [x] Increase Dashie size on landing page (300px)

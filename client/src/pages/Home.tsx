@@ -64,7 +64,8 @@ export default function Home() {
             <motion.img
               src="/images/mascot/dashie-wings-dd-transparent.png"
               alt="Dashie - Your task companion"
-              className="w-32 h-32 md:w-40 md:h-40 object-contain"
+              className="object-contain"
+              style={{ width: '300px', height: '300px' }}
               animate={{ y: [0, -10, 0] }}
               transition={{
                 duration: 3,
