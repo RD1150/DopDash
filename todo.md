@@ -399,6 +399,10 @@
 
 ## Current Work - Dashie Visual Polish
 - [ ] Regenerate Dashie image without checkered transparency pattern - solid clean background
+- [ ] Task category selector UI (Grind/Housework/Self-Care)
+- [ ] Achievement badge system with special outfits
+- [ ] Celebratory sound effects for confetti burst
+- [ ] Integrate sound effects into task completion
 - [x] Add empty state messaging for categories with no tasks
 - [x] Add smooth animations for category transitions
 - [x] Test all three enhancements

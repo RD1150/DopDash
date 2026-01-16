@@ -392,8 +392,11 @@ export default function Onboarding() {
             className="min-h-screen flex flex-col items-center justify-center px-6 py-12"
           >
             <h2 className="text-4xl md:text-5xl font-bold text-center mb-6">Where are you right now?</h2>
-            <p className="text-lg md:text-xl text-center mb-16 max-w-xl" style={{ color: 'hsl(var(--foreground) / 0.7)' }}>
+            <p className="text-lg md:text-xl text-center mb-4 max-w-xl" style={{ color: 'hsl(var(--foreground) / 0.7)' }}>
               Pick the context that fits your day.
+            </p>
+            <p className="text-xl md:text-2xl font-bold text-center mb-16 text-primary">
+              Pick one 👇
             </p>
             
             <div className="space-y-6 max-w-xl w-full">
