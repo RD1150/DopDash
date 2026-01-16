@@ -618,7 +618,12 @@ export default function Dash() {
             <div>
               <div className="flex items-center gap-3">
                 <h1 className="text-3xl font-bold text-primary">Today's Dash</h1>
-                {/* Change Context moved to Settings menu */}
+                {/* Daily Streak Counter */}
+                {streakCount > 0 && (
+                  <div className="ml-auto bg-gradient-to-r from-orange-400 to-red-500 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2 shadow-lg">
+                    <span>🔥</span> {streakCount} day streak!
+                  </div>
+                )}
               </div>
               <div className="flex items-center gap-3 mt-1">
                 <p className="text-muted-foreground">Just start. That's enough.</p>
@@ -644,7 +649,29 @@ export default function Dash() {
                     )}
                   </>
                 )}
-                {/* Mood and Brain Dump moved to Settings for cleaner dashboard */}
+                {/* Advanced Options Menu - Mood, Brain Dump, Settings */}
+                <div className="flex gap-2 items-center">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="sm" className="gap-2">
+                        <Settings className="w-4 h-4" />
+                        More
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-48">
+                      <DropdownMenuItem onClick={() => setShowMoodSelector(true)} className="gap-2 cursor-pointer">
+                        <span>Check Mood</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setShowBrainDumpModal(true)} className="gap-2 cursor-pointer">
+                        <span>Brain Dump</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setLocation('/settings')} className="gap-2 cursor-pointer">
+                        <span>Settings</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+                {/* Hidden original */}
                 <div className="flex gap-2 items-center hidden">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -1185,15 +1212,45 @@ export default function Dash() {
                 )}
               </motion.div>
             ) : (
-              <motion.button
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                onClick={() => setIsAddingTask(true)}
-                className="w-full py-4 rounded-2xl border-2 border-dashed border-muted-foreground/20 hover:border-primary/40 hover:bg-accent/50 transition-all flex items-center justify-center gap-2 text-muted-foreground hover:text-primary group"
-              >
-                <Plus className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                <span className="font-medium">Add your own task</span>
-              </motion.button>
+              <div className="space-y-3">
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    onClick={() => { addAction('Make coffee', 'energy'); soundManager.playDing(); }}
+                    className="py-3 rounded-xl bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 text-sm font-medium hover:shadow-md"
+                  >
+                    Coffee
+                  </button>
+                  <button
+                    onClick={() => { addAction('Make the bed', 'momentum'); soundManager.playDing(); }}
+                    className="py-3 rounded-xl bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-sm font-medium hover:shadow-md"
+                  >
+                    Make Bed
+                  </button>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    onClick={() => { addAction('Morning routine', 'energy'); soundManager.playDing(); }}
+                    className="py-3 rounded-xl bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 text-sm font-medium hover:shadow-md"
+                  >
+                    Morning
+                  </button>
+                  <button
+                    onClick={() => { addAction('Evening routine', 'energy'); soundManager.playDing(); }}
+                    className="py-3 rounded-xl bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 text-sm font-medium hover:shadow-md"
+                  >
+                    Evening
+                  </button>
+                </div>
+                <motion.button
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  onClick={() => setIsAddingTask(true)}
+                  className="w-full py-4 rounded-2xl border-2 border-dashed border-muted-foreground/20 hover:border-primary/40 hover:bg-accent/50 transition-all flex items-center justify-center gap-2 text-muted-foreground hover:text-primary group"
+                >
+                  <Plus className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                  <span className="font-medium">Add your own task</span>
+                </motion.button>
+              </div>
             )}
           </AnimatePresence>
         </motion.div>

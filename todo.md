@@ -607,3 +607,31 @@
 - [x] Add entrance animations to Dashie (spring bounce + floating)
 - [x] Create features section with benefit icons (already existed)
 - [x] Add social proof testimonials section (already existed)
+
+## Next Phase - Engagement & Routine Builders
+- [ ] Daily Streak counter display on dashboard
+- [ ] Collapsible Advanced Options menu (Mood, Brain Dump, Settings)
+- [ ] Task templates system (quick-start tasks)
+- [ ] Morning Routine template with pre-built tasks
+- [ ] Evening Routine template with pre-built tasks
+- [ ] Routine completion bonus rewards
+
+
+## Latest Sprint - Engagement & Dopamine Amplification
+- [x] Add Daily Streak counter display to dashboard header
+- [x] Create Advanced Options menu (Mood, Brain Dump, Settings)
+- [x] Add quick task templates (Coffee, Make Bed, Morning, Evening routines)
+- [x] Generate celebratory sound effects (ding, pop, level-up)
+- [x] Integrate sounds into task completion flow
+- [x] Implement smart task type detection (auto-detect grind/housework/self-care)
+- [x] Add Dashie outfit system (display matching outfit based on task type)
+- [x] Add confetti burst animation on task completion
+- [x] Streamline dashboard UI (remove clutter, focus on core tasks)
+- [x] Add "Pick one 👇" instruction to context selection page
+- [x] MomTo3 testimonial added (dishwasher task story)
+- [x] Demo video showing task completion with dopamine rewards
+- [x] Trust badge: "Built for ADHD brains, by people who use it"
+- [x] Pricing section: Free Forever ($0) vs Premium Access ($9.99 one-time)
+- [x] Email waitlist form
+- [x] Referral program with unique codes
+- [x] Three Dashie outfit variations (Grind Mode, Housework Hero, Self-Care Spa)
