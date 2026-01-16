@@ -49,6 +49,14 @@ export default function Home() {
           transition={{ duration: 0.6 }}
           className="space-y-4"
         >
+          {/* Dashie Character */}
+          <div className="flex justify-center mb-4">
+            <img
+              src="/images/mascot/hero.png"
+              alt="Dashie - Your task companion"
+              className="w-32 h-32 md:w-40 md:h-40 object-contain"
+            />
+          </div>
           <h1 className="text-5xl md:text-6xl font-bold text-foreground tracking-tight">
             Dopamine Dasher
           </h1>

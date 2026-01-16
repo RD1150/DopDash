@@ -585,3 +585,8 @@
 - [x] Remove all "Made with Manus" references from visible UI
 - [x] Remove "Built with" text from stats sharing component
 - [x] Verify no platform attribution visible to users
+
+## Web App Deployment - In Progress
+- [x] Update app icon to show character with DD t-shirt and wings
+- [ ] Verify icon displays correctly on iPhone home screen
+- [ ] Add Dashie character back to landing page hero section
