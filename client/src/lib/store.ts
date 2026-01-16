@@ -183,21 +183,17 @@ interface AppState {
 }
 
 const BADGES_LIBRARY: Badge[] = [
-  { id: 'first_step', name: 'First Step', description: 'Completed your first dash', icon: '🌱', unlocked: false },
-  { id: 'streak_3', name: 'Momentum', description: 'Reached a 3-day streak', icon: '🔥', unlocked: false },
-  { id: 'streak_7', name: 'Unstoppable', description: 'Reached a 7-day streak', icon: '🚀', unlocked: false },
-  { id: 'early_bird', name: 'Early Bird', description: 'Completed a dash before noon', icon: '☀️', unlocked: false },
-  { id: 'night_owl', name: 'Night Owl', description: 'Completed a dash after 8 PM', icon: '🌙', unlocked: false },
-  { id: 'weekend_warrior', name: 'Weekend Warrior', description: 'Completed a dash on a weekend', icon: '🎉', unlocked: false },
-  { id: 'streak_14', name: 'Legendary Streak', description: 'Reached a 14-day streak', icon: '⚡', unlocked: false },
-  { id: 'streak_30', name: 'Unstoppable Force', description: 'Reached a 30-day streak', icon: '💪', unlocked: false },
-  { id: 'streak_100', name: 'Century Champion', description: 'Reached a 100-day streak', icon: '👑', unlocked: false },
-  { id: 'getting_started', name: 'Getting Started', description: 'Completed 5 tasks', icon: '🎯', unlocked: false },
-  { id: 'task_master', name: 'Task Master', description: 'Completed 50 tasks', icon: '🏆', unlocked: false },
-  { id: 'century_club', name: 'Century Club', description: 'Completed 100 tasks', icon: '💯', unlocked: false },
-  { id: 'perfect_week', name: 'Perfect Week', description: '7 consecutive days with tasks', icon: '🌟', unlocked: false },
-  { id: 'outfit_collector', name: 'Outfit Collector', description: 'Completed 10 of each task type', icon: '🎨', unlocked: false },
+  // ADHD-friendly badges: celebrate wins, not perfection
+  { id: 'first_step', name: 'First Step', description: 'You did it! Completed your first dash', icon: '🌱', unlocked: false },
+  { id: 'momentum', name: 'Momentum', description: 'You\'re on a roll! Keep going when you feel like it', icon: '🔥', unlocked: false },
+  { id: 'task_master', name: 'Task Master', description: 'You\'ve completed 50 tasks. Amazing!', icon: '🏆', unlocked: false },
+  { id: 'outfit_collector', name: 'Outfit Collector', description: 'You\'ve tried all of Dashie\'s outfits', icon: '🎨', unlocked: false },
 ];
+
+// REMOVED: Streak-based badges (perfectionism trap)
+// REMOVED: Time-based badges (decision fatigue)
+// REMOVED: Consecutive day requirements (shame spiral risk)
+// KEPT: Celebration-based badges (you did something!)
 
 const TASK_PACKS: Record<Context, Omit<MicroAction, 'completed'>[]> = {
   nest: [
@@ -452,55 +448,29 @@ export const useStore = create<AppState>()(
         set({ todaysActions: updated });
       },
 
-      checkBadges: () => {
-        const { badges, streak, totalTasksCompleted, grindTasksCompleted, houseworkTasksCompleted, selfCareTasksCompleted, perfectWeekDates } = get();
+checkBadges: () => {
+        // ADHD-friendly badge system: celebrate wins, not perfection
+        const { badges, totalTasksCompleted, grindTasksCompleted, houseworkTasksCompleted, selfCareTasksCompleted } = get();
         let coinBonus = 0;
         
         const updated = badges.map((badge) => {
-          // Streak badges
-          if (badge.id === 'first_step' && streak >= 1 && !badge.unlocked) {
-            return { ...badge, unlocked: true, unlockedDate: new Date().toISOString() };
-          }
-          if (badge.id === 'streak_3' && streak >= 3 && !badge.unlocked) {
-            return { ...badge, unlocked: true, unlockedDate: new Date().toISOString() };
-          }
-          if (badge.id === 'streak_7' && streak >= 7 && !badge.unlocked) {
-            return { ...badge, unlocked: true, unlockedDate: new Date().toISOString() };
-          }
-          if (badge.id === 'streak_14' && streak >= 14 && !badge.unlocked) {
-            coinBonus += 100;
-            return { ...badge, unlocked: true, unlockedDate: new Date().toISOString() };
-          }
-          if (badge.id === 'streak_30' && streak >= 30 && !badge.unlocked) {
-            coinBonus += 300;
-            return { ...badge, unlocked: true, unlockedDate: new Date().toISOString() };
-          }
-          if (badge.id === 'streak_100' && streak >= 100 && !badge.unlocked) {
-            coinBonus += 1000;
+          // First Step - celebrate first completion
+          if (badge.id === 'first_step' && totalTasksCompleted >= 1 && !badge.unlocked) {
             return { ...badge, unlocked: true, unlockedDate: new Date().toISOString() };
           }
           
-          // Task count badges
-          if (badge.id === 'getting_started' && totalTasksCompleted >= 5 && !badge.unlocked) {
-            coinBonus += 50;
+          // Momentum - celebrate 3 tasks (optional milestone, no pressure)
+          if (badge.id === 'momentum' && totalTasksCompleted >= 3 && !badge.unlocked) {
             return { ...badge, unlocked: true, unlockedDate: new Date().toISOString() };
           }
+          
+          // Task Master - 50 tasks (aspirational, not required)
           if (badge.id === 'task_master' && totalTasksCompleted >= 50 && !badge.unlocked) {
-            coinBonus += 200;
-            return { ...badge, unlocked: true, unlockedDate: new Date().toISOString() };
-          }
-          if (badge.id === 'century_club' && totalTasksCompleted >= 100 && !badge.unlocked) {
-            coinBonus += 500;
+            coinBonus += 50; // Modest coin bonus, not overwhelming
             return { ...badge, unlocked: true, unlockedDate: new Date().toISOString() };
           }
           
-          // Perfect week badge
-          if (badge.id === 'perfect_week' && perfectWeekDates.length >= 7 && !badge.unlocked) {
-            coinBonus += 250;
-            return { ...badge, unlocked: true, unlockedDate: new Date().toISOString() };
-          }
-          
-          // Outfit collector badge
+          // Outfit Collector - tried all Dashie outfits (fun exploration)
           if (badge.id === 'outfit_collector' && grindTasksCompleted >= 10 && houseworkTasksCompleted >= 10 && selfCareTasksCompleted >= 10 && !badge.unlocked) {
             return { ...badge, unlocked: true, unlockedDate: new Date().toISOString() };
           }
