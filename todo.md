@@ -396,6 +396,9 @@
 
 ## Category Filter Advanced Features
 - [x] Persist category selection to localStorage (remember user's last filter)
+
+## Current Work - Dashie Visual Polish
+- [ ] Regenerate Dashie image without checkered transparency pattern - solid clean background
 - [x] Add empty state messaging for categories with no tasks
 - [x] Add smooth animations for category transitions
 - [x] Test all three enhancements
