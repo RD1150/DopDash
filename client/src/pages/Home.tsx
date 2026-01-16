@@ -50,13 +50,29 @@ export default function Home() {
           className="space-y-4"
         >
           {/* Dashie Character */}
-          <div className="flex justify-center mb-4">
-            <img
+          <motion.div 
+            className="flex justify-center mb-4"
+            initial={{ opacity: 0, scale: 0.5, y: 30 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ 
+              duration: 0.8, 
+              type: "spring",
+              stiffness: 100,
+              damping: 15
+            }}
+          >
+            <motion.img
               src="/images/mascot/dashie-wings-dd-transparent.png"
               alt="Dashie - Your task companion"
               className="w-32 h-32 md:w-40 md:h-40 object-contain"
+              animate={{ y: [0, -10, 0] }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
             />
-          </div>
+          </motion.div>
           <h1 className="text-5xl md:text-6xl font-bold text-foreground tracking-tight">
             Dopamine Dasher
           </h1>

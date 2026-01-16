@@ -592,3 +592,8 @@
 - [x] Fix Onboarding modal to show correct DD t-shirt Dashie
 - [x] Remove white background square from Dashie image (make transparent)
 - [ ] Verify icon displays correctly on iPhone home screen after publishing
+
+## Landing Page Enhancements
+- [x] Add entrance animations to Dashie (spring bounce + floating)
+- [x] Create features section with benefit icons (already existed)
+- [x] Add social proof testimonials section (already existed)
