@@ -104,6 +104,11 @@ interface AppState {
   todaysEnergyLevel: 'low' | 'medium' | 'high' | null;
   todaysVibe: 'anxious' | 'bored' | 'overwhelmed' | 'energized' | null;
   todaysNeed: 'quick-wins' | 'deep-focus' | 'movement' | 'rest' | null;
+  totalTasksCompleted: number; // Track total tasks for milestones
+  grindTasksCompleted: number; // Track grind tasks for outfit collector
+  houseworkTasksCompleted: number; // Track housework tasks for outfit collector
+  selfCareTasksCompleted: number; // Track self-care tasks for outfit collector
+  perfectWeekDates: string[]; // Track consecutive days for perfect week badge
 
   // Actions
   startApp: () => void;
@@ -184,6 +189,14 @@ const BADGES_LIBRARY: Badge[] = [
   { id: 'early_bird', name: 'Early Bird', description: 'Completed a dash before noon', icon: '☀️', unlocked: false },
   { id: 'night_owl', name: 'Night Owl', description: 'Completed a dash after 8 PM', icon: '🌙', unlocked: false },
   { id: 'weekend_warrior', name: 'Weekend Warrior', description: 'Completed a dash on a weekend', icon: '🎉', unlocked: false },
+  { id: 'streak_14', name: 'Legendary Streak', description: 'Reached a 14-day streak', icon: '⚡', unlocked: false },
+  { id: 'streak_30', name: 'Unstoppable Force', description: 'Reached a 30-day streak', icon: '💪', unlocked: false },
+  { id: 'streak_100', name: 'Century Champion', description: 'Reached a 100-day streak', icon: '👑', unlocked: false },
+  { id: 'getting_started', name: 'Getting Started', description: 'Completed 5 tasks', icon: '🎯', unlocked: false },
+  { id: 'task_master', name: 'Task Master', description: 'Completed 50 tasks', icon: '🏆', unlocked: false },
+  { id: 'century_club', name: 'Century Club', description: 'Completed 100 tasks', icon: '💯', unlocked: false },
+  { id: 'perfect_week', name: 'Perfect Week', description: '7 consecutive days with tasks', icon: '🌟', unlocked: false },
+  { id: 'outfit_collector', name: 'Outfit Collector', description: 'Completed 10 of each task type', icon: '🎨', unlocked: false },
 ];
 
 const TASK_PACKS: Record<Context, Omit<MicroAction, 'completed'>[]> = {
@@ -329,6 +342,11 @@ export const useStore = create<AppState>()(
       todaysEnergyLevel: null,
       todaysVibe: null,
       todaysNeed: null,
+      totalTasksCompleted: 0,
+      grindTasksCompleted: 0,
+      houseworkTasksCompleted: 0,
+      selfCareTasksCompleted: 0,
+      perfectWeekDates: [],
 
       startApp: () => set({ hasStarted: true }),
       completeTutorial: () => set({ hasSeenTutorial: true }),
@@ -345,7 +363,7 @@ export const useStore = create<AppState>()(
       setSoundTheme: (soundTheme: 'default' | 'arcade' | 'nature') => set({ soundTheme }),
 
       toggleAction: (id: string) => {
-        const { todaysActions, lastCompletedDate, streak, coins } = get();
+        const { todaysActions, lastCompletedDate, streak, coins, totalTasksCompleted, grindTasksCompleted, houseworkTasksCompleted, selfCareTasksCompleted, perfectWeekDates } = get();
         const action = todaysActions.find((a) => a.id === id);
         const isCompleting = action && !action.completed;
 
@@ -358,6 +376,11 @@ export const useStore = create<AppState>()(
         
         let newStreak = streak;
         let newLastCompletedDate = lastCompletedDate;
+        let newTotalTasks = totalTasksCompleted;
+        let newGrindTasks = grindTasksCompleted;
+        let newHouseworkTasks = houseworkTasksCompleted;
+        let newSelfCareTasks = selfCareTasksCompleted;
+        let newPerfectWeekDates = perfectWeekDates;
 
         let newHistory = get().history || [];
 
@@ -367,17 +390,37 @@ export const useStore = create<AppState>()(
           const todayISO = new Date().toISOString().split('T')[0];
           if (!newHistory.includes(todayISO)) {
             newHistory = [...newHistory, todayISO];
+            newPerfectWeekDates = [...newPerfectWeekDates, todayISO];
+            if (newPerfectWeekDates.length > 7) {
+              newPerfectWeekDates = newPerfectWeekDates.slice(-7);
+            }
           }
         }
 
         if (isCompleting) {
+          // Track task type
+          const taskType = action?.taskType;
+          if (taskType === 'grind') newGrindTasks += 1;
+          if (taskType === 'housework') newHouseworkTasks += 1;
+          if (taskType === 'self-care') newSelfCareTasks += 1;
+          
+          newTotalTasks += 1;
+          
           set({
             todaysActions: newActions,
             streak: newStreak,
             lastCompletedDate: newLastCompletedDate,
             coins: coins + 1,
             history: newHistory,
+            totalTasksCompleted: newTotalTasks,
+            grindTasksCompleted: newGrindTasks,
+            houseworkTasksCompleted: newHouseworkTasks,
+            selfCareTasksCompleted: newSelfCareTasks,
+            perfectWeekDates: newPerfectWeekDates,
           });
+          
+          // Check for badge unlocks
+          get().checkBadges();
         } else {
           set({ todaysActions: newActions });
         }
@@ -410,8 +453,11 @@ export const useStore = create<AppState>()(
       },
 
       checkBadges: () => {
-        const { badges, streak } = get();
+        const { badges, streak, totalTasksCompleted, grindTasksCompleted, houseworkTasksCompleted, selfCareTasksCompleted, perfectWeekDates } = get();
+        let coinBonus = 0;
+        
         const updated = badges.map((badge) => {
+          // Streak badges
           if (badge.id === 'first_step' && streak >= 1 && !badge.unlocked) {
             return { ...badge, unlocked: true, unlockedDate: new Date().toISOString() };
           }
@@ -421,8 +467,52 @@ export const useStore = create<AppState>()(
           if (badge.id === 'streak_7' && streak >= 7 && !badge.unlocked) {
             return { ...badge, unlocked: true, unlockedDate: new Date().toISOString() };
           }
+          if (badge.id === 'streak_14' && streak >= 14 && !badge.unlocked) {
+            coinBonus += 100;
+            return { ...badge, unlocked: true, unlockedDate: new Date().toISOString() };
+          }
+          if (badge.id === 'streak_30' && streak >= 30 && !badge.unlocked) {
+            coinBonus += 300;
+            return { ...badge, unlocked: true, unlockedDate: new Date().toISOString() };
+          }
+          if (badge.id === 'streak_100' && streak >= 100 && !badge.unlocked) {
+            coinBonus += 1000;
+            return { ...badge, unlocked: true, unlockedDate: new Date().toISOString() };
+          }
+          
+          // Task count badges
+          if (badge.id === 'getting_started' && totalTasksCompleted >= 5 && !badge.unlocked) {
+            coinBonus += 50;
+            return { ...badge, unlocked: true, unlockedDate: new Date().toISOString() };
+          }
+          if (badge.id === 'task_master' && totalTasksCompleted >= 50 && !badge.unlocked) {
+            coinBonus += 200;
+            return { ...badge, unlocked: true, unlockedDate: new Date().toISOString() };
+          }
+          if (badge.id === 'century_club' && totalTasksCompleted >= 100 && !badge.unlocked) {
+            coinBonus += 500;
+            return { ...badge, unlocked: true, unlockedDate: new Date().toISOString() };
+          }
+          
+          // Perfect week badge
+          if (badge.id === 'perfect_week' && perfectWeekDates.length >= 7 && !badge.unlocked) {
+            coinBonus += 250;
+            return { ...badge, unlocked: true, unlockedDate: new Date().toISOString() };
+          }
+          
+          // Outfit collector badge
+          if (badge.id === 'outfit_collector' && grindTasksCompleted >= 10 && houseworkTasksCompleted >= 10 && selfCareTasksCompleted >= 10 && !badge.unlocked) {
+            return { ...badge, unlocked: true, unlockedDate: new Date().toISOString() };
+          }
+          
           return badge;
         });
+        
+        if (coinBonus > 0) {
+          const { coins } = get();
+          set({ coins: coins + coinBonus });
+        }
+        
         set({ badges: updated });
       },
 
