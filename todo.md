@@ -589,4 +589,4 @@
 ## Web App Deployment - In Progress
 - [x] Update app icon to show character with DD t-shirt and wings
 - [ ] Verify icon displays correctly on iPhone home screen
-- [ ] Add Dashie character back to landing page hero section
+- [x] Add Dashie character back to landing page hero section

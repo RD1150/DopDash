@@ -52,7 +52,7 @@ export default function Home() {
           {/* Dashie Character */}
           <div className="flex justify-center mb-4">
             <img
-              src="/images/mascot/hero.png"
+              src="/images/mascot/dashie-dd-tshirt.png"
               alt="Dashie - Your task companion"
               className="w-32 h-32 md:w-40 md:h-40 object-contain"
             />
