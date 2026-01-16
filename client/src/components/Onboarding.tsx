@@ -328,7 +328,7 @@ export default function Onboarding() {
               className="mb-12 px-6 py-4 rounded-2xl border-2 border-primary/20 bg-primary/5 inline-block"
             >
               <p className="text-center text-sm md:text-base font-semibold" style={{ color: 'hsl(var(--foreground) / 0.9)' }}>
-                ✨ Trusted by 10K+ ADHD brains
+                ✨ Built for ADHD brains, by people who use it
               </p>
               <p className="text-center text-xs md:text-sm mt-2" style={{ color: 'hsl(var(--foreground) / 0.6)' }}>
                 38 visitors today • 8+ min average session
@@ -515,8 +515,8 @@ export default function Onboarding() {
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 px-4 py-1 rounded-full" style={{ backgroundColor: 'hsl(var(--primary))' }}>
                     <span className="text-white text-sm font-bold">Most Popular</span>
                   </div>
-                  <h4 className="text-2xl font-bold mb-2">Premium</h4>
-                  <p className="text-lg font-semibold mb-6" style={{ color: 'hsl(var(--primary))' }}>$29.99</p>
+                  <h4 className="text-2xl font-bold mb-2">Premium Access</h4>
+                  <p className="text-lg font-semibold mb-6" style={{ color: 'hsl(var(--primary))' }}>$9.99</p>
                   <ul className="space-y-3 mb-8">
                     <li className="flex items-center gap-2">
                       <span style={{ color: 'hsl(var(--primary))' }}>✓</span>
@@ -536,10 +536,10 @@ export default function Onboarding() {
                     </li>
                     <li className="flex items-center gap-2">
                       <span style={{ color: 'hsl(var(--primary))' }}>✓</span>
-                      <span>One-time payment, forever</span>
+                      <span>One-time payment</span>
                     </li>
                   </ul>
-                  <p className="text-sm text-center" style={{ color: 'hsl(var(--foreground) / 0.6)' }}>Lifetime access</p>
+                  <p className="text-sm text-center" style={{ color: 'hsl(var(--foreground) / 0.6)' }}>Pay once, enjoy premium</p>
                 </motion.div>
               </div>
             </div>
