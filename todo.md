@@ -586,7 +586,8 @@
 - [x] Remove "Built with" text from stats sharing component
 - [x] Verify no platform attribution visible to users
 
-## Web App Deployment - In Progress
+## Web App Deployment - Complete
 - [x] Update app icon to show character with DD t-shirt and wings
-- [ ] Verify icon displays correctly on iPhone home screen
 - [x] Add Dashie character back to landing page hero section
+- [x] Fix Onboarding modal to show correct DD t-shirt Dashie
+- [ ] Verify icon displays correctly on iPhone home screen after publishing
