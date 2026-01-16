@@ -4,6 +4,84 @@ import { Button } from '@/components/ui/button';
 import confetti from 'canvas-confetti';
 import { ChevronDown } from 'lucide-react';
 import { useStore } from '@/lib/store';
+import { toast } from 'sonner';
+
+// Waitlist Form Component
+function WaitlistForm() {
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) {
+      toast.error('Please enter your email');
+      return;
+    }
+    setLoading(true);
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 500));
+      toast.success('Welcome to the waitlist! Check your email for updates.');
+      setEmail('');
+    } catch (error) {
+      toast.error('Something went wrong. Try again!');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
+      <input
+        type="email"
+        placeholder="your@email.com"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        className="flex-1 px-4 py-3 rounded-lg border-2 border-primary/20 bg-background focus:outline-none focus:border-primary"
+      />
+      <button
+        type="submit"
+        disabled={loading}
+        className="px-6 py-3 rounded-lg font-semibold transition-opacity hover:opacity-90 disabled:opacity-50"
+        style={{ backgroundColor: 'hsl(var(--primary))' }}
+      >
+        {loading ? 'Joining...' : 'Join Waitlist'}
+      </button>
+    </form>
+  );
+}
+
+// Referral Program Component
+function ReferralProgram() {
+  const [referralCode] = useState('DASHIE' + Math.random().toString(36).substr(2, 9).toUpperCase());
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(`https://dopamine-dasher.com?ref=${referralCode}`);
+    setCopied(true);
+    toast.success('Referral link copied!');
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="p-4 rounded-lg border-2 border-primary/20 bg-background">
+        <p className="text-sm mb-2" style={{ color: 'hsl(var(--foreground) / 0.6)' }}>Your Referral Code:</p>
+        <p className="font-mono font-bold text-lg">{referralCode}</p>
+      </div>
+      <button
+        onClick={handleCopy}
+        className="w-full px-4 py-3 rounded-lg font-semibold transition-opacity hover:opacity-90"
+        style={{ backgroundColor: 'hsl(var(--primary))' }}
+      >
+        {copied ? '✓ Link Copied!' : 'Copy Referral Link'}
+      </button>
+      <p className="text-center text-sm" style={{ color: 'hsl(var(--foreground) / 0.6)' }}>
+        Share your link • Friend signs up • You both get premium free 🎉
+      </p>
+    </div>
+  );
+}
 
 // FAQ Item Component
 function FAQItem({ question, answer }: { question: string; answer: string }) {
@@ -533,11 +611,44 @@ export default function Onboarding() {
                   quote: "I can finally put the entire dishwasher away before randomly switching to something else. I think it's the dopamine spikes this app helps me get.",
                   author: 'MomTo3',
                   role: 'Parent with ADHD'
+                },
+                {
+                  quote: "5-minute homework sprints changed my life. I went from staring at my textbook for 2 hours doing nothing to actually grinding through assignments. The streak counter keeps me accountable.",
+                  author: 'Alex K.',
+                  role: 'College Student with ADHD'
                 }
               ].map((testimonial, idx) => (
                 <TestimonialCard key={idx} {...testimonial} />
               ))}
             </div>
+
+            {/* Email Waitlist Section */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="w-full max-w-2xl mt-20 mb-20 p-8 rounded-2xl border-2 border-primary/20 bg-primary/5"
+            >
+              <h3 className="text-2xl md:text-3xl font-bold text-center mb-4">Join the Waitlist</h3>
+              <p className="text-center mb-6" style={{ color: 'hsl(var(--foreground) / 0.7)' }}>
+                Get early access to premium features and exclusive task templates
+              </p>
+              <WaitlistForm />
+            </motion.div>
+
+            {/* Referral Program Section */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="w-full max-w-2xl mb-20 p-8 rounded-2xl border-2 border-primary bg-primary/10"
+            >
+              <h3 className="text-2xl md:text-3xl font-bold text-center mb-4">Refer & Get Premium Free</h3>
+              <p className="text-center mb-6" style={{ color: 'hsl(var(--foreground) / 0.7)' }}>
+                Invite friends to Dopamine Dasher. When they sign up, you both get lifetime premium access!
+              </p>
+              <ReferralProgram />
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
