@@ -22,9 +22,25 @@ export default function FocusMode({ isOpen, onClose, taskName, onComplete }: Foc
   
   const [timeLeft, setTimeLeft] = useState(15 * 60); // 15 minutes
   const [isActive, setIsActive] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const [showMicroTryPrompt, setShowMicroTryPrompt] = useState(false);
   const [lastActivityTime, setLastActivityTime] = useState(Date.now());
   const [userIsActive, setUserIsActive] = useState(false);
+  const [showEncouragement, setShowEncouragement] = useState(false);
+
+  const encouragementMessages = [
+    "You've got this! 💪",
+    "Take your time, I'll be here! ✨",
+    "No rush, just breathe 🌬️",
+    "You're doing amazing! 🎉",
+    "Come back whenever you're ready 💚",
+    "I believe in you! 🚀",
+    "Rest is productive too 🧘"
+  ];
+
+  const getRandomEncouragement = () => {
+    return encouragementMessages[Math.floor(Math.random() * encouragementMessages.length)];
+  };
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -130,7 +146,26 @@ export default function FocusMode({ isOpen, onClose, taskName, onComplete }: Foc
   };
 
   const toggleTimer = () => {
-    setIsActive(!isActive);
+    if (!isActive && !isPaused) {
+      // Starting timer
+      setIsActive(true);
+      setIsPaused(false);
+    } else if (isActive) {
+      // Pausing timer
+      setIsActive(false);
+      setIsPaused(true);
+      setShowEncouragement(true);
+      // Haptic feedback
+      if (navigator.vibrate) {
+        navigator.vibrate(50);
+      }
+      setTimeout(() => setShowEncouragement(false), 3000);
+    } else if (isPaused) {
+      // Resuming timer
+      setIsActive(true);
+      setIsPaused(false);
+      setShowEncouragement(false);
+    }
     soundManager.playPop();
   };
 
@@ -233,12 +268,23 @@ export default function FocusMode({ isOpen, onClose, taskName, onComplete }: Foc
             <div className="flex gap-4 justify-center">
               <Button
                 size="lg"
-                variant={isActive ? "secondary" : "default"}
+                variant={isActive || isPaused ? "secondary" : "default"}
                 className="rounded-full w-16 h-16 p-0"
                 onClick={toggleTimer}
               >
                 {isActive ? <Pause className="w-8 h-8" /> : <Play className="w-8 h-8 ml-1" />}
               </Button>
+              
+              {showEncouragement && isPaused && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-primary text-primary-foreground px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap"
+                >
+                  {getRandomEncouragement()}
+                </motion.div>
+              )}
               
               <Button
                 size="lg"
