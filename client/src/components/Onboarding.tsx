@@ -401,6 +401,11 @@ export default function Onboarding() {
                   quote: "No judgment, no guilt—just wins. That's what I needed. Finally feels like an app built FOR me, not against me.",
                   author: 'Maya P.',
                   role: 'Student with ADHD'
+                },
+                {
+                  quote: "I can finally put the entire dishwasher away before randomly switching to something else. I think it's the dopamine spikes this app helps me get.",
+                  author: 'MomTo3',
+                  role: 'Parent with ADHD'
                 }
               ].map((testimonial, idx) => (
                 <TestimonialCard key={idx} {...testimonial} />

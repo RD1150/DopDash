@@ -152,13 +152,24 @@ export default function Home() {
           transition={{ duration: 0.6, delay: 1.2 }}
           className="bg-card border-2 border-border rounded-3xl p-8 md:p-12 text-center space-y-6"
         >
-          <div className="space-y-4">
-            <p className="text-xl md:text-2xl font-medium text-foreground leading-relaxed">
-              "Finally, a productivity app that doesn't make me feel broken."
-            </p>
-            <p className="text-muted-foreground">
-              — Every ADHD brain that's tried this
-            </p>
+          <div className="space-y-6">
+            <div className="space-y-4">
+              <p className="text-xl md:text-2xl font-medium text-foreground leading-relaxed">
+                "Finally, a productivity app that doesn't make me feel broken."
+              </p>
+              <p className="text-muted-foreground">
+                — Every ADHD brain that's tried this
+              </p>
+            </div>
+            
+            <div className="border-t border-border pt-6 space-y-4">
+              <p className="text-lg md:text-xl font-medium text-foreground leading-relaxed italic">
+                "I can finally put the entire dishwasher away before randomly switching to something else. I think it's the dopamine spikes this app helps me get."
+              </p>
+              <p className="text-muted-foreground">
+                — MomTo3
+              </p>
+            </div>
           </div>
 
           <div className="pt-6">
