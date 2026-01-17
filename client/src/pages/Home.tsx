@@ -1,10 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
-import { Zap, Target, Trophy, Sparkles, Heart, Brain } from "lucide-react";
+import { Zap, Target, Trophy, Sparkles, Heart, Brain, LogIn } from "lucide-react";
 import { motion } from "framer-motion";
+import { getLoginUrl } from "@/const";
+import { useAuth } from "@/_core/hooks/useAuth";
 
 export default function Home() {
   const [, setLocation] = useLocation();
+  const { isAuthenticated } = useAuth();
 
   const features = [
     {
@@ -93,17 +96,38 @@ export default function Home() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button
-              size="lg"
-              onClick={() => setLocation('/vibe-check')}
-              className="text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all"
-            >
-              Start today
-            </Button>
-            <p className="text-sm text-muted-foreground">
-              No login. No signup. No explanation wall.
-            </p>
+            {isAuthenticated ? (
+              <Button
+                size="lg"
+                onClick={() => setLocation('/dash')}
+                className="text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all"
+              >
+                Go to Dashboard
+              </Button>
+            ) : (
+              <>
+                <Button
+                  size="lg"
+                  onClick={() => window.location.href = getLoginUrl()}
+                  className="text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all bg-primary hover:bg-primary/90"
+                >
+                  <LogIn className="w-5 h-5 mr-2" />
+                  Sign Up Free
+                </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  onClick={() => setLocation('/vibe-check')}
+                  className="text-lg px-8 py-6 rounded-full"
+                >
+                  Try Demo
+                </Button>
+              </>
+            )}
           </div>
+          <p className="text-sm text-muted-foreground">
+            Free signup • Save your progress • No credit card needed
+          </p>
         </motion.div>
       </div>
 
@@ -172,15 +196,26 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="pt-6">
-            <Button
-              size="lg"
-              onClick={() => setLocation('/vibe-check')}
-              className="text-lg px-8 py-6 rounded-full"
-            >
-              Try it now — it's free
-            </Button>
-          </div>
+            <div className="pt-6 flex flex-col sm:flex-row gap-4 justify-center">
+              {!isAuthenticated && (
+                <Button
+                  size="lg"
+                  onClick={() => window.location.href = getLoginUrl()}
+                  className="text-lg px-8 py-6 rounded-full bg-primary hover:bg-primary/90"
+                >
+                  <LogIn className="w-5 h-5 mr-2" />
+                  Create Free Account
+                </Button>
+              )}
+              <Button
+                size="lg"
+                variant="outline"
+                onClick={() => setLocation('/vibe-check')}
+                className="text-lg px-8 py-6 rounded-full"
+              >
+                {isAuthenticated ? "Start a New Task" : "Try Demo First"}
+              </Button>
+            </div>
         </motion.div>
       </div>
 
@@ -192,7 +227,11 @@ export default function Home() {
           transition={{ duration: 0.6, delay: 1.4 }}
         >
           <p className="text-sm text-muted-foreground">
-            Works offline • No account needed • Your data stays yours
+            {isAuthenticated ? (
+              <>Your progress is saved • Access anywhere • ADHD-friendly design</>
+            ) : (
+              <>Try free • Save your progress • Your data stays yours</>
+            )}
           </p>
         </motion.div>
       </div>

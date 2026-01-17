@@ -264,12 +264,12 @@ export default function Onboarding() {
               <p>✅ Just instant dopamine hits that get you moving</p>
             </div>
 
-            {/* CTA Button - Huge and prominent */}
+            {/* CTA Buttons - Huge and prominent */}
             <motion.div
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.3, duration: 0.5 }}
-              className="mb-8"
+              className="mb-8 flex flex-col sm:flex-row gap-4 justify-center"
             >
               <Button 
                 size="lg"
@@ -279,7 +279,14 @@ export default function Onboarding() {
                 }}
                 className="text-lg px-12 py-8 rounded-2xl"
               >
-                Start Your First Win (Free) 🚀
+                Try Demo (Free) 🚀
+              </Button>
+              <Button 
+                size="lg"
+                onClick={() => window.location.href = (import.meta.env.VITE_OAUTH_PORTAL_URL ? `${import.meta.env.VITE_OAUTH_PORTAL_URL}/app-auth?appId=${import.meta.env.VITE_APP_ID}&redirectUri=${encodeURIComponent(window.location.origin + '/api/oauth/callback')}&state=${btoa(window.location.origin + '/api/oauth/callback')}&type=signUp` : '#')}
+                className="text-lg px-12 py-8 rounded-2xl bg-primary/80 hover:bg-primary/90"
+              >
+                Sign Up Free 📝
               </Button>
             </motion.div>
 
@@ -316,7 +323,7 @@ export default function Onboarding() {
                 ⚡ Takes 30 seconds to get your first dopamine hit
               </p>
               <p className="text-sm md:text-base" style={{ color: 'hsl(var(--foreground) / 0.7)' }}>
-                No login • No signup • No credit card
+                Free signup • Save your progress • No credit card
               </p>
             </div>
 
