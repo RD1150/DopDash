@@ -441,9 +441,16 @@ export default function SettingsPage() {
             >
               Reset Day Start Time
             </Button>
-            <p className="text-center text-xs text-muted-foreground/40 mt-4">
-              Dopamine Dasher v1.0 • No tracking. No shame.
-            </p>
+            <div className="flex justify-center gap-4 text-xs text-muted-foreground/60 mt-4">
+              <button 
+                onClick={() => setLocation('/terms')}
+                className="hover:text-primary transition-colors"
+              >
+                Terms of Service
+              </button>
+              <span>•</span>
+              <span>Dopamine Dasher v1.0 • No tracking. No shame.</span>
+            </div>
           </section>
         </div>
       </div>

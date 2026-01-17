@@ -4,13 +4,22 @@ import { Card } from '@/components/ui/card';
 import { trpc } from '@/lib/trpc';
 import { toast } from 'sonner';
 import { Crown, Check, Sparkles } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
+import { useLocation } from 'wouter';
 
 export default function PremiumUpgrade() {
   const [isLoading, setIsLoading] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [, navigate] = useLocation();
   const { data: premiumStatus } = trpc.stripe.checkPremiumStatus.useQuery();
   const createCheckout = trpc.stripe.createCheckoutSession.useMutation();
 
   const handleUpgrade = async () => {
+    if (!agreedToTerms) {
+      toast.error('Please agree to the Terms of Service to continue');
+      return;
+    }
+
     setIsLoading(true);
     try {
       const result = await createCheckout.mutateAsync();
@@ -83,10 +92,29 @@ export default function PremiumUpgrade() {
           ))}
         </div>
 
+        {/* Terms Agreement */}
+        <div className="flex items-start gap-3 p-4 bg-muted/30 rounded-lg">
+          <Checkbox
+            id="terms-agree"
+            checked={agreedToTerms}
+            onCheckedChange={(checked) => setAgreedToTerms(checked as boolean)}
+            className="mt-1"
+          />
+          <label htmlFor="terms-agree" className="text-sm text-muted-foreground cursor-pointer">
+            I agree to the{' '}
+            <button
+              onClick={() => navigate('/terms')}
+              className="text-primary hover:underline font-medium"
+            >
+              Terms of Service
+            </button>
+          </label>
+        </div>
+
         {/* CTA Button */}
         <Button
           onClick={handleUpgrade}
-          disabled={isLoading}
+          disabled={isLoading || !agreedToTerms}
           className="w-full h-14 text-lg font-bold"
           size="lg"
         >

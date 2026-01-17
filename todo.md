@@ -649,3 +649,10 @@
 - [ ] Regenerate Dashie hero image with solid background (no checkered transparency)
 - [ ] Clear browser cache and restart dev server
 - [ ] Verify Dashie displays correctly
+
+## Terms of Service Integration - Completed
+- [x] Create Terms of Service page component (/terms route)
+- [x] Add Terms link to Settings footer
+- [x] Add Terms agreement checkbox to Premium upgrade flow
+- [x] Disable Upgrade button until Terms are agreed to
+- [x] Add clickable link to Terms from checkout agreement checkbox
