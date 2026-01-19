@@ -1,0 +1,1 @@
+ALTER TABLE `termsVersions` MODIFY COLUMN `content` text NOT NULL;

@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, json } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, json, longtext } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -351,3 +351,46 @@ export const dailyCheckIns = mysqlTable("dailyCheckIns", {
 
 export type DailyCheckIn = typeof dailyCheckIns.$inferSelect;
 export type InsertDailyCheckIn = typeof dailyCheckIns.$inferInsert;
+
+
+/**
+ * Terms of Service versions tracking
+ */
+export const termsVersions = mysqlTable("termsVersions", {
+  id: int("id").autoincrement().primaryKey(),
+  version: varchar("version", { length: 20 }).notNull().unique(), // e.g., "1.0", "1.1"
+  title: varchar("title", { length: 255 }).notNull(),
+  content: text("content").notNull(), // Full terms content
+  effectiveDate: timestamp("effectiveDate").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type TermsVersion = typeof termsVersions.$inferSelect;
+export type InsertTermsVersion = typeof termsVersions.$inferInsert;
+
+/**
+ * User terms acceptance tracking
+ */
+export const userTermsAcceptance = mysqlTable("userTermsAcceptance", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  termsVersionId: int("termsVersionId").notNull().references(() => termsVersions.id, { onDelete: "restrict" }),
+  acceptedAt: timestamp("acceptedAt").defaultNow().notNull(),
+  ipAddress: varchar("ipAddress", { length: 45 }), // IPv4 or IPv6
+});
+export type UserTermsAcceptance = typeof userTermsAcceptance.$inferSelect;
+export type InsertUserTermsAcceptance = typeof userTermsAcceptance.$inferInsert;
+
+/**
+ * Email verification codes for checkout
+ */
+export const emailVerificationCodes = mysqlTable("emailVerificationCodes", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  email: varchar("email", { length: 320 }).notNull(),
+  code: varchar("code", { length: 6 }).notNull(), // 6-digit code
+  verified: int("verified").notNull().default(0), // 0 or 1 for boolean
+  expiresAt: timestamp("expiresAt").notNull(), // Code expires after 10 minutes
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type EmailVerificationCode = typeof emailVerificationCodes.$inferSelect;
+export type InsertEmailVerificationCode = typeof emailVerificationCodes.$inferInsert;

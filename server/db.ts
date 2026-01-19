@@ -1,6 +1,6 @@
 import { eq, and, desc, gte } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, userProfiles, InsertUserProfile, tasks, InsertTask, journalEntries, InsertJournalEntry, dailyAffirmations, InsertDailyAffirmation, habits, InsertHabit, habitCompletions, InsertHabitCompletion, moodEntries, InsertMoodEntry, userStats, InsertUserStats, leaderboardEntries, InsertLeaderboardEntry, contests, InsertContest, contestParticipation, InsertContestParticipation, rewards, InsertReward, userRewards, InsertUserReward, dailyCheckIns, InsertDailyCheckIn } from "../drizzle/schema";
+import { InsertUser, users, userProfiles, InsertUserProfile, tasks, InsertTask, journalEntries, InsertJournalEntry, dailyAffirmations, InsertDailyAffirmation, habits, InsertHabit, habitCompletions, InsertHabitCompletion, moodEntries, InsertMoodEntry, userStats, InsertUserStats, leaderboardEntries, InsertLeaderboardEntry, contests, InsertContest, contestParticipation, InsertContestParticipation, rewards, InsertReward, userRewards, InsertUserReward, dailyCheckIns, InsertDailyCheckIn, termsVersions, InsertTermsVersion, userTermsAcceptance, InsertUserTermsAcceptance, emailVerificationCodes, InsertEmailVerificationCode } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -548,4 +548,132 @@ export async function getCheckInHistory(userId: number, days: number = 30) {
       gte(dailyCheckIns.date, startDateStr)
     ))
     .orderBy(desc(dailyCheckIns.date));
+}
+
+
+// ============ EMAIL VERIFICATION FUNCTIONS ============
+
+export async function createEmailVerificationCode(userId: number, email: string): Promise<string> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  // Generate 6-digit code
+  const code = Math.floor(100000 + Math.random() * 900000).toString();
+  
+  // Code expires in 10 minutes
+  const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+  
+  await db.insert(emailVerificationCodes).values({
+    userId,
+    email,
+    code,
+    expiresAt,
+  });
+  
+  return code;
+}
+
+export async function verifyEmailCode(userId: number, code: string): Promise<boolean> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const result = await db.select().from(emailVerificationCodes)
+    .where(and(
+      eq(emailVerificationCodes.userId, userId),
+      eq(emailVerificationCodes.code, code),
+      gte(emailVerificationCodes.expiresAt, new Date())
+    ))
+    .limit(1);
+  
+  if (result.length === 0) return false;
+  
+  // Mark as verified
+  await db.update(emailVerificationCodes)
+    .set({ verified: 1 })
+    .where(eq(emailVerificationCodes.id, result[0].id));
+  
+  return true;
+}
+
+export async function getLatestVerifiedEmail(userId: number): Promise<string | null> {
+  const db = await getDb();
+  if (!db) return null;
+  
+  const result = await db.select().from(emailVerificationCodes)
+    .where(and(
+      eq(emailVerificationCodes.userId, userId),
+      eq(emailVerificationCodes.verified, 1)
+    ))
+    .orderBy(desc(emailVerificationCodes.createdAt))
+    .limit(1);
+  
+  return result.length > 0 ? result[0].email : null;
+}
+
+// ============ TERMS VERSION FUNCTIONS ============
+export async function createTermsVersion(data: InsertTermsVersion) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const result = await db.insert(termsVersions).values(data);
+  return result;
+}
+
+export async function getLatestTermsVersion() {
+  const db = await getDb();
+  if (!db) return null;
+  
+  const result = await db.select().from(termsVersions)
+    .orderBy(desc(termsVersions.effectiveDate))
+    .limit(1);
+  
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function getTermsVersionById(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  
+  const result = await db.select().from(termsVersions)
+    .where(eq(termsVersions.id, id))
+    .limit(1);
+  
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function recordTermsAcceptance(userId: number, termsVersionId: number, ipAddress?: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.insert(userTermsAcceptance).values({
+    userId,
+    termsVersionId,
+    ipAddress,
+  });
+}
+
+export async function getUserLatestTermsAcceptance(userId: number) {
+  const db = await getDb();
+  if (!db) return null;
+  
+  const result = await db.select().from(userTermsAcceptance)
+    .where(eq(userTermsAcceptance.userId, userId))
+    .orderBy(desc(userTermsAcceptance.acceptedAt))
+    .limit(1);
+  
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function hasUserAcceptedTermsVersion(userId: number, termsVersionId: number): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+  
+  const result = await db.select().from(userTermsAcceptance)
+    .where(and(
+      eq(userTermsAcceptance.userId, userId),
+      eq(userTermsAcceptance.termsVersionId, termsVersionId)
+    ))
+    .limit(1);
+  
+  return result.length > 0;
 }

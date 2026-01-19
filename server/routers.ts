@@ -425,6 +425,89 @@ export const appRouter = router({
         return await db.getCheckInHistory(ctx.user.id, input.days);
       }),
   }),
+
+  emailVerification: router({
+    sendVerificationCode: protectedProcedure
+      .input(z.object({ email: z.string().email() }))
+      .mutation(async ({ ctx, input }) => {
+        try {
+          const code = await db.createEmailVerificationCode(ctx.user.id, input.email);
+          console.log(`[Email Verification] Code for ${input.email}: ${code}`);
+          return {
+            success: true,
+            message: 'Verification code sent to email',
+          };
+        } catch (error: any) {
+          console.error('[Email Verification] Error sending code:', error);
+          throw new Error('Failed to send verification code');
+        }
+      }),
+
+    verifyCode: protectedProcedure
+      .input(z.object({ code: z.string().length(6) }))
+      .mutation(async ({ ctx, input }) => {
+        try {
+          const verified = await db.verifyEmailCode(ctx.user.id, input.code);
+          if (!verified) {
+            throw new Error('Invalid or expired verification code');
+          }
+          return {
+            success: true,
+            message: 'Email verified successfully',
+          };
+        } catch (error: any) {
+          console.error('[Email Verification] Error verifying code:', error);
+          throw new Error('Failed to verify code');
+        }
+      }),
+
+    getVerificationStatus: protectedProcedure
+      .query(async ({ ctx }) => {
+        const verifiedEmail = await db.getLatestVerifiedEmail(ctx.user.id);
+        return {
+          isVerified: verifiedEmail !== null,
+          email: verifiedEmail,
+        };
+      }),
+  }),
+
+  compliance: router({
+    getLatestTerms: publicProcedure
+      .query(async () => {
+        const termsVersion = await db.getLatestTermsVersion();
+        if (!termsVersion) {
+          throw new Error('Terms of Service not found');
+        }
+        return {
+          id: termsVersion.id,
+          version: termsVersion.version,
+          title: termsVersion.title,
+          effectiveDate: termsVersion.effectiveDate,
+        };
+      }),
+
+    acceptTerms: protectedProcedure
+      .input(z.object({ termsVersionId: z.number() }))
+      .mutation(async ({ ctx, input }) => {
+        try {
+          const ipAddress = (ctx.req.headers['x-forwarded-for'] as string) || ctx.req.socket.remoteAddress || undefined;
+          await db.recordTermsAcceptance(ctx.user.id, input.termsVersionId, ipAddress);
+          return { success: true, message: 'Terms accepted' };
+        } catch (error: any) {
+          console.error('[Terms Acceptance] Error:', error);
+          throw new Error('Failed to record terms acceptance');
+        }
+      }),
+
+    hasAcceptedLatestTerms: protectedProcedure
+      .query(async ({ ctx }) => {
+        const latestTerms = await db.getLatestTermsVersion();
+        if (!latestTerms) return false;
+        
+        const accepted = await db.hasUserAcceptedTermsVersion(ctx.user.id, latestTerms.id);
+        return accepted;
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

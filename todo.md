@@ -656,3 +656,35 @@
 - [x] Add Terms agreement checkbox to Premium upgrade flow
 - [x] Disable Upgrade button until Terms are agreed to
 - [x] Add clickable link to Terms from checkout agreement checkbox
+
+## Privacy Policy & Compliance - In Progress
+- [ ] Draft Privacy Policy tailored to Dopamine Dasher
+- [ ] Create Privacy Policy page component (/privacy route)
+- [ ] Add Privacy link to Settings footer
+- [ ] Link Privacy Policy from Terms page
+
+## Email Verification for Premium - In Progress
+- [ ] Add email verification requirement before Premium checkout
+- [ ] Create email verification modal in checkout flow
+- [ ] Store verified email in database
+- [ ] Prevent checkout without verified email
+
+## Terms Version History - In Progress
+- [ ] Add terms_versions table to database schema
+- [ ] Create tRPC procedure to track terms changes
+- [ ] Implement terms acceptance tracking per user
+- [ ] Notify users when terms are updated
+- [ ] Require re-acceptance of new terms on next login
+
+
+## Latest Session - Web App & iOS Fixes
+- [x] Fix iOS app icon - resize from 2048x2048 to 1024x1024 pixels
+- [x] Convert icon from RGB to RGBA format (add alpha channel for transparency)
+- [x] Update Premium price from $29.99 to $9.99
+- [x] Implement email verification tRPC procedures (sendVerificationCode, verifyCode, getVerificationStatus)
+- [x] Create EmailVerificationModal component for checkout flow
+- [x] Integrate email verification into PremiumUpgrade component
+- [ ] Test iOS app archive and upload to App Store Connect with fixed icon
+- [ ] Write and run vitest tests for email verification
+- [ ] Write and run vitest tests for terms acceptance
+- [ ] Test full Premium upgrade flow end-to-end

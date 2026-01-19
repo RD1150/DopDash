@@ -8,7 +8,7 @@ export const PRODUCTS = {
   PREMIUM_LIFETIME: {
     name: 'Dopamine Dasher Premium - Lifetime Access',
     description: 'One payment. Yours forever. Unlock all premium features.',
-    price: 29.99,
+    price: 9.99,
     currency: 'usd',
     type: 'one_time' as const,
     features: [

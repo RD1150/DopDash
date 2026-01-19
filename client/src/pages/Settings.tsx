@@ -449,6 +449,13 @@ export default function SettingsPage() {
                 Terms of Service
               </button>
               <span>•</span>
+              <button 
+                onClick={() => setLocation('/privacy')}
+                className="hover:text-primary transition-colors"
+              >
+                Privacy Policy
+              </button>
+              <span>•</span>
               <span>Dopamine Dasher v1.0 • No tracking. No shame.</span>
             </div>
           </section>

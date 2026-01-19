@@ -6,10 +6,12 @@ import { toast } from 'sonner';
 import { Crown, Check, Sparkles } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useLocation } from 'wouter';
+import EmailVerificationModal from './EmailVerificationModal';
 
 export default function PremiumUpgrade() {
   const [isLoading, setIsLoading] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [showEmailVerification, setShowEmailVerification] = useState(false);
   const [, navigate] = useLocation();
   const { data: premiumStatus } = trpc.stripe.checkPremiumStatus.useQuery();
   const createCheckout = trpc.stripe.createCheckoutSession.useMutation();
@@ -20,6 +22,11 @@ export default function PremiumUpgrade() {
       return;
     }
 
+    // Show email verification modal first
+    setShowEmailVerification(true);
+  };
+
+  const handleEmailVerified = async () => {
     setIsLoading(true);
     try {
       const result = await createCheckout.mutateAsync();
@@ -54,84 +61,92 @@ export default function PremiumUpgrade() {
   }
 
   return (
-    <Card className="p-6 bg-gradient-to-br from-primary/5 to-background border-primary/10">
-      <div className="space-y-6">
-        {/* Header */}
-        <div className="text-center space-y-2">
-          <div className="flex items-center justify-center gap-2">
-            <Sparkles className="w-6 h-6 text-primary" />
-            <h3 className="font-bold text-2xl">Upgrade to Premium</h3>
-            <Sparkles className="w-6 h-6 text-primary" />
+    <>
+      <Card className="p-6 bg-gradient-to-br from-primary/5 to-background border-primary/10">
+        <div className="space-y-6">
+          {/* Header */}
+          <div className="text-center space-y-2">
+            <div className="flex items-center justify-center gap-2">
+              <Sparkles className="w-6 h-6 text-primary" />
+              <h3 className="font-bold text-2xl">Upgrade to Premium</h3>
+              <Sparkles className="w-6 h-6 text-primary" />
+            </div>
+            <p className="text-muted-foreground">
+              Unlock all features. One payment. Yours forever.
+            </p>
           </div>
-          <p className="text-muted-foreground">
-            Unlock all features. One payment. Yours forever.
+
+          {/* Pricing */}
+          <div className="text-center py-4">
+            <div className="text-5xl font-bold text-primary">$9.99</div>
+            <div className="text-sm text-muted-foreground mt-1">Lifetime Access</div>
+          </div>
+
+          {/* Features */}
+          <div className="space-y-3">
+            {[
+              'All premium themes (Cyberpunk, Ocean, Sunset, Lavender)',
+              'Cloud sync across devices',
+              'Advanced analytics and insights',
+              'Custom mascot accessories',
+              'Wallpaper generator',
+              'Priority support',
+              'All future updates included'
+            ].map((feature, i) => (
+              <div key={i} className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                <span className="text-sm">{feature}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Terms Agreement */}
+          <div className="flex items-start gap-3 p-4 bg-muted/30 rounded-lg">
+            <Checkbox
+              id="terms-agree"
+              checked={agreedToTerms}
+              onCheckedChange={(checked) => setAgreedToTerms(checked as boolean)}
+              className="mt-1"
+            />
+            <label htmlFor="terms-agree" className="text-sm text-muted-foreground cursor-pointer">
+              I agree to the{' '}
+              <button
+                onClick={() => navigate('/terms')}
+                className="text-primary hover:underline font-medium"
+              >
+                Terms of Service
+              </button>
+            </label>
+          </div>
+
+          {/* CTA Button */}
+          <Button
+            onClick={handleUpgrade}
+            disabled={isLoading || !agreedToTerms}
+            className="w-full h-14 text-lg font-bold"
+            size="lg"
+          >
+            {isLoading ? (
+              'Opening checkout...'
+            ) : (
+              <>
+                <Crown className="w-5 h-5 mr-2" />
+                Upgrade Now
+              </>
+            )}
+          </Button>
+
+          <p className="text-xs text-center text-muted-foreground">
+            Secure payment powered by Stripe
           </p>
         </div>
+      </Card>
 
-        {/* Pricing */}
-        <div className="text-center py-4">
-          <div className="text-5xl font-bold text-primary">$29.99</div>
-          <div className="text-sm text-muted-foreground mt-1">Lifetime Access</div>
-        </div>
-
-        {/* Features */}
-        <div className="space-y-3">
-          {[
-            'All premium themes (Cyberpunk, Ocean, Sunset, Lavender)',
-            'Cloud sync across devices',
-            'Advanced analytics and insights',
-            'Custom mascot accessories',
-            'Wallpaper generator',
-            'Priority support',
-            'All future updates included'
-          ].map((feature, i) => (
-            <div key={i} className="flex items-start gap-3">
-              <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-              <span className="text-sm">{feature}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* Terms Agreement */}
-        <div className="flex items-start gap-3 p-4 bg-muted/30 rounded-lg">
-          <Checkbox
-            id="terms-agree"
-            checked={agreedToTerms}
-            onCheckedChange={(checked) => setAgreedToTerms(checked as boolean)}
-            className="mt-1"
-          />
-          <label htmlFor="terms-agree" className="text-sm text-muted-foreground cursor-pointer">
-            I agree to the{' '}
-            <button
-              onClick={() => navigate('/terms')}
-              className="text-primary hover:underline font-medium"
-            >
-              Terms of Service
-            </button>
-          </label>
-        </div>
-
-        {/* CTA Button */}
-        <Button
-          onClick={handleUpgrade}
-          disabled={isLoading || !agreedToTerms}
-          className="w-full h-14 text-lg font-bold"
-          size="lg"
-        >
-          {isLoading ? (
-            'Opening checkout...'
-          ) : (
-            <>
-              <Crown className="w-5 h-5 mr-2" />
-              Upgrade Now
-            </>
-          )}
-        </Button>
-
-        <p className="text-xs text-center text-muted-foreground">
-          Secure payment powered by Stripe
-        </p>
-      </div>
-    </Card>
+      <EmailVerificationModal
+        isOpen={showEmailVerification}
+        onClose={() => setShowEmailVerification(false)}
+        onVerified={handleEmailVerified}
+      />
+    </>
   );
 }

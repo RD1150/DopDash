@@ -157,6 +157,9 @@ export default function Terms() {
             <p className="text-sm text-muted-foreground italic">
               By purchasing Dopamine Dasher, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service.
             </p>
+            <p className="text-xs text-muted-foreground/60 mt-4">
+              Also review our <button onClick={() => navigate('/privacy')} className="text-primary hover:underline">Privacy Policy</button>
+            </p>
           </div>
         </article>
       </div>
