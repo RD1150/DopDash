@@ -765,8 +765,8 @@ export default function Dash() {
             <button
               onClick={() => setContext('nest')}
               className={cn(
-                "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap",
-                context === 'nest' ? "bg-primary text-primary-foreground shadow-md" : "bg-accent/50 text-muted-foreground hover:bg-accent"
+                "flex items-center justify-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap border-2",
+                context === 'nest' ? "bg-primary text-primary-foreground border-primary shadow-md" : "bg-primary/5 text-primary border-primary/30 hover:border-primary/50"
               )}
             >
               <Home className="w-4 h-4" /> Nest
@@ -774,8 +774,8 @@ export default function Dash() {
             <button
               onClick={() => setContext('grind')}
               className={cn(
-                "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap",
-                context === 'grind' ? "bg-primary text-primary-foreground shadow-md" : "bg-accent/50 text-muted-foreground hover:bg-accent"
+                "flex items-center justify-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap border-2",
+                context === 'grind' ? "bg-primary text-primary-foreground border-primary shadow-md" : "bg-primary/5 text-primary border-primary/30 hover:border-primary/50"
               )}
             >
               <Briefcase className="w-4 h-4" /> Grind
@@ -783,15 +783,15 @@ export default function Dash() {
             <button
               onClick={() => setContext('self')}
               className={cn(
-                "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap",
-                context === 'self' ? "bg-primary text-primary-foreground shadow-md" : "bg-accent/50 text-muted-foreground hover:bg-accent"
+                "flex items-center justify-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap border-2",
+                context === 'self' ? "bg-primary text-primary-foreground border-primary shadow-md" : "bg-primary/5 text-primary border-primary/30 hover:border-primary/50"
               )}
             >
               <User className="w-4 h-4" /> Self
             </button>
             <button
               onClick={() => setShowDecisionTree(true)}
-              className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:shadow-lg"
+              className="flex items-center justify-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap border-2 bg-primary text-primary-foreground border-primary shadow-md hover:shadow-lg"
               title="Smart task sequencing based on your state"
             >
               <Wand2 className="w-4 h-4" /> Decision Tree
@@ -799,8 +799,8 @@ export default function Dash() {
             <button
               onClick={() => setContext('family')}
               className={cn(
-                "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap",
-                context === 'family' ? "bg-primary text-primary-foreground shadow-md" : "bg-accent/50 text-muted-foreground hover:bg-accent"
+                "flex items-center justify-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap border-2",
+                context === 'family' ? "bg-primary text-primary-foreground border-primary shadow-md" : "bg-primary/5 text-primary border-primary/30 hover:border-primary/50"
               )}
             >
               <Users className="w-4 h-4" /> Family
@@ -832,8 +832,8 @@ export default function Dash() {
             <button
               onClick={() => setSelectedCategory(null)}
               className={cn(
-                "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap",
-                selectedCategory === null ? "bg-primary text-primary-foreground shadow-md" : "bg-accent/50 text-muted-foreground hover:bg-accent"
+                "flex items-center justify-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap border-2",
+                selectedCategory === null ? "bg-primary text-primary-foreground border-primary shadow-md" : "bg-primary/5 text-primary border-primary/30 hover:border-primary/50"
               )}
             >
               All
@@ -842,47 +842,38 @@ export default function Dash() {
             <button
               onClick={() => setSelectedCategory('focus')}
               className={cn(
-                "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap",
+                "flex items-center justify-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap border-2",
                 selectedCategory === 'focus' 
-                  ? `bg-gradient-to-r ${categoryConfig.focus.color} text-white shadow-md` 
-                  : `${categoryConfig.focus.bgInactive} ${categoryConfig.focus.textInactive} hover:opacity-80`
+                  ? "bg-primary text-primary-foreground border-primary shadow-md" 
+                  : "bg-primary/5 text-primary border-primary/30 hover:border-primary/50"
               )}
             >
               <BrainCircuit className="w-4 h-4" /> Focus
-              <span className={cn(
-                "ml-1 px-2 py-0.5 rounded-full text-xs font-semibold",
-                selectedCategory === 'focus' ? "bg-white/30" : categoryConfig.focus.badge
-              )}>{focusCount}</span>
+              <span className="ml-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-primary/20">{focusCount}</span>
             </button>
             <button
               onClick={() => setSelectedCategory('energy')}
               className={cn(
-                "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap",
+                "flex items-center justify-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap border-2",
                 selectedCategory === 'energy' 
-                  ? `bg-gradient-to-r ${categoryConfig.energy.color} text-white shadow-md` 
-                  : `${categoryConfig.energy.bgInactive} ${categoryConfig.energy.textInactive} hover:opacity-80`
+                  ? "bg-primary text-primary-foreground border-primary shadow-md" 
+                  : "bg-primary/5 text-primary border-primary/30 hover:border-primary/50"
               )}
             >
               <Zap className="w-4 h-4" /> Energy
-              <span className={cn(
-                "ml-1 px-2 py-0.5 rounded-full text-xs font-semibold",
-                selectedCategory === 'energy' ? "bg-white/30" : categoryConfig.energy.badge
-              )}>{energyCount}</span>
+              <span className="ml-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-primary/20">{energyCount}</span>
             </button>
             <button
               onClick={() => setSelectedCategory('momentum')}
               className={cn(
-                "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap",
+                "flex items-center justify-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap border-2",
                 selectedCategory === 'momentum' 
-                  ? `bg-gradient-to-r ${categoryConfig.momentum.color} text-white shadow-md` 
-                  : `${categoryConfig.momentum.bgInactive} ${categoryConfig.momentum.textInactive} hover:opacity-80`
+                  ? "bg-primary text-primary-foreground border-primary shadow-md" 
+                  : "bg-primary/5 text-primary border-primary/30 hover:border-primary/50"
               )}
             >
               <RefreshCw className="w-4 h-4" /> Momentum
-              <span className={cn(
-                "ml-1 px-2 py-0.5 rounded-full text-xs font-semibold",
-                selectedCategory === 'momentum' ? "bg-white/30" : categoryConfig.momentum.badge
-              )}>{momentumCount}</span>
+              <span className="ml-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-primary/20">{momentumCount}</span>
             </button>
           </div>
           </div>
