@@ -13,7 +13,7 @@ const faqItems: FAQItem[] = [
   {
     category: 'Getting Started',
     question: 'What is Dopamine Dasher?',
-    answer: 'Dopamine Dasher is a task app designed specifically FOR ADHD brains, not against them. Instead of forcing you through overwhelming to-do lists, it breaks projects into 2-5 minute micro-tasks and gives you instant dopamine rewards (confetti, animations, points) for each completion. This builds momentum without shame. The app understands that your brain works differently—and that\'s not broken, it\'s just different.',
+    answer: 'Dopamine Dasher is a task app designed specifically FOR ADHD brains, not against them. Formed with the knowledge and practice of hundreds of ADHD practitioners, it breaks projects into 2-5 minute micro-tasks and gives you instant dopamine rewards (confetti, animations, points) for each completion. This builds momentum without shame. The app understands that your brain works differently—and that\'s not broken, it\'s just different.',
     icon: <Brain className="w-5 h-5" />,
   },
   {
