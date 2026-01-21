@@ -725,7 +725,8 @@
 - [x] Create tRPC procedures for decision tree (recordState, sequenceTasks, getEncouragement)
 - [x] Write comprehensive tests for sequencing algorithm (27 tests - all passing)
 - [x] Update FocusMode to accept taskDuration prop
-- [x] Create Decision Tree Demo page for testing
+- [ ] Fix Decision Tree Demo page: ask state FIRST (before time/tasks)
+- [ ] Add ADHD-friendly spacing and visual breaks to demo page
 - [ ] Build full Decision Tree UI flow (5 screens)
 - [ ] Add state-aware encouragement messages to FocusMode
 - [ ] Create task templates for common sequences (mail, cleaning, work, self-care)
