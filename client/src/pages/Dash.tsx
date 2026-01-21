@@ -36,7 +36,8 @@ import QuickWinSuggestions from '@/components/QuickWinSuggestions';
 import MoodSelector from '@/components/MoodSelector';
 import DailyCheckIn from '@/components/DailyCheckIn';
 import DashieOutfitDisplay, { TaskType } from '@/components/DashieOutfitDisplay';
-import { Timer, CircleDashed, StickyNote, Volume2, Map } from 'lucide-react';
+import DecisionTreeDemo from '@/pages/DecisionTreeDemo';
+import { Timer, CircleDashed, StickyNote, Volume2, Map, Wand2 } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -98,6 +99,7 @@ export default function Dash() {
   const [selectedTaskType, setSelectedTaskType] = useState<TaskType>('grind');
   const [showOutfitDisplay, setShowOutfitDisplay] = useState(false);
   const [completedTaskType, setCompletedTaskType] = useState<TaskType | null>(null);
+  const [showDecisionTree, setShowDecisionTree] = useState(false);
 
   const [showBubblePop, setShowBubblePop] = useState(false);
   const [isAddingTask, setIsAddingTask] = useState(false);
@@ -786,6 +788,13 @@ export default function Dash() {
               <User className="w-4 h-4" /> Self
             </button>
             <button
+              onClick={() => setShowDecisionTree(true)}
+              className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:shadow-lg"
+              title="Smart task sequencing based on your state"
+            >
+              <Wand2 className="w-4 h-4" /> Decision Tree
+            </button>
+            <button
               onClick={() => setContext('family')}
               className={cn(
                 "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap",
@@ -1387,6 +1396,15 @@ export default function Dash() {
         onSelect={handleMoodSelect}
         currentMood={currentEmotionalState}
       />
+      
+      {/* Decision Tree Modal */}
+      {showDecisionTree && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-background rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <DecisionTreeDemo />
+          </div>
+        </div>
+      )}
     </Layout>
   );
 }

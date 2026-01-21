@@ -725,9 +725,12 @@
 - [x] Create tRPC procedures for decision tree (recordState, sequenceTasks, getEncouragement)
 - [x] Write comprehensive tests for sequencing algorithm (27 tests - all passing)
 - [x] Update FocusMode to accept taskDuration prop
-- [ ] Fix Decision Tree Demo page: ask state FIRST (before time/tasks)
-- [ ] Add ADHD-friendly spacing and visual breaks to demo page
-- [ ] Build full Decision Tree UI flow (5 screens)
+- [x] Fix Decision Tree Demo page: ask state FIRST (before time/tasks)
+- [x] Add ADHD-friendly spacing and visual breaks to demo page
+- [x] Build full Decision Tree UI flow (5 screens)
+- [x] Research Bionic Chaos dopamine framework and extract principles
+- [x] Create 25 task templates with activation energy levels
+- [x] Integrate decision tree into main Dash app with button
 - [ ] Add state-aware encouragement messages to FocusMode
 - [ ] Create task templates for common sequences (mail, cleaning, work, self-care)
 - [ ] Test decision tree end-to-end with different state combinations
