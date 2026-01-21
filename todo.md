@@ -736,8 +736,3 @@
 - [ ] Test decision tree end-to-end with different state combinations
 
 
-## Milestone: 10K+ ADHD Users
-- 🎉 Reached 10K+ active users
-- 38 visitors today with 8+ min average session
-- Decision tree and micro-task system is working at scale
-- Real impact: thousands of ADHD brains getting dopamine hits and building momentum
