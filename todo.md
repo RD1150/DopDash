@@ -744,3 +744,10 @@
 - [x] Establish visual hierarchy (size, weight, spacing)
 - [x] Reorganize sections for ADHD clarity (Context/Category/Filters in separate cards)
 - [x] Test layout for visual comfort and organization (build successful)
+
+
+## Button Layout Fixes - Text Overflow
+- [ ] Fix context buttons to wrap text and use multiple rows
+- [ ] Fix category buttons to wrap text and use multiple rows
+- [ ] Ensure all button text stays contained within button boundaries
+- [ ] Test responsive layout on mobile screens

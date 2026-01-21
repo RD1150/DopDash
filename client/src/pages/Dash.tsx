@@ -761,7 +761,7 @@ export default function Dash() {
           {/* Life Area Tabs */}
           <div className="bg-card border border-border rounded-lg p-4">
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Choose Your Context</p>
-          <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+          <div className="flex flex-wrap gap-2 pb-2">
             <button
               onClick={() => setContext('nest')}
               className={cn(
@@ -828,7 +828,7 @@ export default function Dash() {
           {/* Category Filter Tabs */}
           <div className="bg-card border border-border rounded-lg p-4">
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Filter By Category</p>
-          <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+          <div className="flex flex-wrap gap-2 pb-2">
             <button
               onClick={() => setSelectedCategory(null)}
               className={cn(
@@ -881,7 +881,7 @@ export default function Dash() {
           {/* Filter Presets */}
           <div className="bg-card border border-border rounded-lg p-4">
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Quick Filters</p>
-          <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+          <div className="flex flex-wrap gap-2 pb-2">
             <button
               onClick={() => setSelectedPreset(selectedPreset === 'quick-wins' ? null : 'quick-wins')}
               className={cn(
