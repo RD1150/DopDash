@@ -747,7 +747,7 @@
 
 
 ## Button Layout Fixes - Text Overflow
-- [ ] Fix context buttons to wrap text and use multiple rows
-- [ ] Fix category buttons to wrap text and use multiple rows
-- [ ] Ensure all button text stays contained within button boundaries
+- [x] Fix context buttons to wrap text and use multiple rows
+- [x] Fix category buttons to wrap text and use multiple rows
+- [x] Ensure all button text stays contained within button boundaries
 - [ ] Test responsive layout on mobile screens
