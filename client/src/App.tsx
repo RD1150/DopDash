@@ -20,6 +20,7 @@ import RewardsShop from "./pages/RewardsShop";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import DecisionTreeDemo from "./pages/DecisionTreeDemo";
+import FAQ from "./pages/FAQ";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
@@ -43,6 +44,7 @@ function Router() {
       <Route path="/settings" component={SettingsPage} />
       <Route path="/terms" component={Terms} />
       <Route path="/privacy" component={Privacy} />
+      <Route path="/faq" component={FAQ} />
       <Route path="/decision-tree-demo" component={DecisionTreeDemo} />
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}

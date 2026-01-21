@@ -1,6 +1,6 @@
 import { useLocation } from 'wouter';
 import { motion } from 'framer-motion';
-import { Home, BarChart3, ShoppingBag, Settings, Archive, Trophy, Zap } from 'lucide-react';
+import { Home, BarChart3, ShoppingBag, Settings, Archive, Trophy, Zap, HelpCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const NAV_ITEMS = [
@@ -8,7 +8,7 @@ const NAV_ITEMS = [
   { path: '/stats', label: 'Stats', icon: BarChart3 },
   { path: '/leaderboard', label: 'Leaderboard', icon: Trophy },
   { path: '/rewards-shop', label: 'Rewards', icon: Zap },
-  { path: '/someday', label: 'Someday', icon: Archive },
+  { path: '/faq', label: 'FAQ', icon: HelpCircle },
   { path: '/settings', label: 'Settings', icon: Settings },
 ];
 
