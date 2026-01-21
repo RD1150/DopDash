@@ -6,6 +6,9 @@ import { z } from "zod";
 import * as db from "./db";
 import Stripe from "stripe";
 import { PRODUCTS } from "../shared/products.js";
+import { sequenceTasks, calculateTotalDuration, validateSequence, getEncouragementMessage } from "./sequencing";
+import type { UserState, TimeAvailable, Task } from "./sequencing";
+import { decisionTreeRouter } from "./decisionTreeRouter";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-12-15.clover',
@@ -92,6 +95,9 @@ export const appRouter = router({
         title: z.string(),
         type: z.enum(["quick", "boss"]),
         category: z.string().optional(),
+        durationMinutes: z.number().default(5),
+        sequenceGroup: z.string().optional(),
+        sequenceOrder: z.number().optional(),
         subtasks: z.array(z.object({
           id: z.string(),
           text: z.string(),
@@ -113,6 +119,7 @@ export const appRouter = router({
       .input(z.object({
         id: z.number(),
         title: z.string().optional(),
+        durationMinutes: z.number().optional(),
         subtasks: z.array(z.object({
           id: z.string(),
           text: z.string(),
@@ -507,6 +514,7 @@ export const appRouter = router({
         const accepted = await db.hasUserAcceptedTermsVersion(ctx.user.id, latestTerms.id);
         return accepted;
       }),
+  decisionTree: decisionTreeRouter,
   }),
 });
 

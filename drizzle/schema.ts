@@ -82,6 +82,7 @@ export const tasks = mysqlTable("tasks", {
   title: text("title").notNull(),
   type: mysqlEnum("type", ["quick", "boss"]).notNull(),
   category: varchar("category", { length: 50 }), // work, home, self, family
+  durationMinutes: int("durationMinutes").notNull().default(5), // Task duration in minutes
   
   // Boss Battle specific
   subtasks: json("subtasks").$type<Array<{ id: string; text: string; completed: boolean }>>(),
@@ -92,6 +93,14 @@ export const tasks = mysqlTable("tasks", {
   // Rewards
   xpReward: int("xpReward").notNull().default(10),
   coinReward: int("coinReward").notNull().default(5),
+  
+  // Task sequencing (for ordered task chains like mail handling)
+  sequenceGroup: varchar("sequenceGroup", { length: 100 }), // e.g., "mail-handling"
+  sequenceOrder: int("sequenceOrder"), // 1, 2, 3... for ordering within group
+  
+  // Decision tree fields for ADHD-informed sequencing
+  activationEnergy: mysqlEnum("activationEnergy", ["micro", "easy", "medium", "deep"]).default("easy"),
+  recommendedState: varchar("recommendedState", { length: 50 }),
   
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
@@ -394,3 +403,49 @@ export const emailVerificationCodes = mysqlTable("emailVerificationCodes", {
 });
 export type EmailVerificationCode = typeof emailVerificationCodes.$inferSelect;
 export type InsertEmailVerificationCode = typeof emailVerificationCodes.$inferInsert;
+
+
+/**
+ * Nervous system states - tracks user's current state for decision tree
+ */
+export const nervousSystemStates = mysqlTable("nervousSystemStates", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  
+  // Current state
+  state: mysqlEnum("state", ["squirrel", "tired", "focused", "hurting"]).notNull(),
+  description: text("description"),
+  
+  // Timestamps
+  recordedAt: timestamp("recordedAt").defaultNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type NervousSystemState = typeof nervousSystemStates.$inferSelect;
+export type InsertNervousSystemState = typeof nervousSystemStates.$inferInsert;
+
+/**
+ * Decision tree sessions - tracks user's journey through the decision tree
+ */
+export const decisionTreeSessions = mysqlTable("decisionTreeSessions", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  
+  // Session data
+  timeAvailable: varchar("timeAvailable", { length: 20 }).notNull(),
+  userState: varchar("userState", { length: 20 }).notNull(),
+  activityPreference: varchar("activityPreference", { length: 50 }),
+  
+  // Brain dump tasks
+  brainDumpTasks: json("brainDumpTasks").$type<string[]>(),
+  
+  // Sequenced tasks (result of decision tree)
+  sequencedTasks: json("sequencedTasks").$type<Array<{ taskId: number; order: number; estimatedDuration: number }>>(),
+  
+  // Session tracking
+  completedAt: timestamp("completedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type DecisionTreeSession = typeof decisionTreeSessions.$inferSelect;
+export type InsertDecisionTreeSession = typeof decisionTreeSessions.$inferInsert;

@@ -688,3 +688,45 @@
 - [ ] Write and run vitest tests for email verification
 - [ ] Write and run vitest tests for terms acceptance
 - [ ] Test full Premium upgrade flow end-to-end
+
+
+## Task Duration Bug Fix - Current Sprint
+- [x] Add durationMinutes column to tasks table schema
+- [x] Create mail handling task sequence with variable durations (2min, 5min, 10min)
+- [ ] Update Focus Mode to display task-specific duration instead of default 15 min
+- [ ] Test task sequencing for Nest context with mail tasks
+- [ ] Verify ADHD-friendly low-barrier entry point (2-min mail task first)
+
+## Decision Tree Implementation - ADHD-Informed Task Sequencing
+- [ ] Add activationEnergy field to tasks table (micro/easy/medium/deep)
+- [ ] Add recommendedState field to tasks table (squirrel/tired/focused/hurting)
+- [ ] Create nervousSystemStates table for user state tracking
+- [ ] Implement task sequencing algorithm based on time + state + activation energy
+- [ ] Create tRPC procedure: getSequencedTasks(timeAvailable, userState, taskList)
+- [ ] Build Decision Tree UI: Screen 1 - Time Assessment
+- [ ] Build Decision Tree UI: Screen 2 - Brain Dump
+- [ ] Build Decision Tree UI: Screen 3 - State Check-In
+- [ ] Build Decision Tree UI: Screen 4 - Activity Preference
+- [ ] Build Decision Tree UI: Screen 5 - Task Sequence Display
+- [ ] Update FocusMode to accept taskDuration prop
+- [ ] Add state-aware encouragement messages to FocusMode
+- [ ] Create task templates for common sequences (mail, cleaning, work, self-care)
+- [ ] Write tests for sequencing algorithm
+- [ ] Test decision tree end-to-end with different state combinations
+- [ ] Validate nervous system regulation activity library
+
+
+## Decision Tree Implementation - ADHD-Informed Task Sequencing
+- [x] Add activationEnergy field to tasks table (micro/easy/medium/deep)
+- [x] Add recommendedState field to tasks table (squirrel/tired/focused/hurting)
+- [x] Create nervousSystemStates table for user state tracking
+- [x] Create decisionTreeSessions table for tracking journeys
+- [x] Implement task sequencing algorithm based on time + state + activation energy
+- [x] Create tRPC procedures for decision tree (recordState, sequenceTasks, getEncouragement)
+- [x] Write comprehensive tests for sequencing algorithm (27 tests - all passing)
+- [x] Update FocusMode to accept taskDuration prop
+- [x] Create Decision Tree Demo page for testing
+- [ ] Build full Decision Tree UI flow (5 screens)
+- [ ] Add state-aware encouragement messages to FocusMode
+- [ ] Create task templates for common sequences (mail, cleaning, work, self-care)
+- [ ] Test decision tree end-to-end with different state combinations

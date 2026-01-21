@@ -1,6 +1,6 @@
-import { eq, and, desc, gte } from "drizzle-orm";
+import { eq, and, desc, or, gte } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, userProfiles, InsertUserProfile, tasks, InsertTask, journalEntries, InsertJournalEntry, dailyAffirmations, InsertDailyAffirmation, habits, InsertHabit, habitCompletions, InsertHabitCompletion, moodEntries, InsertMoodEntry, userStats, InsertUserStats, leaderboardEntries, InsertLeaderboardEntry, contests, InsertContest, contestParticipation, InsertContestParticipation, rewards, InsertReward, userRewards, InsertUserReward, dailyCheckIns, InsertDailyCheckIn, termsVersions, InsertTermsVersion, userTermsAcceptance, InsertUserTermsAcceptance, emailVerificationCodes, InsertEmailVerificationCode } from "../drizzle/schema";
+import { InsertUser, users, userProfiles, InsertUserProfile, tasks, InsertTask, journalEntries, InsertJournalEntry, dailyAffirmations, InsertDailyAffirmation, habits, InsertHabit, habitCompletions, InsertHabitCompletion, moodEntries, InsertMoodEntry, userStats, InsertUserStats, leaderboardEntries, InsertLeaderboardEntry, contests, InsertContest, contestParticipation, InsertContestParticipation, rewards, InsertReward, userRewards, InsertUserReward, dailyCheckIns, InsertDailyCheckIn, termsVersions, InsertTermsVersion, userTermsAcceptance, InsertUserTermsAcceptance, emailVerificationCodes, InsertEmailVerificationCode, nervousSystemStates, InsertNervousSystemState, decisionTreeSessions, InsertDecisionTreeSession } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -676,4 +676,97 @@ export async function hasUserAcceptedTermsVersion(userId: number, termsVersionId
     .limit(1);
   
   return result.length > 0;
+}
+
+
+// Decision Tree functions
+
+export async function recordNervousSystemState(userId: number, state: "squirrel" | "tired" | "focused" | "hurting", description?: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db.insert(nervousSystemStates).values({
+    userId,
+    state,
+    description,
+    recordedAt: new Date(),
+  });
+}
+
+export async function getLatestNervousSystemState(userId: number) {
+  const db = await getDb();
+  if (!db) return null;
+
+  const result = await db.select()
+    .from(nervousSystemStates)
+    .where(eq(nervousSystemStates.userId, userId))
+    .orderBy(desc(nervousSystemStates.recordedAt))
+    .limit(1);
+
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function createDecisionTreeSession(session: InsertDecisionTreeSession) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const result = await db.insert(decisionTreeSessions).values(session);
+  return result;
+}
+
+export async function getDecisionTreeSession(sessionId: number, userId: number) {
+  const db = await getDb();
+  if (!db) return null;
+
+  const result = await db.select()
+    .from(decisionTreeSessions)
+    .where(and(
+      eq(decisionTreeSessions.id, sessionId),
+      eq(decisionTreeSessions.userId, userId)
+    ))
+    .limit(1);
+
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function getTasksByActivationEnergy(userId: number, activationEnergy: "micro" | "easy" | "medium" | "deep") {
+  const db = await getDb();
+  if (!db) return [];
+
+  return await db.select()
+    .from(tasks)
+    .where(and(
+      eq(tasks.userId, userId),
+      eq(tasks.completed, 0),
+      eq(tasks.activationEnergy, activationEnergy)
+    ))
+    .orderBy(desc(tasks.createdAt));
+}
+
+export async function getTasksByState(userId: number, state: string) {
+  const db = await getDb();
+  if (!db) return [];
+
+  return await db.select()
+    .from(tasks)
+    .where(and(
+      eq(tasks.userId, userId),
+      eq(tasks.completed, 0),
+      eq(tasks.recommendedState, state)
+    ))
+    .orderBy(desc(tasks.createdAt));
+}
+
+export async function getTasksBySequenceGroup(userId: number, sequenceGroup: string) {
+  const db = await getDb();
+  if (!db) return [];
+
+  return await db.select()
+    .from(tasks)
+    .where(and(
+      eq(tasks.userId, userId),
+      eq(tasks.completed, 0),
+      eq(tasks.sequenceGroup, sequenceGroup)
+    ))
+    .orderBy(tasks.sequenceOrder);
 }

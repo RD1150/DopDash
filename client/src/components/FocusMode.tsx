@@ -12,15 +12,18 @@ interface FocusModeProps {
   onClose: () => void;
   taskName: string;
   onComplete: () => void;
+  taskDuration?: number;
+  userState?: 'squirrel' | 'tired' | 'focused' | 'hurting';
+  encouragementMessage?: string;
 }
 
-export default function FocusMode({ isOpen, onClose, taskName, onComplete }: FocusModeProps) {
+export default function FocusMode({ isOpen, onClose, taskName, onComplete, taskDuration = 15, userState, encouragementMessage }: FocusModeProps) {
   const microTryMode = useStore((state) => state.microTryMode);
   const continueMicroTry = useStore((state) => state.continueMicroTry);
   const endMicroTry = useStore((state) => state.endMicroTry);
   const momentumMode = useStore((state) => state.momentumMode);
   
-  const [timeLeft, setTimeLeft] = useState(15 * 60); // 15 minutes
+  const [timeLeft, setTimeLeft] = useState((taskDuration || 15) * 60);
   const [isActive, setIsActive] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [showMicroTryPrompt, setShowMicroTryPrompt] = useState(false);
@@ -60,11 +63,11 @@ export default function FocusMode({ isOpen, onClose, taskName, onComplete }: Foc
       if (microTryMode) {
         setTimeLeft(2 * 60);
       } else {
-        setTimeLeft(15 * 60);
+        setTimeLeft((taskDuration || 15) * 60);
       }
       setIsActive(false);
     }
-  }, [isOpen, microTryMode]);
+  }, [isOpen, microTryMode, taskDuration]);
 
   // Handle micro-try timer reaching 2 minutes
   useEffect(() => {
