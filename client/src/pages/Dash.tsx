@@ -622,7 +622,7 @@ export default function Dash() {
                 <h1 className="text-3xl font-bold text-primary">Today's Dash</h1>
                 {/* Daily Streak Counter */}
                 {streakCount > 0 && (
-                  <div className="ml-auto bg-gradient-to-r from-orange-400 to-red-500 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2 shadow-lg">
+                  <div className="ml-auto bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2 shadow-md border border-primary/30">
                     <span>🔥</span> {streakCount} day streak!
                   </div>
                 )}
@@ -631,11 +631,11 @@ export default function Dash() {
                 <p className="text-muted-foreground">Just start. That's enough.</p>
                 {!zenMode && (
                   <>
-                    <div className="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 px-3 py-0.5 rounded-full text-sm font-bold flex items-center gap-1">
+                    <div className="bg-primary/5 text-primary px-3 py-0.5 rounded-full text-sm font-bold flex items-center gap-1 border border-primary/20">
                       <span>⭐</span> {coins}
                     </div>
                     {comboCount > 1 && (
-                      <div className="animate-bounce bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 px-3 py-0.5 rounded-full text-sm font-bold flex items-center gap-1">
+                      <div className="animate-bounce bg-primary/10 text-primary px-3 py-0.5 rounded-full text-sm font-bold flex items-center gap-1 border border-primary/30">
                         <span>🔥</span> {comboCount}x COMBO!
                       </div>
                     )}
@@ -644,7 +644,7 @@ export default function Dash() {
                         initial={{ scale: 0, rotate: -180 }}
                         animate={{ scale: 1, rotate: 0 }}
                         exit={{ scale: 0 }}
-                        className="bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 px-3 py-0.5 rounded-full text-sm font-bold flex items-center gap-1"
+                        className="bg-primary/10 text-primary px-3 py-0.5 rounded-full text-sm font-bold flex items-center gap-1 border border-primary/30"
                       >
                         <span>⚡</span> 2x STREAK!
                       </motion.div>
@@ -759,6 +759,8 @@ export default function Dash() {
           </div>
           
           {/* Life Area Tabs */}
+          <div className="bg-card border border-border rounded-lg p-4">
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Choose Your Context</p>
           <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
             <button
               onClick={() => setContext('nest')}
@@ -804,6 +806,7 @@ export default function Dash() {
               <Users className="w-4 h-4" /> Family
             </button>
           </div>
+          </div>
           
           {/* Category Stats */}
           {selectedCategory && (
@@ -823,6 +826,8 @@ export default function Dash() {
           {/* Daily Challenges moved to Rewards tab for cleaner dashboard */}
           
           {/* Category Filter Tabs */}
+          <div className="bg-card border border-border rounded-lg p-4">
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Filter By Category</p>
           <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
             <button
               onClick={() => setSelectedCategory(null)}
@@ -880,8 +885,11 @@ export default function Dash() {
               )}>{momentumCount}</span>
             </button>
           </div>
+          </div>
           
           {/* Filter Presets */}
+          <div className="bg-card border border-border rounded-lg p-4">
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Quick Filters</p>
           <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
             <button
               onClick={() => setSelectedPreset(selectedPreset === 'quick-wins' ? null : 'quick-wins')}
@@ -910,6 +918,7 @@ export default function Dash() {
             >
               Focus on 1
             </button>
+          </div>
           </div>
         </header>
 

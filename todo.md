@@ -736,3 +736,11 @@
 - [ ] Test decision tree end-to-end with different state combinations
 
 
+
+
+## Dash Page Redesign - ADHD Visual Clarity
+- [x] Reduce color palette to 2-3 primary colors (replaced orange/yellow/purple with primary)
+- [x] Add clear visual delineation between sections (cards, borders, backgrounds)
+- [x] Establish visual hierarchy (size, weight, spacing)
+- [x] Reorganize sections for ADHD clarity (Context/Category/Filters in separate cards)
+- [x] Test layout for visual comfort and organization (build successful)
