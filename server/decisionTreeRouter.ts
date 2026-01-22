@@ -85,4 +85,31 @@ export const decisionTreeRouter = router({
         input.totalTasks
       );
     }),
+
+  getTasksForBrainCheck: protectedProcedure
+    .input(z.object({
+      timeAvailable: z.enum(["5min", "15min", "30min", "1hour", "2plus"]).optional(),
+    }))
+    .query(async ({ ctx, input }) => {
+      const userTasks = await db.getUserTasks(ctx.user.id, false);
+      const timeMinutesMap: Record<string, number> = {
+        "5min": 5,
+        "15min": 15,
+        "30min": 30,
+        "1hour": 60,
+        "2plus": 999,
+      };
+      let filteredTasks = userTasks;
+      if (input.timeAvailable) {
+        const timeLimit = timeMinutesMap[input.timeAvailable];
+        filteredTasks = userTasks.filter(t => (t.durationMinutes || 5) <= timeLimit);
+      }
+      return filteredTasks.map(t => ({
+        id: t.id,
+        title: t.title,
+        durationMinutes: t.durationMinutes || 5,
+        activationEnergy: (t.activationEnergy || "easy") as "micro" | "easy" | "medium" | "deep",
+        category: t.category || undefined,
+      }));
+    }),
 });

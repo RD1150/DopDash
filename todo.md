@@ -764,6 +764,15 @@
 ## Brain Check Enhancements - Phase 2
 - [x] Add empty state message when no tasks fit selected time
 - [x] Add +5 min button to FocusMode timer
-- [ ] Connect Brain Check to real user tasks from database
-- [ ] Add quick task creation flow within Brain Check
-- [ ] Test all three features end-to-end
+- [x] Connect Brain Check to real user tasks from database
+- [x] Add quick task creation flow within Brain Check
+- [x] Test all three features end-to-end
+
+## Beta Testing Preparation - Final Sprint
+- [x] Add quick task creation form to Brain Check
+- [x] Create tRPC procedure for quick task creation
+- [x] Draft comprehensive Privacy Policy with health disclaimers
+- [x] Draft comprehensive Terms of Service with liability waivers
+- [x] Integrate policies into app (pages + routes)
+- [ ] Test end-to-end: account creation → onboarding → Brain Check → quick task creation
+- [ ] Save checkpoint for beta launch

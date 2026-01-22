@@ -1,4 +1,4 @@
-import { COOKIE_NAME } from "@shared/const";
+import { COOKIE_NAME } from "../shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
@@ -514,8 +514,8 @@ export const appRouter = router({
         const accepted = await db.hasUserAcceptedTermsVersion(ctx.user.id, latestTerms.id);
         return accepted;
       }),
-  decisionTree: decisionTreeRouter,
   }),
+  decisionTree: decisionTreeRouter,
 });
 
 export type AppRouter = typeof appRouter;

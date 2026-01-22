@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { trpc } from '@/lib/trpc';
@@ -8,6 +8,7 @@ type UserState = 'squirrel' | 'tired' | 'focused' | 'hurting';
 type TimeAvailable = '5min' | '15min' | '30min' | '1hour' | '2plus';
 type Step = 'state' | 'time' | 'tasks' | 'results';
 
+// Demo tasks as fallback if user has no tasks
 const DEMO_TASKS = [
   { id: 1, title: 'Open all mail and discard junk', durationMinutes: 2, activationEnergy: 'micro' as const },
   { id: 2, title: 'Read through and categorize mail', durationMinutes: 5, activationEnergy: 'easy' as const },
@@ -27,8 +28,25 @@ export default function BrainCheckDemo() {
   const [selectedTasks, setSelectedTasks] = useState<number[]>([]);
   const [sequenceResult, setSequenceResult] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showQuickCreate, setShowQuickCreate] = useState(false);
+  const [quickTaskTitle, setQuickTaskTitle] = useState('');
+  const [quickTaskDuration, setQuickTaskDuration] = useState(5);
 
+  // Fetch real user tasks filtered by time
+  const { data: userTasks = [] } = trpc.decisionTree.getTasksForBrainCheck.useQuery(
+    { timeAvailable: selectedTime || undefined },
+    { enabled: currentStep === 'tasks' }
+  );
   const sequenceTasksMutation = trpc.decisionTree.sequenceTasks.useMutation();
+  const createTaskMutation = trpc.tasks.create.useMutation();
+
+  // Use real tasks if available, otherwise use demo tasks
+  const availableTasks = useMemo(() => {
+    if (userTasks && userTasks.length > 0) {
+      return userTasks;
+    }
+    return DEMO_TASKS;
+  }, [userTasks]);
 
   const timeOptions: { value: TimeAvailable; label: string }[] = [
     { value: '5min', label: '5 minutes' },
@@ -45,6 +63,7 @@ export default function BrainCheckDemo() {
 
   const handleTimeSelect = (time: TimeAvailable) => {
     setSelectedTime(time);
+    setSelectedTasks([]); // Reset selected tasks when time changes
     setCurrentStep('tasks');
   };
 
@@ -68,18 +87,18 @@ export default function BrainCheckDemo() {
   };
 
   const getFilteredTasks = () => {
-    if (!selectedTime) return DEMO_TASKS;
-    const timeLimit = getTimeLimit(selectedTime);
-    return DEMO_TASKS.filter(task => task.durationMinutes <= timeLimit);
+    return availableTasks;
   };
 
   const handleSequence = async () => {
     if (!selectedState || !selectedTime || selectedTasks.length === 0) return;
     setIsLoading(true);
     try {
+      // Map 5min to 15min for the backend API
+      const timeForBackend = selectedTime === '5min' ? '15min' : selectedTime;
       const result = await sequenceTasksMutation.mutateAsync({
         userState: selectedState,
-        timeAvailable: selectedTime,
+        timeAvailable: timeForBackend as any,
         taskIds: selectedTasks,
       });
       setSequenceResult(result);
@@ -97,6 +116,27 @@ export default function BrainCheckDemo() {
     setSelectedTime(null);
     setSelectedTasks([]);
     setSequenceResult(null);
+    setShowQuickCreate(false);
+    setQuickTaskTitle('');
+    setQuickTaskDuration(5);
+  };
+
+  const handleQuickCreateTask = async () => {
+    if (!quickTaskTitle.trim()) return;
+    try {
+      await createTaskMutation.mutateAsync({
+        title: quickTaskTitle,
+        type: 'quick',
+        durationMinutes: quickTaskDuration,
+        category: 'quick-add',
+      });
+      setQuickTaskTitle('');
+      setQuickTaskDuration(5);
+      setShowQuickCreate(false);
+      window.location.reload();
+    } catch (error) {
+      console.error('Error creating task:', error);
+    }
   };
 
   const getStateColor = (state: UserState) => {
@@ -277,7 +317,42 @@ export default function BrainCheckDemo() {
                       >
                         Choose more time
                       </button>
-                      <p className="text-sm text-gray-500">Or create a new task that fits this time window</p>
+                      <button
+                        onClick={() => setShowQuickCreate(!showQuickCreate)}
+                        className="w-full p-3 rounded-lg bg-green-50 border-2 border-green-200 text-green-700 font-medium hover:bg-green-100 transition-all"
+                      >
+                        {showQuickCreate ? 'Cancel' : '+ Create new task'}
+                      </button>
+                      {showQuickCreate && (
+                        <div className="mt-4 p-4 bg-white border-2 border-green-200 rounded-lg space-y-3">
+                          <input
+                            type="text"
+                            placeholder="Task name"
+                            value={quickTaskTitle}
+                            onChange={(e) => setQuickTaskTitle(e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                          />
+                          <div className="flex gap-2 items-center">
+                            <label className="text-sm font-medium text-gray-700">Duration:</label>
+                            <input
+                              type="number"
+                              min="1"
+                              max="120"
+                              value={quickTaskDuration}
+                              onChange={(e) => setQuickTaskDuration(parseInt(e.target.value) || 5)}
+                              className="w-16 px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                            />
+                            <span className="text-sm text-gray-600">minutes</span>
+                          </div>
+                          <button
+                            onClick={handleQuickCreateTask}
+                            disabled={!quickTaskTitle.trim() || createTaskMutation.isPending}
+                            className="w-full p-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 disabled:opacity-50 transition-all"
+                          >
+                            {createTaskMutation.isPending ? 'Creating...' : 'Create & Add'}
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 ) : (
