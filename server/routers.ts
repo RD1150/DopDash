@@ -9,6 +9,7 @@ import { PRODUCTS } from "../shared/products.js";
 import { sequenceTasks, calculateTotalDuration, validateSequence, getEncouragementMessage } from "./sequencing";
 import type { UserState, TimeAvailable, Task } from "./sequencing";
 import { decisionTreeRouter } from "./decisionTreeRouter";
+import { pickAndWinRouter } from "./pickAndWinRouter";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-12-15.clover',
@@ -516,6 +517,7 @@ export const appRouter = router({
       }),
   }),
   decisionTree: decisionTreeRouter,
+  pickAndWin: pickAndWinRouter,
 });
 
 export type AppRouter = typeof appRouter;

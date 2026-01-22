@@ -449,3 +449,46 @@ export const decisionTreeSessions = mysqlTable("decisionTreeSessions", {
 
 export type DecisionTreeSession = typeof decisionTreeSessions.$inferSelect;
 export type InsertDecisionTreeSession = typeof decisionTreeSessions.$inferInsert;
+
+
+/**
+ * Pick & Win - Gamification feature for character picks and discount codes
+ */
+export const characterPicks = mysqlTable("characterPicks", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  
+  // Character selection
+  character: mysqlEnum("character", ["focused", "energized", "creative", "chill"]).notNull(),
+  discountPercent: int("discountPercent").notNull(), // 25, 20, 15, or free trial
+  discountCode: varchar("discountCode", { length: 50 }).notNull().unique(),
+  
+  // Tracking
+  pickedAt: timestamp("pickedAt").defaultNow().notNull(),
+  usedAt: timestamp("usedAt"), // When user redeemed the code
+  expiresAt: timestamp("expiresAt").notNull(), // Expires after 30 days
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type CharacterPick = typeof characterPicks.$inferSelect;
+export type InsertCharacterPick = typeof characterPicks.$inferInsert;
+
+/**
+ * Weekly character picks - tracks when user last picked for weekly bonus
+ */
+export const weeklyCharacterPicks = mysqlTable("weeklyCharacterPicks", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  
+  // Weekly bonus tracking
+  character: mysqlEnum("character", ["focused", "energized", "creative", "chill"]).notNull(),
+  bonusCoins: int("bonusCoins").notNull().default(50), // Bonus coins for weekly pick
+  
+  // Tracking
+  pickedAt: timestamp("pickedAt").defaultNow().notNull(),
+  weekStartDate: varchar("weekStartDate", { length: 10 }).notNull(), // YYYY-MM-DD
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type WeeklyCharacterPick = typeof weeklyCharacterPicks.$inferSelect;
+export type InsertWeeklyCharacterPick = typeof weeklyCharacterPicks.$inferInsert;

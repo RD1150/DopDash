@@ -1,9 +1,10 @@
-import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
 import { Zap, Target, Trophy, Sparkles, Heart, Brain, LogIn } from "lucide-react";
 import { motion } from "framer-motion";
 import { getLoginUrl } from "@/const";
 import { useAuth } from "@/_core/hooks/useAuth";
+import PickAndWinSection from "@/components/PickAndWinSection";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
   const [, setLocation] = useLocation();
@@ -218,6 +219,19 @@ export default function Home() {
             </div>
         </motion.div>
       </div>
+
+      {/* Pick & Win Section */}
+      {!isAuthenticated && (
+        <PickAndWinSection
+          onEmailCapture={(email, character, discountCode) => {
+            const signupUrl = new URL(getLoginUrl());
+            signupUrl.searchParams.set('email', email);
+            signupUrl.searchParams.set('discount', discountCode);
+            signupUrl.searchParams.set('character', character);
+            window.location.href = signupUrl.toString();
+          }}
+        />
+      )}
 
       {/* Footer CTA */}
       <div className="container max-w-4xl mx-auto px-4 py-16 text-center space-y-4">

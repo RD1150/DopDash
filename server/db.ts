@@ -1,6 +1,6 @@
 import { eq, and, desc, or, gte } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, userProfiles, InsertUserProfile, tasks, InsertTask, journalEntries, InsertJournalEntry, dailyAffirmations, InsertDailyAffirmation, habits, InsertHabit, habitCompletions, InsertHabitCompletion, moodEntries, InsertMoodEntry, userStats, InsertUserStats, leaderboardEntries, InsertLeaderboardEntry, contests, InsertContest, contestParticipation, InsertContestParticipation, rewards, InsertReward, userRewards, InsertUserReward, dailyCheckIns, InsertDailyCheckIn, termsVersions, InsertTermsVersion, userTermsAcceptance, InsertUserTermsAcceptance, emailVerificationCodes, InsertEmailVerificationCode, nervousSystemStates, InsertNervousSystemState, decisionTreeSessions, InsertDecisionTreeSession } from "../drizzle/schema";
+import { InsertUser, users, userProfiles, InsertUserProfile, tasks, InsertTask, journalEntries, InsertJournalEntry, dailyAffirmations, InsertDailyAffirmation, habits, InsertHabit, habitCompletions, InsertHabitCompletion, moodEntries, InsertMoodEntry, userStats, InsertUserStats, leaderboardEntries, InsertLeaderboardEntry, contests, InsertContest, contestParticipation, InsertContestParticipation, rewards, InsertReward, userRewards, InsertUserReward, dailyCheckIns, InsertDailyCheckIn, termsVersions, InsertTermsVersion, userTermsAcceptance, InsertUserTermsAcceptance, emailVerificationCodes, InsertEmailVerificationCode, nervousSystemStates, InsertNervousSystemState, decisionTreeSessions, InsertDecisionTreeSession, characterPicks, InsertCharacterPick, weeklyCharacterPicks, InsertWeeklyCharacterPick } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -769,4 +769,44 @@ export async function getTasksBySequenceGroup(userId: number, sequenceGroup: str
       eq(tasks.sequenceGroup, sequenceGroup)
     ))
     .orderBy(tasks.sequenceOrder);
+}
+
+
+// ============ PICK & WIN FUNCTIONS ============
+
+export async function createCharacterPick(pick: InsertCharacterPick) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db.insert(characterPicks).values(pick);
+  return pick;
+}
+
+export async function getCharacterPickHistory(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+
+  return await db.select().from(characterPicks).where(eq(characterPicks.userId, userId));
+}
+
+export async function getWeeklyCharacterPick(userId: number, weekStartDate: string) {
+  const db = await getDb();
+  if (!db) return null;
+
+  const result = await db.select().from(weeklyCharacterPicks)
+    .where(and(
+      eq(weeklyCharacterPicks.userId, userId),
+      eq(weeklyCharacterPicks.weekStartDate, weekStartDate)
+    ))
+    .limit(1);
+
+  return result.length > 0 ? result[0] : null;
+}
+
+export async function createWeeklyCharacterPick(pick: InsertWeeklyCharacterPick) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db.insert(weeklyCharacterPicks).values(pick);
+  return pick;
 }

@@ -776,3 +776,41 @@
 - [x] Integrate policies into app (pages + routes)
 - [ ] Test end-to-end: account creation → onboarding → Brain Check → quick task creation
 - [ ] Save checkpoint for beta launch
+
+
+## Pick & Win Gamification Feature
+- [ ] Design characters and discount tier structure
+- [ ] Create database schema for character picks and discount codes
+- [ ] Build Pick & Win modal component with character selection
+- [ ] Create tRPC procedures for character picks and discount code generation
+- [ ] Integrate Pick & Win into onboarding flow
+- [ ] Add weekly character pick feature for bonus rewards
+- [ ] Write vitest tests for Pick & Win logic
+- [ ] Test end-to-end and save checkpoint
+
+
+## Pick & Win Gamification Feature - Completed
+- [x] Design Pick & Win characters and discount tier structure
+- [x] Create database schema for character picks and discount codes
+- [x] Build Pick & Win section component for landing page
+- [x] Create tRPC procedures for character picks and discount code generation
+- [x] Integrate Pick & Win into Home/landing page
+- [x] Add weekly character pick feature for bonus rewards
+- [x] Write vitest tests for Pick & Win logic
+- [x] Style with theme colors
+
+## Brain Check Enhancements - Completed
+- [x] Add empty state message when no tasks fit selected time
+- [x] Add +5 min button to FocusMode timer
+- [x] Connect Brain Check to real user tasks from database
+- [x] Add quick task creation flow within Brain Check
+- [x] Test all features end-to-end
+
+## Beta Testing Preparation - Completed
+- [x] Add quick task creation form to Brain Check
+- [x] Create tRPC procedure for quick task creation
+- [x] Draft comprehensive Privacy Policy with health disclaimers
+- [x] Draft comprehensive Terms of Service with liability waivers
+- [x] Integrate policies into app (pages + routes)
+- [x] Test end-to-end: account creation → onboarding → Brain Check → quick task creation
+- [x] Save checkpoint for beta launch
