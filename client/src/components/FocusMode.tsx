@@ -303,6 +303,16 @@ export default function FocusMode({ isOpen, onClose, taskName, onComplete, taskD
               </Button>
             </div>
             
+            {/* Add 5 Minutes Button */}
+            <Button
+              size="sm"
+              variant="secondary"
+              className="gap-2"
+              onClick={() => setTimeLeft(prev => prev + (5 * 60))}
+            >
+              +5 min
+            </Button>
+            
             {/* Stop Anytime Button */}
             <Button
               size="sm"

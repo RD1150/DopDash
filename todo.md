@@ -759,3 +759,11 @@
 - [ ] Add prominent prompt/banner on Dash page
 - [ ] Update button labels and messaging
 - [ ] Test end-to-end flow
+
+
+## Brain Check Enhancements - Phase 2
+- [x] Add empty state message when no tasks fit selected time
+- [x] Add +5 min button to FocusMode timer
+- [ ] Connect Brain Check to real user tasks from database
+- [ ] Add quick task creation flow within Brain Check
+- [ ] Test all three features end-to-end

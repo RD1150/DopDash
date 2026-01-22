@@ -265,27 +265,44 @@ export default function BrainCheckDemo() {
                 <CardDescription className="text-base mt-2">Select tasks from your brain dump</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3 max-h-96 overflow-y-auto pr-2">
-                  {getFilteredTasks().map(task => (
-                    <label
-                      key={task.id}
-                      className="flex items-start gap-4 p-4 rounded-lg hover:bg-gray-50 cursor-pointer border border-gray-200 transition-all"
-                    >
-                      <input
-                        type="checkbox"
-                        checked={selectedTasks.includes(task.id)}
-                        onChange={() => toggleTask(task.id)}
-                        className="mt-1 w-5 h-5"
-                      />
-                      <div className="flex-1 min-w-0">
-                        <div className="font-medium text-base">{task.title}</div>
-                        <div className="text-xs text-gray-500 mt-1">
-                          {task.durationMinutes}min • {task.activationEnergy}
+                {getFilteredTasks().length === 0 ? (
+                  <div className="py-12 text-center">
+                    <div className="text-4xl mb-4">⏱️</div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">No tasks fit this time</h3>
+                    <p className="text-gray-600 mb-6">You don't have any tasks that fit in {selectedTime === '2plus' ? '2+ hours' : selectedTime}.</p>
+                    <div className="space-y-3">
+                      <button
+                        onClick={() => setCurrentStep('time')}
+                        className="w-full p-3 rounded-lg bg-blue-50 border-2 border-blue-200 text-blue-700 font-medium hover:bg-blue-100 transition-all"
+                      >
+                        Choose more time
+                      </button>
+                      <p className="text-sm text-gray-500">Or create a new task that fits this time window</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-3 max-h-96 overflow-y-auto pr-2">
+                    {getFilteredTasks().map(task => (
+                      <label
+                        key={task.id}
+                        className="flex items-start gap-4 p-4 rounded-lg hover:bg-gray-50 cursor-pointer border border-gray-200 transition-all"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={selectedTasks.includes(task.id)}
+                          onChange={() => toggleTask(task.id)}
+                          className="mt-1 w-5 h-5"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <div className="font-medium text-base">{task.title}</div>
+                          <div className="text-xs text-gray-500 mt-1">
+                            {task.durationMinutes}min • {task.activationEnergy}
+                          </div>
                         </div>
-                      </div>
-                    </label>
-                  ))}
-                </div>
+                      </label>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
 
