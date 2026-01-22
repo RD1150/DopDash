@@ -56,6 +56,23 @@ export default function BrainCheckDemo() {
     );
   };
 
+  const getTimeLimit = (time: TimeAvailable): number => {
+    const limits: Record<TimeAvailable, number> = {
+      '5min': 5,
+      '15min': 15,
+      '30min': 30,
+      '1hour': 60,
+      '2plus': 999,
+    };
+    return limits[time];
+  };
+
+  const getFilteredTasks = () => {
+    if (!selectedTime) return DEMO_TASKS;
+    const timeLimit = getTimeLimit(selectedTime);
+    return DEMO_TASKS.filter(task => task.durationMinutes <= timeLimit);
+  };
+
   const handleSequence = async () => {
     if (!selectedState || !selectedTime || selectedTasks.length === 0) return;
     setIsLoading(true);
@@ -249,7 +266,7 @@ export default function BrainCheckDemo() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3 max-h-96 overflow-y-auto pr-2">
-                  {DEMO_TASKS.map(task => (
+                  {getFilteredTasks().map(task => (
                     <label
                       key={task.id}
                       className="flex items-start gap-4 p-4 rounded-lg hover:bg-gray-50 cursor-pointer border border-gray-200 transition-all"
