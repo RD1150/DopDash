@@ -5,7 +5,7 @@ import { trpc } from '@/lib/trpc';
 import { AlertCircle, Loader2, ChevronRight, ChevronLeft } from 'lucide-react';
 
 type UserState = 'squirrel' | 'tired' | 'focused' | 'hurting';
-type TimeAvailable = '15min' | '30min' | '1hour' | '2plus';
+type TimeAvailable = '5min' | '15min' | '30min' | '1hour' | '2plus';
 type Step = 'state' | 'time' | 'tasks' | 'results';
 
 const DEMO_TASKS = [
@@ -20,7 +20,7 @@ const DEMO_TASKS = [
   { id: 9, title: 'Deep work on project', durationMinutes: 45, activationEnergy: 'deep' as const },
 ];
 
-export default function DecisionTreeDemo() {
+export default function BrainCheckDemo() {
   const [currentStep, setCurrentStep] = useState<Step>('state');
   const [selectedState, setSelectedState] = useState<UserState | null>(null);
   const [selectedTime, setSelectedTime] = useState<TimeAvailable | null>(null);
@@ -29,6 +29,14 @@ export default function DecisionTreeDemo() {
   const [isLoading, setIsLoading] = useState(false);
 
   const sequenceTasksMutation = trpc.decisionTree.sequenceTasks.useMutation();
+
+  const timeOptions: { value: TimeAvailable; label: string }[] = [
+    { value: '5min', label: '5 minutes' },
+    { value: '15min', label: '15 minutes' },
+    { value: '30min', label: '30 minutes' },
+    { value: '1hour', label: '1 hour' },
+    { value: '2plus', label: '2+ hours' },
+  ];
 
   const handleStateSelect = (state: UserState) => {
     setSelectedState(state);
@@ -108,7 +116,7 @@ export default function DecisionTreeDemo() {
     <div className="min-h-screen bg-white">
       {/* Header - with breathing room */}
       <div className="pt-8 pb-12 px-4 text-center border-b border-gray-100">
-        <h1 className="text-4xl font-bold mb-3">Decision Tree</h1>
+        <h1 className="text-4xl font-bold mb-3">Brain Check</h1>
         <p className="text-lg text-gray-600">Let's figure out what you actually need right now</p>
       </div>
 
@@ -183,7 +191,7 @@ export default function DecisionTreeDemo() {
                 <CardDescription className="text-base mt-2">Be honest about what's realistic right now</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                {(['15min', '30min', '1hour', '2plus'] as TimeAvailable[]).map(time => (
+                {timeOptions.map(({ value: time, label }) => (
                   <button
                     key={time}
                     onClick={() => handleTimeSelect(time)}
@@ -193,7 +201,7 @@ export default function DecisionTreeDemo() {
                         : 'bg-gray-50 border-gray-200 hover:border-gray-300'
                     }`}
                   >
-                    {time === '2plus' ? '2+ hours' : time}
+                    {label}
                   </button>
                 ))}
               </CardContent>

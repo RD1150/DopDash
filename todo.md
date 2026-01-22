@@ -751,3 +751,11 @@
 - [x] Fix category buttons to wrap text and use multiple rows
 - [x] Ensure all button text stays contained within button boundaries
 - [ ] Test responsive layout on mobile screens
+
+
+## Brain Check Rename & Enhancement
+- [ ] Rename "Decision Tree" to "Brain Check" in all files
+- [ ] Add 5-minute time option to Brain Check flow
+- [ ] Add prominent prompt/banner on Dash page
+- [ ] Update button labels and messaging
+- [ ] Test end-to-end flow

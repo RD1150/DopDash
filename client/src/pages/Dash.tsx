@@ -36,7 +36,7 @@ import QuickWinSuggestions from '@/components/QuickWinSuggestions';
 import MoodSelector from '@/components/MoodSelector';
 import DailyCheckIn from '@/components/DailyCheckIn';
 import DashieOutfitDisplay, { TaskType } from '@/components/DashieOutfitDisplay';
-import DecisionTreeDemo from '@/pages/DecisionTreeDemo';
+import BrainCheckDemo from '@/pages/BrainCheckDemo';
 import { Timer, CircleDashed, StickyNote, Volume2, Map, Wand2 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -794,7 +794,7 @@ export default function Dash() {
               className="flex items-center justify-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap border-2 bg-primary text-primary-foreground border-primary shadow-md hover:shadow-lg"
               title="Smart task sequencing based on your state"
             >
-              <Wand2 className="w-4 h-4" /> Decision Tree
+              <Wand2 className="w-4 h-4" /> Brain Check
             </button>
             <button
               onClick={() => setContext('family')}
@@ -1401,7 +1401,7 @@ export default function Dash() {
       {showDecisionTree && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
           <div className="bg-background rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <DecisionTreeDemo />
+            <BrainCheckDemo />
           </div>
         </div>
       )}
