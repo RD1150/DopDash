@@ -12,6 +12,7 @@ import { decisionTreeRouter } from "./decisionTreeRouter";
 import { pickAndWinRouter } from "./pickAndWinRouter";
 import { feedbackRouter } from "./feedbackRouter";
 import { retentionRouter } from "./retentionRouter";
+import { coachRouter } from "./coachRouter";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-12-15.clover',
@@ -522,6 +523,7 @@ export const appRouter = router({
   pickAndWin: pickAndWinRouter,
   feedback: feedbackRouter,
   retention: retentionRouter,
+  coach: coachRouter,
 });
 
 export type AppRouter = typeof appRouter;

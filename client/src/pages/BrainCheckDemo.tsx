@@ -2,7 +2,8 @@ import { useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { trpc } from '@/lib/trpc';
-import { AlertCircle, Loader2, ChevronRight, ChevronLeft } from 'lucide-react';
+import { AlertCircle, Loader2, ChevronRight, ChevronLeft, MessageCircle } from 'lucide-react';
+import { AICoachChat } from '@/components/AICoachChat';
 
 type UserState = 'squirrel' | 'tired' | 'focused' | 'hurting';
 type TimeAvailable = '5min' | '15min' | '30min' | '1hour' | '2plus';
@@ -31,6 +32,7 @@ export default function BrainCheckDemo() {
   const [showQuickCreate, setShowQuickCreate] = useState(false);
   const [quickTaskTitle, setQuickTaskTitle] = useState('');
   const [quickTaskDuration, setQuickTaskDuration] = useState(5);
+  const [showCoach, setShowCoach] = useState(false);
 
   // Fetch real user tasks filtered by time
   const { data: userTasks = [] } = trpc.decisionTree.getTasksForBrainCheck.useQuery(
@@ -504,6 +506,58 @@ export default function BrainCheckDemo() {
                 ))}
               </CardContent>
             </Card>
+
+            {/* Spacer */}
+            <div className="h-8" />
+
+            {/* Coach Support */}
+            <Card className="border-0 shadow-sm bg-purple-50">
+              <CardHeader className="pb-4">
+                <CardTitle className="flex items-center gap-2">
+                  <MessageCircle className="w-5 h-5" />
+                  Need Support?
+                </CardTitle>
+                <CardDescription>Talk to Dashie, your AI coach, for techniques to manage your {selectedState} state</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button
+                  onClick={() => setShowCoach(true)}
+                  className="w-full h-12 bg-purple-600 hover:bg-purple-700 text-base"
+                >
+                  <MessageCircle className="mr-2 h-4 w-4" />
+                  Chat with Dashie
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Coach Modal */}
+            {showCoach && (
+              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                <Card className="w-full max-w-2xl h-96 shadow-lg">
+                  <div className="flex flex-col h-full">
+                    <div className="flex items-center justify-between p-4 border-b border-border">
+                      <h2 className="text-lg font-semibold">Chat with Dashie</h2>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setShowCoach(false)}
+                      >
+                        ✕
+                      </Button>
+                    </div>
+                    <div className="flex-1 overflow-hidden">
+                      <AICoachChat
+                        nervousSystemState={selectedState!}
+                        context={{
+                          tasksCompleted: selectedTasks.length,
+                          recentChallenge: `Trying to sequence ${selectedTasks.length} tasks in ${selectedTime} available`
+                        }}
+                      />
+                    </div>
+                  </div>
+                </Card>
+              </div>
+            )}
 
             {/* Spacer */}
             <div className="h-8" />

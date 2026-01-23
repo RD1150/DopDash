@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, json, longtext } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, json, longtext, decimal } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -511,3 +511,66 @@ export const feedbacks = mysqlTable("feedbacks", {
 
 export type Feedback = typeof feedbacks.$inferSelect;
 export type InsertFeedback = typeof feedbacks.$inferInsert;
+
+/**
+ * AI Coach conversation history
+ * Stores user messages and coach responses for personalization and analysis
+ */
+export const coachConversations = mysqlTable("coachConversations", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  
+  // Conversation context
+  nervousSystemState: mysqlEnum("nervousSystemState", ["squirrel", "tired", "focused", "hurting"]).notNull(),
+  
+  // Message content
+  userMessage: text("userMessage").notNull(),
+  coachMessage: text("coachMessage").notNull(),
+  
+  // Suggested technique (if any)
+  suggestedTechniqueId: varchar("suggestedTechniqueId", { length: 100 }),
+  suggestedTechniqueName: varchar("suggestedTechniqueName", { length: 255 }),
+  
+  // User feedback on technique
+  techniqueHelpfulRating: int("techniqueHelpfulRating"), // 1-5 scale
+  techniqueNotes: text("techniqueNotes"),
+  
+  // Timestamps
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type CoachConversation = typeof coachConversations.$inferSelect;
+export type InsertCoachConversation = typeof coachConversations.$inferInsert;
+
+/**
+ * Technique effectiveness tracking
+ * Helps personalize which techniques are recommended to each user
+ */
+export const userTechniqueEffectiveness = mysqlTable("userTechniqueEffectiveness", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  
+  // Technique info
+  techniqueId: varchar("techniqueId", { length: 100 }).notNull(),
+  techniqueName: varchar("techniqueName", { length: 255 }).notNull(),
+  techniqueCategory: mysqlEnum("techniqueCategory", ["grounding", "motivation", "breakdown", "cognitive", "emotion"]).notNull(),
+  
+  // Effectiveness data
+  timesUsed: int("timesUsed").notNull().default(0),
+  averageRating: decimal("averageRating", { precision: 3, scale: 2 }).notNull().default("0"), // 1-5 scale
+  totalRatings: int("totalRatings").notNull().default(0),
+  
+  // Nervous system state effectiveness
+  effectiveForSquirrel: int("effectiveForSquirrel").notNull().default(0), // count of positive ratings
+  effectiveForTired: int("effectiveForTired").notNull().default(0),
+  effectiveForFocused: int("effectiveForFocused").notNull().default(0),
+  effectiveForHurting: int("effectiveForHurting").notNull().default(0),
+  
+  // Timestamps
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type UserTechniqueEffectiveness = typeof userTechniqueEffectiveness.$inferSelect;
+export type InsertUserTechniqueEffectiveness = typeof userTechniqueEffectiveness.$inferInsert;

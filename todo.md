@@ -824,3 +824,14 @@
 - [ ] Build retention metrics admin dashboard (private)
 - [ ] Streamline onboarding to get users to first task in <2 minutes
 - [ ] Optimize Brain Check for immediate success on first use
+
+
+## AI Behavioral Therapy Coach - Priority Feature
+- [x] Create behavioral therapy knowledge base (CBT/DBT techniques for ADHD)
+- [x] Build AI coach component with chat interface
+- [x] Create conversation storage and history tracking
+- [x] Integrate AI coach with Brain Check and user context
+- [x] Add context-aware prompts based on nervous system state
+- [x] Write vitest tests for AI coach logic (35 tests, all passing)
+- [x] Test end-to-end and optimize prompts
+- [ ] Save checkpoint with AI coach feature

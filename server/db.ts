@@ -930,3 +930,214 @@ export async function getRetentionCohort(days: number) {
 
   return cohort;
 }
+
+
+/**
+ * Store a coach conversation in the database
+ */
+export async function storeCoachConversation(
+  userId: number,
+  nervousSystemState: 'squirrel' | 'tired' | 'focused' | 'hurting',
+  userMessage: string,
+  coachMessage: string,
+  suggestedTechniqueId?: string,
+  suggestedTechniqueName?: string
+) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot store coach conversation: database not available");
+    return null;
+  }
+
+  try {
+    const { coachConversations } = await import("../drizzle/schema");
+    const result = await db.insert(coachConversations).values({
+      userId,
+      nervousSystemState,
+      userMessage,
+      coachMessage,
+      suggestedTechniqueId,
+      suggestedTechniqueName
+    });
+    return result;
+  } catch (error) {
+    console.error("[Database] Error storing coach conversation:", error);
+    return null;
+  }
+}
+
+/**
+ * Get coach conversation history for a user
+ */
+export async function getCoachConversationHistory(userId: number, limit: number = 20) {
+  const db = await getDb();
+  if (!db) return [];
+
+  try {
+    const { coachConversations } = await import("../drizzle/schema");
+    const { eq, desc } = await import("drizzle-orm");
+    
+    const conversations = await db
+      .select()
+      .from(coachConversations)
+      .where(eq(coachConversations.userId, userId))
+      .orderBy(desc(coachConversations.createdAt))
+      .limit(limit);
+    
+    return conversations;
+  } catch (error) {
+    console.error("[Database] Error fetching coach conversations:", error);
+    return [];
+  }
+}
+
+/**
+ * Record user feedback on a technique
+ */
+export async function recordTechniqueFeedback(
+  conversationId: number,
+  helpfulRating: number,
+  notes?: string
+) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot record technique feedback: database not available");
+    return null;
+  }
+
+  try {
+    const { coachConversations } = await import("../drizzle/schema");
+    const { eq } = await import("drizzle-orm");
+    
+    const result = await db
+      .update(coachConversations)
+      .set({
+        techniqueHelpfulRating: helpfulRating,
+        techniqueNotes: notes
+      })
+      .where(eq(coachConversations.id, conversationId));
+    
+    return result;
+  } catch (error) {
+    console.error("[Database] Error recording technique feedback:", error);
+    return null;
+  }
+}
+
+/**
+ * Update user technique effectiveness tracking
+ */
+export async function updateTechniqueEffectiveness(
+  userId: number,
+  techniqueId: string,
+  techniqueName: string,
+  techniqueCategory: 'grounding' | 'motivation' | 'breakdown' | 'cognitive' | 'emotion',
+  nervousSystemState: 'squirrel' | 'tired' | 'focused' | 'hurting',
+  helpfulRating: number
+) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot update technique effectiveness: database not available");
+    return null;
+  }
+
+  try {
+    const { userTechniqueEffectiveness } = await import("../drizzle/schema");
+    const { eq, and } = await import("drizzle-orm");
+    
+    // Check if record exists
+    const existing = await db
+      .select()
+      .from(userTechniqueEffectiveness)
+      .where(
+        and(
+          eq(userTechniqueEffectiveness.userId, userId),
+          eq(userTechniqueEffectiveness.techniqueId, techniqueId)
+        )
+      )
+      .limit(1);
+
+    if (existing.length > 0) {
+      // Update existing record
+      const current = existing[0];
+      const newTotalRatings = current.totalRatings + 1;
+      const newAverageRating = (parseFloat(current.averageRating.toString()) * current.totalRatings + helpfulRating) / newTotalRatings;
+      
+      // Count positive ratings for this state
+      const stateField = `effectiveFor${nervousSystemState.charAt(0).toUpperCase() + nervousSystemState.slice(1)}` as const;
+      const updates: Record<string, unknown> = {
+        timesUsed: current.timesUsed + 1,
+        averageRating: newAverageRating,
+        totalRatings: newTotalRatings
+      };
+      
+      if (helpfulRating >= 4) {
+        updates[stateField] = (current[stateField as keyof typeof current] as number) + 1;
+      }
+
+      await db
+        .update(userTechniqueEffectiveness)
+        .set(updates)
+        .where(
+          and(
+            eq(userTechniqueEffectiveness.userId, userId),
+            eq(userTechniqueEffectiveness.techniqueId, techniqueId)
+          )
+        );
+    } else {
+      // Create new record
+      const updates: Record<string, unknown> = {
+        userId,
+        techniqueId,
+        techniqueName,
+        techniqueCategory,
+        timesUsed: 1,
+        averageRating: helpfulRating,
+        totalRatings: 1
+      };
+      
+      if (helpfulRating >= 4) {
+        const stateField = `effectiveFor${nervousSystemState.charAt(0).toUpperCase() + nervousSystemState.slice(1)}`;
+        updates[stateField] = 1;
+      }
+
+      await db.insert(userTechniqueEffectiveness).values(updates as any);
+    }
+    
+    return true;
+  } catch (error) {
+    console.error("[Database] Error updating technique effectiveness:", error);
+    return null;
+  }
+}
+
+/**
+ * Get user's most effective techniques for a nervous system state
+ */
+export async function getEffectiveTechniquesForUser(
+  userId: number,
+  nervousSystemState: 'squirrel' | 'tired' | 'focused' | 'hurting',
+  limit: number = 5
+) {
+  const db = await getDb();
+  if (!db) return [];
+
+  try {
+    const { userTechniqueEffectiveness } = await import("../drizzle/schema");
+    const { eq, desc } = await import("drizzle-orm");
+    
+    const stateField = `effectiveFor${nervousSystemState.charAt(0).toUpperCase() + nervousSystemState.slice(1)}` as const;
+    
+    const techniques = await db
+      .select()
+      .from(userTechniqueEffectiveness)
+      .where(eq(userTechniqueEffectiveness.userId, userId))
+      .orderBy(desc(userTechniqueEffectiveness.averageRating))
+      .limit(limit);
+    
+    return techniques;
+  } catch (error) {
+    console.error("[Database] Error fetching effective techniques:", error);
+    return [];
+  }
+}
