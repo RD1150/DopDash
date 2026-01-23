@@ -10,6 +10,8 @@ import { sequenceTasks, calculateTotalDuration, validateSequence, getEncourageme
 import type { UserState, TimeAvailable, Task } from "./sequencing";
 import { decisionTreeRouter } from "./decisionTreeRouter";
 import { pickAndWinRouter } from "./pickAndWinRouter";
+import { feedbackRouter } from "./feedbackRouter";
+import { retentionRouter } from "./retentionRouter";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-12-15.clover',
@@ -518,6 +520,8 @@ export const appRouter = router({
   }),
   decisionTree: decisionTreeRouter,
   pickAndWin: pickAndWinRouter,
+  feedback: feedbackRouter,
+  retention: retentionRouter,
 });
 
 export type AppRouter = typeof appRouter;

@@ -28,6 +28,7 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import BottomNav from "@/components/BottomNav";
 import QuickActionButton from "@/components/QuickActionButton";
+import { useRetentionTracking } from "@/hooks/useRetentionTracking";
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
@@ -66,6 +67,9 @@ function App() {
   const theme = useStore((state) => state.theme);
   const showOnboardingChecklist = useStore((state) => state.showOnboardingChecklist);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  
+  // Track retention silently
+  useRetentionTracking();
 
   // Register Service Worker for offline support
   useEffect(() => {

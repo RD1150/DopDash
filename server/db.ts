@@ -810,3 +810,123 @@ export async function createWeeklyCharacterPick(pick: InsertWeeklyCharacterPick)
   await db.insert(weeklyCharacterPicks).values(pick);
   return pick;
 }
+
+
+// ============ FEEDBACK FUNCTIONS ============
+
+export async function submitFeedback(data: {
+  userId: number | null;
+  type: 'bug' | 'feature' | 'general';
+  message: string;
+}) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const { feedbacks } = await import("../drizzle/schema");
+  await db.insert(feedbacks).values({
+    userId: data.userId,
+    type: data.type,
+    message: data.message,
+  });
+}
+
+export async function getAllFeedback() {
+  const db = await getDb();
+  if (!db) return [];
+
+  const { feedbacks } = await import("../drizzle/schema");
+  const { desc } = await import("drizzle-orm");
+  
+  return await db.select().from(feedbacks).orderBy(desc(feedbacks.createdAt));
+}
+
+export async function getFeedbackStats() {
+  const db = await getDb();
+  if (!db) return [];
+
+  const { feedbacks } = await import("../drizzle/schema");
+  const { sql } = await import("drizzle-orm");
+  
+  return await db.select({
+    type: feedbacks.type,
+    count: sql<number>`COUNT(*)`.as('count'),
+  }).from(feedbacks).groupBy(feedbacks.type);
+}
+
+// ============ RETENTION ANALYTICS FUNCTIONS ============
+
+export async function recordUserSession(userId: number) {
+  const db = await getDb();
+  if (!db) return;
+
+  const { userProfiles } = await import("../drizzle/schema");
+  const { eq, and } = await import("drizzle-orm");
+
+  // Get user profile
+  const profile = await db.select().from(userProfiles)
+    .where(eq(userProfiles.userId, userId))
+    .limit(1);
+
+  if (!profile.length) return;
+
+  const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+
+  // Update last active date for streak tracking
+  await db.update(userProfiles)
+    .set({ lastActiveDate: today })
+    .where(eq(userProfiles.userId, userId));
+}
+
+export async function getUserRetentionMetrics(userId: number) {
+  const db = await getDb();
+  if (!db) return null;
+
+  const { userProfiles } = await import("../drizzle/schema");
+  const { eq } = await import("drizzle-orm");
+
+  const profile = await db.select().from(userProfiles)
+    .where(eq(userProfiles.userId, userId))
+    .limit(1);
+
+  if (!profile.length) return null;
+
+  const p = profile[0];
+  const createdAt = new Date(p.createdAt);
+  const now = new Date();
+  const daysSinceSignup = Math.floor((now.getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24));
+
+  return {
+    userId,
+    daysSinceSignup,
+    lastActiveDate: p.lastActiveDate,
+    currentStreak: p.currentStreak,
+    createdAt: p.createdAt,
+  };
+}
+
+export async function getRetentionCohort(days: number) {
+  const db = await getDb();
+  if (!db) return [];
+
+  const { users, userProfiles } = await import("../drizzle/schema");
+  const { eq, gte, lte, and, sql } = await import("drizzle-orm");
+
+  const cutoffDate = new Date();
+  cutoffDate.setDate(cutoffDate.getDate() - days);
+
+  // Get users created in the last N days
+  const cohort = await db.select({
+    userId: users.id,
+    email: users.email,
+    createdAt: users.createdAt,
+    lastActiveDate: userProfiles.lastActiveDate,
+    isActive: sql<boolean>`${userProfiles.lastActiveDate} IS NOT NULL`,
+  }).from(users)
+    .innerJoin(userProfiles, eq(users.id, userProfiles.userId))
+    .where(and(
+      gte(users.createdAt, cutoffDate),
+      lte(users.createdAt, new Date())
+    ));
+
+  return cohort;
+}

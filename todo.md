@@ -814,3 +814,13 @@
 - [x] Integrate policies into app (pages + routes)
 - [x] Test end-to-end: account creation → onboarding → Brain Check → quick task creation
 - [x] Save checkpoint for beta launch
+
+
+## Retention Optimization (Private) - In Progress
+- [x] Add silent retention analytics tracking (D1/D7/D30) to database
+- [x] Create retention analytics tRPC procedures (recordSession, getMetrics, getCohort, getRetentionRates)
+- [x] Add retention tracking to main app entry point (useRetentionTracking hook)
+- [x] Write vitest tests for retention analytics (10 tests, all passing)
+- [ ] Build retention metrics admin dashboard (private)
+- [ ] Streamline onboarding to get users to first task in <2 minutes
+- [ ] Optimize Brain Check for immediate success on first use

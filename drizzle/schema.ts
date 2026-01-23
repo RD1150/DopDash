@@ -492,3 +492,22 @@ export const weeklyCharacterPicks = mysqlTable("weeklyCharacterPicks", {
 
 export type WeeklyCharacterPick = typeof weeklyCharacterPicks.$inferSelect;
 export type InsertWeeklyCharacterPick = typeof weeklyCharacterPicks.$inferInsert;
+
+
+/**
+ * User Feedback - Collects bug reports, feature requests, and general feedback
+ */
+export const feedbacks = mysqlTable("feedbacks", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").references(() => users.id, { onDelete: "cascade" }), // Nullable for anonymous feedback
+  
+  // Feedback details
+  type: mysqlEnum("type", ["bug", "feature", "general"]).notNull(),
+  message: text("message").notNull(),
+  
+  // Tracking
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Feedback = typeof feedbacks.$inferSelect;
+export type InsertFeedback = typeof feedbacks.$inferInsert;

@@ -220,8 +220,8 @@ export default function Home() {
         </motion.div>
       </div>
 
-      {/* Pick & Win Section */}
-      {!isAuthenticated && (
+      {/* Pick & Win Section - Always show unless authenticated */}
+      {!isAuthenticated ? (
         <PickAndWinSection
           onEmailCapture={(email, character, discountCode) => {
             const signupUrl = new URL(getLoginUrl());
@@ -231,7 +231,7 @@ export default function Home() {
             window.location.href = signupUrl.toString();
           }}
         />
-      )}
+      ) : null}
 
       {/* Footer CTA */}
       <div className="container max-w-4xl mx-auto px-4 py-16 text-center space-y-4">
