@@ -574,3 +574,79 @@ export const userTechniqueEffectiveness = mysqlTable("userTechniqueEffectiveness
 
 export type UserTechniqueEffectiveness = typeof userTechniqueEffectiveness.$inferSelect;
 export type InsertUserTechniqueEffectiveness = typeof userTechniqueEffectiveness.$inferInsert;
+
+
+/**
+ * A/B Test Variants - Track which users are in which experiment group
+ * Used to measure coach engagement impact on retention
+ */
+export const abTestVariants = mysqlTable("abTestVariants", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }).unique(),
+  
+  // Coach engagement test
+  coachVariant: mysqlEnum("coachVariant", ["control", "treatment"]).notNull().default("control"),
+  coachVariantAssignedAt: timestamp("coachVariantAssignedAt").defaultNow().notNull(),
+  
+  // Retention tracking
+  d1Completed: int("d1Completed").notNull().default(0), // 0 or 1
+  d7Completed: int("d7Completed").notNull().default(0),
+  d30Completed: int("d30Completed").notNull().default(0),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ABTestVariant = typeof abTestVariants.$inferSelect;
+export type InsertABTestVariant = typeof abTestVariants.$inferInsert;
+
+/**
+ * Retention Metrics - Track daily active users and retention cohorts
+ */
+export const retentionMetrics = mysqlTable("retentionMetrics", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  
+  // Cohort info
+  cohortDate: varchar("cohortDate", { length: 10 }).notNull(), // YYYY-MM-DD of user signup
+  
+  // Activity tracking
+  lastActiveDate: varchar("lastActiveDate", { length: 10 }).notNull(), // YYYY-MM-DD
+  daysSinceSignup: int("daysSinceSignup").notNull(), // 0 = D0, 1 = D1, etc.
+  tasksCompletedOnDay: int("tasksCompletedOnDay").notNull().default(0),
+  
+  // Engagement metrics
+  usedBrainCheck: int("usedBrainCheck").notNull().default(0), // 0 or 1
+  usedCoach: int("usedCoach").notNull().default(0), // 0 or 1
+  usedFocusMode: int("usedFocusMode").notNull().default(0), // 0 or 1
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type RetentionMetric = typeof retentionMetrics.$inferSelect;
+export type InsertRetentionMetric = typeof retentionMetrics.$inferInsert;
+
+/**
+ * Technique Ratings - Individual ratings for techniques (1-5 stars)
+ * Used to train personalization algorithm
+ */
+export const techniqueRatings = mysqlTable("techniqueRatings", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  
+  // Technique info
+  techniqueId: varchar("techniqueId", { length: 100 }).notNull(),
+  techniqueName: varchar("techniqueName", { length: 255 }).notNull(),
+  
+  // Context
+  nervousSystemState: mysqlEnum("nervousSystemState", ["squirrel", "tired", "focused", "hurting"]).notNull(),
+  
+  // Rating
+  rating: int("rating").notNull(), // 1-5 stars
+  feedback: text("feedback"), // Optional user comment
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type TechniqueRating = typeof techniqueRatings.$inferSelect;
+export type InsertTechniqueRating = typeof techniqueRatings.$inferInsert;

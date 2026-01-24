@@ -78,6 +78,13 @@
       "when": 1769203965211,
       "tag": "0010_open_thaddeus_ross",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "5",
+      "when": 1769244035784,
+      "tag": "0011_nebulous_blackheart",
+      "breakpoints": true
     }
   ]
 }

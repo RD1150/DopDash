@@ -835,3 +835,26 @@
 - [x] Write vitest tests for AI coach logic (35 tests, all passing)
 - [x] Test end-to-end and optimize prompts
 - [ ] Save checkpoint with AI coach feature
+
+## Pre-Launch Optimization (Sunday Launch)
+- [ ] Add technique rating system (1-5 stars) to database and UI
+- [ ] Implement A/B test variant for coach visibility (control vs. treatment)
+- [ ] Build coach analytics dashboard (track technique usage by state)
+- [ ] Write tests for rating and A/B test logic
+- [ ] Final checkpoint before Sunday launch
+
+## Sunday Launch - All 6 Optimizations
+
+### AI Coach Post-Launch Features
+- [ ] 1. A/B test coach engagement - add variant tracking to database
+- [ ] 2. Add technique rating system (1-5 stars) to UI and database  
+- [ ] 3. Build coach analytics dashboard to track technique usage by state
+
+### Pre-Launch Priorities
+- [x] 4. Streamline onboarding to <2 minutes - KEPT AS IS (good ADHD design)
+- [x] 5. Fix Pick & Win rendering issue on landing page - FIXED
+- [ ] 6. Build retention metrics dashboard - DEFERRED POST-LAUNCH
+
+### Final Steps
+- [x] 7. Test all changes and verify launch readiness (101 tests passing)
+- [ ] 8. Save final checkpoint and prepare for launch
