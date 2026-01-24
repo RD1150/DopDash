@@ -33,8 +33,8 @@ export default function Home() {
     },
     {
       icon: <Target className="w-6 h-6" />,
-      title: "Streak Tracking",
-      description: "Build momentum with streaks. Vacation mode protects your progress."
+      title: "Bullseye Wins",
+      description: "Dashie helps you hit your targets. Every win counts, no matter the size."
     },
     {
       icon: <Sparkles className="w-6 h-6" />,

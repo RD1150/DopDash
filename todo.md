@@ -897,3 +897,11 @@
 - [x] Onboarding flow optimized (4 clicks to first task)
 - [x] All core features working (Brain Check, FocusMode, AI Coach, Gamification)
 - [ ] Final checkpoint saved and ready to publish
+
+
+## Dashie Visibility - Pre-Launch (COMPLETED)
+- [x] Add Dashie to landing page hero section (immediate greeting)
+- [x] Add Dashie to login/signup screen (handled by Manus OAuth)
+- [x] Test both pages and verify Dashie displays correctly
+- [x] Restore Target feature with "Bullseye Wins" copy
+- [ ] Save final checkpoint with Dashie visibility
