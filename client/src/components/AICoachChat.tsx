@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, Send, Lightbulb, Clock } from 'lucide-react';
+import { Loader2, Send, Lightbulb, Clock, AlertCircle } from 'lucide-react';
 import { Streamdown } from 'streamdown';
 
 export type NervousSystemState = 'squirrel' | 'tired' | 'focused' | 'hurting';

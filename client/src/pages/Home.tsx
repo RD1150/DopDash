@@ -1,5 +1,5 @@
 import { useLocation } from "wouter";
-import { Zap, Target, Trophy, Sparkles, Heart, Brain, LogIn } from "lucide-react";
+import { Zap, Target, Trophy, Sparkles, Heart, Brain, LogIn, Wand2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { getLoginUrl } from "@/const";
 import { useAuth } from "@/_core/hooks/useAuth";
@@ -53,6 +53,13 @@ export default function Home() {
           transition={{ duration: 0.6 }}
           className="space-y-4"
         >
+          {/* Early Access Badge */}
+          <div className="inline-block mb-2">
+            <span className="px-4 py-2 rounded-full bg-accent/20 text-accent text-sm font-semibold border border-accent/30">
+              🚀 Early Access
+            </span>
+          </div>
+
           {/* Dashie Character */}
           <motion.div 
             className="flex justify-center mb-4"
