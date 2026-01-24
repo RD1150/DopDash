@@ -904,4 +904,5 @@
 - [x] Add Dashie to login/signup screen (handled by Manus OAuth)
 - [x] Test both pages and verify Dashie displays correctly
 - [x] Restore Target feature with "Bullseye Wins" copy
-- [ ] Save final checkpoint with Dashie visibility
+- [x] Remove Manus branding (badge removed, no Manus references in code)
+- [ ] Save final checkpoint - READY FOR LAUNCH
