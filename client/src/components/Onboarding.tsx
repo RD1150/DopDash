@@ -328,19 +328,7 @@ export default function Onboarding() {
             </div>
 
             {/* Trust Badge - Social Proof */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.7, duration: 0.5 }}
-              className="mb-12 px-6 py-4 rounded-2xl border-2 border-primary/20 bg-primary/5 inline-block"
-            >
-              <p className="text-center text-sm md:text-base font-semibold" style={{ color: 'hsl(var(--foreground) / 0.9)' }}>
-                ✨ Trusted by 10K+ ADHD brains
-              </p>
-              <p className="text-center text-xs md:text-sm mt-2" style={{ color: 'hsl(var(--foreground) / 0.6)' }}>
-                38 visitors today • 8+ min average session
-              </p>
-            </motion.div>
+
 
             {/* Skip link - Simple */}
             <a

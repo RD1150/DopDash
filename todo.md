@@ -906,3 +906,11 @@
 - [x] Restore Target feature with "Bullseye Wins" copy
 - [x] Remove Manus branding (badge removed, no Manus references in code)
 - [ ] Save final checkpoint - READY FOR LAUNCH
+
+
+## Beta Tester Program - Pre-Launch (COMPLETED)
+- [x] Add "Become a Beta Tester" section to landing page
+- [ ] Create beta tester database table (deferred - can use email form for now)
+- [ ] Create beta tester signup API endpoint (deferred - can use email form for now)
+- [x] Test beta tester signup flow (working with prompt)
+- [ ] Save final checkpoint with beta tester feature

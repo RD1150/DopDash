@@ -240,6 +240,63 @@ export default function Home() {
         />
       ) : null}
 
+      {/* Beta Tester Program */}
+      <div className="bg-gradient-to-r from-primary/10 via-accent/10 to-primary/10 border-y border-primary/20 py-16">
+        <div className="container max-w-4xl mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1.6 }}
+            className="text-center space-y-6"
+          >
+            <div className="space-y-2">
+              <h2 className="text-3xl md:text-4xl font-bold">Join Our Beta Testers</h2>
+              <p className="text-lg text-muted-foreground">Get lifetime free Pro access + shape Dopamine Dasher's future</p>
+            </div>
+            
+            <div className="bg-card border-2 border-primary/30 rounded-2xl p-8 space-y-4 inline-block">
+              <div className="space-y-3">
+                <p className="font-semibold text-foreground">What You Get:</p>
+                <ul className="text-sm text-muted-foreground space-y-2 text-left">
+                  <li className="flex items-center gap-2">
+                    <span className="text-primary">✓</span>
+                    <span>Lifetime free Pro access (even after launch)</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="text-primary">✓</span>
+                    <span>Early access to new features</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="text-primary">✓</span>
+                    <span>Direct feedback channel with the creator</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="text-primary">✓</span>
+                    <span>Beta tester badge in the app</span>
+                  </li>
+                </ul>
+              </div>
+              
+              <div className="pt-4 border-t border-border">
+                <p className="text-xs text-muted-foreground mb-3">Limited spots available • First come, first served</p>
+                <Button 
+                  size="lg"
+                  className="w-full"
+                  onClick={() => {
+                    const email = prompt('Enter your email to become a beta tester:');
+                    if (email) {
+                      alert('Thanks! We will be in touch soon.');
+                    }
+                  }}
+                >
+                  Become a Beta Tester
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+
       {/* Footer CTA */}
       <div className="container max-w-4xl mx-auto px-4 py-16 text-center space-y-4">
         <motion.div
