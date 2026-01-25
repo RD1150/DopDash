@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { getLoginUrl } from "@/const";
 import { useAuth } from "@/_core/hooks/useAuth";
 import PickAndWinSection from "@/components/PickAndWinSection";
+import ArrowToBullseye from "@/components/ArrowToBullseye";
 import { Button } from "@/components/ui/button";
 
 export default function Home() {
@@ -60,29 +61,14 @@ export default function Home() {
             </span>
           </div>
 
-          {/* Dashie Character */}
-          <motion.div 
-            className="flex justify-center mb-4"
-            initial={{ opacity: 0, scale: 0.5, y: 30 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ 
-              duration: 0.8, 
-              type: "spring",
-              stiffness: 100,
-              damping: 15
-            }}
+          {/* Arrow to Bullseye Animation */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="mb-8"
           >
-            <motion.img
-              src="/dashie-hero.png"
-              alt="Dashie - Your task companion"
-              className="w-32 h-32 md:w-40 md:h-40 object-contain"
-              animate={{ y: [0, -10, 0] }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-            />
+            <ArrowToBullseye />
           </motion.div>
           <h1 className="text-5xl md:text-6xl font-bold text-foreground tracking-tight">
             Dopamine Dasher

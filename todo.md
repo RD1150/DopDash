@@ -13,6 +13,12 @@
 
 ## Upcoming Features
 
+## Landing Page Animation - Arrow to Bullseye
+- [x] Add Dashie pulling arrow animation to hero section
+- [x] Create arrow travel path animation to bullseye target
+- [x] Add celebration effect when arrow hits bullseye
+- [x] Test animation performance and visual quality
+
 ## Final Steps
 - [ ] Test all features end-to-end
 - [ ] Create checkpoint for deployment

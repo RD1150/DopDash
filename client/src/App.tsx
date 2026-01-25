@@ -23,6 +23,7 @@ import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import BrainCheckDemo from "./pages/BrainCheckDemo";
 import FAQ from "./pages/FAQ";
+import Home from "./pages/Home";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
@@ -33,7 +34,8 @@ function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
-      <Route path="/" component={Welcome} />
+      <Route path="/" component={Home} />
+      <Route path="/welcome" component={Welcome} />
       <Route path="/flavor" component={FlavorSelector} />
       <Route path="/dash" component={Dash} />
       <Route path="/reward" component={Reward} />
