@@ -38,6 +38,8 @@ import DailyCheckIn from '@/components/DailyCheckIn';
 import DashieOutfitDisplay, { TaskType } from '@/components/DashieOutfitDisplay';
 import BrainCheckDemo from '@/pages/BrainCheckDemo';
 import { Timer, CircleDashed, StickyNote, Volume2, Map, Wand2 } from 'lucide-react';
+import ClarityMessage from '@/components/ClarityMessage';
+import AffirmationFeedback from '@/components/AffirmationFeedback';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -613,7 +615,11 @@ export default function Dash() {
         toTaskText={actions.find(a => a.id === contextSwitchTo)?.text || ''}
       />
       <BodyDouble />
+      <AffirmationFeedback isVisible={false} />
       <div className="flex flex-col h-full">
+        {/* Clarity Message */}
+        <ClarityMessage />
+        
         {/* Header */}
         <header className="pt-8 pb-8 space-y-4">
           <div className="flex justify-between items-start">

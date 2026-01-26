@@ -920,3 +920,35 @@
 - [ ] Create beta tester signup API endpoint (deferred - can use email form for now)
 - [x] Test beta tester signup flow (working with prompt)
 - [ ] Save final checkpoint with beta tester feature
+
+
+## ChatGPT UX Improvements - Phase 1
+- [ ] Add above-the-fold clarity message: "Pick one tiny action. Finish it. Get dopamine."
+- [ ] Add subline: "This app helps you start when you feel stuck."
+- [ ] Implement single primary CTA: "Start a Dash" button (no competing buttons on initial view)
+- [ ] Create default task system with rotating micro-tasks (Stand up and stretch, Take 3 breaths, Put one item away, Open the document you're avoiding)
+- [ ] Implement immediate dopamine feedback on task completion (confetti/pulse + affirmation messages)
+- [ ] Create affirmation message rotation: "Nice. That counts.", "Momentum unlocked.", "You showed up.", "This is how progress starts."
+- [ ] Add visual progress confirmation: "1 Dash completed today"
+
+## ChatGPT UX Improvements - Phase 2
+- [ ] Add stickiness hook: "What feels stuck right now?" on return visits
+- [ ] Add progress indicator (simple, not full habit tracker)
+- [ ] Prepare UI for premium features (Auto-Dash, Low-energy mode, Streak protection)
+- [ ] Review language/tone for calm, adult, reassuring messaging
+- [ ] Remove shame-based streaks and hustle language
+- [ ] Ensure no over-gamification or infantilization
+
+## ChatGPT UX Improvements - Phase 3
+- [ ] Test 30-second first-time user completion flow
+- [ ] Verify user feels relieved, not pressured
+- [ ] Ensure premium experience, not gimmicky
+
+
+## ChatGPT UX Improvements - In Progress
+- [x] Add ClarityMessage component for above-the-fold messaging
+- [x] Create AffirmationFeedback component for dopamine rewards
+- [ ] Integrate default task suggestions system
+- [ ] Add progress tracking UI
+- [ ] Implement stickiness hooks
+- [ ] Create premium feature placeholders
