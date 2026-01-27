@@ -109,8 +109,6 @@ interface AppState {
   houseworkTasksCompleted: number; // Track housework tasks for outfit collector
   selfCareTasksCompleted: number; // Track self-care tasks for outfit collector
   perfectWeekDates: string[]; // Track consecutive days for perfect week badge
-  homeTasksMode: boolean; // Parent-enabled mode for household/school tasks
-  completionSoundEnabled: boolean; // Optional gentle sound on task completion (off by default)
 
   // Actions
   startApp: () => void;
@@ -182,8 +180,6 @@ interface AppState {
   setDailyCheckIn: (energy: 'low' | 'medium' | 'high', vibe: 'anxious' | 'bored' | 'overwhelmed' | 'energized', need: 'quick-wins' | 'deep-focus' | 'movement' | 'rest') => void;
   getDashieGreeting: () => string;
   getDashieEncouragement: () => string;
-  setHomeTasksMode: (enabled: boolean) => void;
-  setCompletionSoundEnabled: (enabled: boolean) => void;
 }
 
 const BADGES_LIBRARY: Badge[] = [
@@ -347,8 +343,6 @@ export const useStore = create<AppState>()(
       houseworkTasksCompleted: 0,
       selfCareTasksCompleted: 0,
       perfectWeekDates: [],
-      homeTasksMode: false,
-      completionSoundEnabled: false,
 
       startApp: () => set({ hasStarted: true }),
       completeTutorial: () => set({ hasSeenTutorial: true }),
@@ -891,11 +885,7 @@ checkBadges: () => {
 
       getDashieEncouragement: () => {
         return "You're doing great!";
-      },
-
-      setHomeTasksMode: (enabled: boolean) => set({ homeTasksMode: enabled }),
-
-      setCompletionSoundEnabled: (enabled: boolean) => set({ completionSoundEnabled: enabled })
+      }
     }),
     {
       name: 'dopamine-dasher-storage',

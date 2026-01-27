@@ -953,30 +953,12 @@
 - [ ] Implement stickiness hooks
 - [ ] Create premium feature placeholders
 
-
-## Home Tasks / Student Support Mode - NEW FEATURE
-- [ ] Add Home Tasks mode toggle in Settings
-- [ ] Create household task suggestions database (Pick up 3 items, Put books away, Open homework folder, etc.)
-- [ ] Create school task suggestions database
-- [ ] Implement simpler affirmation copy for student mode
-- [ ] Add optional gentle completion sound (off by default)
-- [ ] Test Home Tasks mode end-to-end
-- [ ] Verify no changes to branding, UI layout, or data collection
-
-## Home Tasks / Student Support Mode - Completed
-- [x] Add Home Tasks mode state to store (homeTasksMode, completionSoundEnabled)
-- [x] Add Home Tasks toggle in Settings page
-- [x] Create household/school task suggestions component (HomeTaskSuggestions.tsx)
-- [x] Implement simpler affirmations for student mode (StudentAffirmationFeedback.tsx)
-- [x] Add optional completion sound (off by default) (completionSound.ts)
-- [x] Integrate mode detection in Settings.tsx with HomeTasksSettings component
-- [x] Add Home Tasks state management to Zustand store
-- [x] Test Home Tasks feature with 17 passing vitest tests
-
-## Landing Page Animation Enhancement - Completed
-- [x] Add 360° spin animation to Dashie when arrow hits target
-- [x] Create wake-up sound effect for arrow hit (using soundManager.playSuccess())
-- [x] Integrate sound and animation timing (1.5s delay + 0.1s offset)
-- [x] Test on landing/onboarding page with 21 passing vitest tests
-- [x] Added "Yes!" text feedback when arrow hits
-- [x] Smooth fade transitions between "Pull!" and "Yes!" text
+## Landing Page Animation - Click-to-Replay & Sound Polish - Completed
+- [x] Implement click-to-replay feature for arrow animation
+- [x] Add hover visual feedback (cursor pointer, subtle background)
+- [x] Display "Click to replay" hint on hover
+- [x] Add keyboard support (Enter/Space keys) for accessibility
+- [x] Test click-to-replay with 34 passing vitest tests
+- [x] Replace heavy ding sound with lighter "oing" sound (bow twang effect)
+- [x] Reduce sound volume and duration for less intrusive feedback
+- [x] Verify animation loops smoothly with new sound

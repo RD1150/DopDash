@@ -81,11 +81,44 @@ class SoundManager {
   }
 
   playSuccess() {
-    this.playDing();
+    this.playLightOing();
   }
 
   playSquish() {
     this.playPop();
+  }
+
+  playLightOing() {
+    try {
+      // Create a lighter, softer oing sound using Web Audio API
+      if (!this.audioContext) {
+        this.initAudioContext();
+      }
+      if (!this.audioContext) return;
+
+      const ctx = this.audioContext;
+      const now = ctx.currentTime;
+      const duration = 0.3; // Shorter, lighter duration
+
+      // Create oscillator for the tone
+      const osc = ctx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(800, now); // Higher pitch for lighter feel
+      osc.frequency.exponentialRampToValueAtTime(600, now + duration);
+
+      // Create gain for volume envelope
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.15, now); // Much quieter
+      gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
+
+      // Connect and play
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + duration);
+    } catch (error) {
+      console.error('Error playing light oing sound:', error);
+    }
   }
 }
 

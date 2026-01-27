@@ -4,6 +4,7 @@ import { soundManager } from "@/lib/soundManager";
 
 export default function ArrowToBullseye() {
   const [isAnimating, setIsAnimating] = useState(true);
+  const [isHovering, setIsHovering] = useState(false);
 
   // Play wake-up sound when arrow hits target
   useEffect(() => {
@@ -24,11 +25,32 @@ export default function ArrowToBullseye() {
     return () => clearInterval(interval);
   }, []);
 
+  // Handle click to replay animation
+  const handleReplay = () => {
+    setIsAnimating(false);
+    setTimeout(() => setIsAnimating(true), 100);
+  };
+
   return (
-    <div className="relative w-full h-64 flex items-center justify-center overflow-hidden">
+    <div
+      className={`relative w-full h-64 flex items-center justify-center overflow-hidden transition-all duration-200 ${
+        isHovering ? "cursor-pointer bg-gradient-to-b from-primary/5 to-transparent rounded-lg" : ""
+      }`}
+      onClick={handleReplay}
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          handleReplay();
+        }
+      }}
+      aria-label="Click to replay arrow animation"
+    >
       {/* SVG Container for arrow path animation */}
       <svg
-        className="absolute inset-0 w-full h-full"
+        className="absolute inset-0 w-full h-full pointer-events-none"
         viewBox="0 0 400 200"
         preserveAspectRatio="xMidYMid meet"
       >
@@ -89,7 +111,7 @@ export default function ArrowToBullseye() {
 
       {/* Dashie on the left pulling the arrow */}
       <motion.div
-        className="absolute left-8 flex flex-col items-center"
+        className="absolute left-8 flex flex-col items-center pointer-events-none"
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.6 }}
@@ -143,6 +165,16 @@ export default function ArrowToBullseye() {
         >
           Yes!
         </motion.p>
+        {isHovering && (
+          <motion.p
+            className="text-xs text-muted-foreground mt-1 whitespace-nowrap"
+            initial={{ opacity: 0, y: -5 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            Click to replay
+          </motion.p>
+        )}
       </motion.div>
 
       {/* Celebration particles when arrow hits (optional) */}
@@ -151,7 +183,7 @@ export default function ArrowToBullseye() {
           {[...Array(5)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute w-2 h-2 bg-yellow-400 rounded-full"
+              className="absolute w-2 h-2 bg-yellow-400 rounded-full pointer-events-none"
               initial={{
                 x: 320,
                 y: 100,
