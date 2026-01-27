@@ -972,3 +972,11 @@
 - [x] Integrate mode detection in Settings.tsx with HomeTasksSettings component
 - [x] Add Home Tasks state management to Zustand store
 - [x] Test Home Tasks feature with 17 passing vitest tests
+
+## Landing Page Animation Enhancement - Completed
+- [x] Add 360° spin animation to Dashie when arrow hits target
+- [x] Create wake-up sound effect for arrow hit (using soundManager.playSuccess())
+- [x] Integrate sound and animation timing (1.5s delay + 0.1s offset)
+- [x] Test on landing/onboarding page with 21 passing vitest tests
+- [x] Added "Yes!" text feedback when arrow hits
+- [x] Smooth fade transitions between "Pull!" and "Yes!" text

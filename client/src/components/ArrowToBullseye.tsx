@@ -1,8 +1,19 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
+import { soundManager } from "@/lib/soundManager";
 
 export default function ArrowToBullseye() {
   const [isAnimating, setIsAnimating] = useState(true);
+
+  // Play wake-up sound when arrow hits target
+  useEffect(() => {
+    if (!isAnimating) {
+      const soundTimer = setTimeout(() => {
+        soundManager.playSuccess();
+      }, 100);
+      return () => clearTimeout(soundTimer);
+    }
+  }, [isAnimating]);
 
   // Reset animation every 4 seconds
   useEffect(() => {
@@ -89,17 +100,49 @@ export default function ArrowToBullseye() {
           className="w-20 h-20 md:w-24 md:h-24 object-contain"
           animate={{
             y: isAnimating ? [0, -5, 0] : 0,
-            rotate: isAnimating ? [-2, 2, -2] : 0
+            rotate: isAnimating ? [-2, 2, -2] : [0, 360],
           }}
           transition={{
-            duration: 0.6,
-            repeat: isAnimating ? Infinity : 0,
-            repeatType: "loop"
+            y: {
+              duration: 0.6,
+              repeat: isAnimating ? Infinity : 0,
+              repeatType: "loop"
+            },
+            rotate: isAnimating ? {
+              duration: 0.6,
+              repeat: Infinity,
+              repeatType: "loop"
+            } : {
+              delay: 1.5,
+              duration: 0.8,
+              ease: "easeInOut"
+            }
           }}
         />
-        <p className="text-sm font-semibold text-primary mt-2 whitespace-nowrap">
+        <motion.p
+          className="text-sm font-semibold text-primary mt-2 whitespace-nowrap"
+          animate={{
+            opacity: isAnimating ? 1 : 0
+          }}
+          transition={{
+            duration: 0.3
+          }}
+        >
           Pull!
-        </p>
+        </motion.p>
+        <motion.p
+          className="text-sm font-semibold text-green-500 mt-2 whitespace-nowrap"
+          initial={{ opacity: 0 }}
+          animate={{
+            opacity: !isAnimating ? 1 : 0
+          }}
+          transition={{
+            delay: 1.5,
+            duration: 0.3
+          }}
+        >
+          Yes!
+        </motion.p>
       </motion.div>
 
       {/* Celebration particles when arrow hits (optional) */}
