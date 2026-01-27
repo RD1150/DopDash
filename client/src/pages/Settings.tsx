@@ -19,6 +19,7 @@ import DataExport from '@/components/DataExport';
 import StatsSharing from '@/components/StatsSharing';
 import InviteFriends from '@/components/InviteFriends';
 import BodyDoubleMode from '@/components/BodyDoubleMode';
+import HomeTasksSettings from '@/components/HomeTasksSettings';
 
 export default function SettingsPage() {
   const [, setLocation] = useLocation();
@@ -44,6 +45,10 @@ export default function SettingsPage() {
   const streak = useStore((state) => state.streak);
   const momentumMode = useStore((state) => state.momentumMode);
   const setMomentumMode = useStore((state) => state.setMomentumMode);
+  const homeTasksMode = useStore((state) => state.homeTasksMode);
+  const setHomeTasksMode = useStore((state) => state.setHomeTasksMode);
+  const completionSoundEnabled = useStore((state) => state.completionSoundEnabled);
+  const setCompletionSoundEnabled = useStore((state) => state.setCompletionSoundEnabled);
 
   const handleNotificationToggle = async (checked: boolean) => {
     if (checked) {
@@ -405,6 +410,16 @@ export default function SettingsPage() {
           <section className="space-y-4">
             <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Share Your Progress</h2>
             <StatsSharing />
+          </section>
+
+          {/* Home Tasks / Student Support Mode */}
+          <section className="space-y-4">
+            <HomeTasksSettings
+              homeTasksMode={homeTasksMode}
+              completionSoundEnabled={completionSoundEnabled}
+              onHomeTasksModeChange={setHomeTasksMode}
+              onCompletionSoundChange={setCompletionSoundEnabled}
+            />
           </section>
 
           {/* Community Features */}

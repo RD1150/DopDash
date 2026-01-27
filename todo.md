@@ -952,3 +952,23 @@
 - [ ] Add progress tracking UI
 - [ ] Implement stickiness hooks
 - [ ] Create premium feature placeholders
+
+
+## Home Tasks / Student Support Mode - NEW FEATURE
+- [ ] Add Home Tasks mode toggle in Settings
+- [ ] Create household task suggestions database (Pick up 3 items, Put books away, Open homework folder, etc.)
+- [ ] Create school task suggestions database
+- [ ] Implement simpler affirmation copy for student mode
+- [ ] Add optional gentle completion sound (off by default)
+- [ ] Test Home Tasks mode end-to-end
+- [ ] Verify no changes to branding, UI layout, or data collection
+
+## Home Tasks / Student Support Mode - Completed
+- [x] Add Home Tasks mode state to store (homeTasksMode, completionSoundEnabled)
+- [x] Add Home Tasks toggle in Settings page
+- [x] Create household/school task suggestions component (HomeTaskSuggestions.tsx)
+- [x] Implement simpler affirmations for student mode (StudentAffirmationFeedback.tsx)
+- [x] Add optional completion sound (off by default) (completionSound.ts)
+- [x] Integrate mode detection in Settings.tsx with HomeTasksSettings component
+- [x] Add Home Tasks state management to Zustand store
+- [x] Test Home Tasks feature with 17 passing vitest tests
