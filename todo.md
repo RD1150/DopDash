@@ -972,3 +972,13 @@
 - [x] Test for 20+ minute extended use without annoyance (26 passing tests)
 - [x] Verify tone is calm, reassuring, and adult-friendly
 - [x] Preserve account system (user preference)
+
+## Beta Account Requirement - Completed
+- [x] Create BetaAccountGate component with smooth animations
+- [x] Show gate after 1st task completion (2.5s delay for dopamine)
+- [x] Capture emails automatically via OAuth (Google/Apple)
+- [x] Allow easy account creation (30 seconds, no extra fields)
+- [x] Allow dismissing gate to continue without account
+- [x] Collect feedback in-app (mood check, surveys)
+- [x] Test account flow with 32 passing vitest tests
+- [x] Hybrid funnel: free trial → account creation → retention

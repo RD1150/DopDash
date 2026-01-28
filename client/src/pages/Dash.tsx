@@ -40,6 +40,7 @@ import BrainCheckDemo from '@/pages/BrainCheckDemo';
 import { Timer, CircleDashed, StickyNote, Volume2, Map, Wand2 } from 'lucide-react';
 import ClarityMessage from '@/components/ClarityMessage';
 import AffirmationFeedback from '@/components/AffirmationFeedback';
+import BetaAccountGate from '@/components/BetaAccountGate';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -120,6 +121,9 @@ export default function Dash() {
   const [selectedMood, setSelectedMood] = useState<'anxious' | 'bored' | 'overwhelmed' | 'energized' | null>(null);
   const setEmotionalState = useStore((state) => state.setEmotionalState);
   const currentEmotionalState = useStore((state) => state.currentEmotionalState);
+  const [tasksCompletedInSession, setTasksCompletedInSession] = useState(0);
+  const [showBetaGate, setShowBetaGate] = useState(false);
+  const totalTasksCompleted = useStore((state) => state.totalTasksCompleted);
   
   const handleMoodSelect = (mood: 'anxious' | 'bored' | 'overwhelmed' | 'energized') => {
     setSelectedMood(mood);
@@ -381,6 +385,13 @@ export default function Dash() {
       if (moodCheckEnabled) {
         setTimeout(() => setShowMoodCheck(true), 800);
       }
+      
+      // Beta gate: Show account creation prompt after 1 task
+      const newCompletedCount = tasksCompletedInSession + 1;
+      setTasksCompletedInSession(newCompletedCount);
+      if (newCompletedCount === 1) {
+        setTimeout(() => setShowBetaGate(true), 2500);
+      }
     }
     
     toggleAction(id);
@@ -523,6 +534,11 @@ export default function Dash() {
     <Layout>
       <AffirmationOverlay />
       <TutorialOverlay />
+      <BetaAccountGate 
+        tasksCompleted={tasksCompletedInSession}
+        onDismiss={() => setShowBetaGate(false)}
+      />
+      {showBetaGate && <BetaAccountGate tasksCompleted={tasksCompletedInSession} />}
       <AnimatePresence>
         {showLootBox && <LootBox onClose={() => {
           setShowLootBox(false);
