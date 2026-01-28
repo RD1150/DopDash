@@ -81,16 +81,16 @@ class SoundManager {
   }
 
   playSuccess() {
-    this.playLightOing();
+    this.playLightCheer();
   }
 
   playSquish() {
     this.playPop();
   }
 
-  playLightOing() {
+  playLightCheer() {
     try {
-      // Create a lighter, softer oing sound using Web Audio API
+      // Create a light, celebratory cheer sound using Web Audio API
       if (!this.audioContext) {
         this.initAudioContext();
       }
@@ -98,26 +98,31 @@ class SoundManager {
 
       const ctx = this.audioContext;
       const now = ctx.currentTime;
-      const duration = 0.3; // Shorter, lighter duration
 
-      // Create oscillator for the tone
-      const osc = ctx.createOscillator();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(800, now); // Higher pitch for lighter feel
-      osc.frequency.exponentialRampToValueAtTime(600, now + duration);
+      // Create three ascending notes for a cheerful effect
+      const notes = [
+        { freq: 800, start: 0, duration: 0.1 },
+        { freq: 1000, start: 0.08, duration: 0.12 },
+        { freq: 1200, start: 0.16, duration: 0.15 }
+      ];
 
-      // Create gain for volume envelope
-      const gain = ctx.createGain();
-      gain.gain.setValueAtTime(0.15, now); // Much quieter
-      gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
+      notes.forEach(note => {
+        const osc = ctx.createOscillator();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(note.freq, now + note.start);
+        osc.frequency.exponentialRampToValueAtTime(note.freq * 1.2, now + note.start + note.duration * 0.7);
 
-      // Connect and play
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(now);
-      osc.stop(now + duration);
+        const gain = ctx.createGain();
+        gain.gain.setValueAtTime(0.15, now + note.start);
+        gain.gain.exponentialRampToValueAtTime(0.02, now + note.start + note.duration);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + note.start);
+        osc.stop(now + note.start + note.duration);
+      });
     } catch (error) {
-      console.error('Error playing light oing sound:', error);
+      console.error('Error playing light cheer sound:', error);
     }
   }
 }
