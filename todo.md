@@ -973,6 +973,13 @@
 - [x] Verify tone is calm, reassuring, and adult-friendly
 - [x] Preserve account system (user preference)
 
+## Try Demo Button - Fixed
+- [x] Fixed broken /vibe-check route (404 error)
+- [x] Changed to /dash route for immediate demo access
+- [x] Updated both hero and testimonial section buttons
+- [x] Test with 10 passing vitest tests
+- [x] Users can now click Try Demo without 404
+
 ## Beta Account Requirement - Completed
 - [x] Create BetaAccountGate component with smooth animations
 - [x] Show gate after 1st task completion (2.5s delay for dopamine)

@@ -111,7 +111,7 @@ export default function Home() {
                 <Button
                   size="lg"
                   variant="outline"
-                  onClick={() => setLocation('/vibe-check')}
+                  onClick={() => setLocation('/dash')}
                   className="text-lg px-8 py-6 rounded-full"
                 >
                   Try Demo
@@ -204,7 +204,7 @@ export default function Home() {
               <Button
                 size="lg"
                 variant="outline"
-                onClick={() => setLocation('/vibe-check')}
+                onClick={() => setLocation('/dash')}
                 className="text-lg px-8 py-6 rounded-full"
               >
                 {isAuthenticated ? "Start a New Task" : "Try Demo First"}
