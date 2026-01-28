@@ -81,16 +81,17 @@ class SoundManager {
   }
 
   playSuccess() {
-    this.playLightCheer();
+    this.playSubtleCompletion();
   }
 
   playSquish() {
     this.playPop();
   }
 
-  playLightCheer() {
+  playSubtleCompletion() {
     try {
-      // Create a light, celebratory cheer sound using Web Audio API
+      // Create a subtle, quiet confirmation tone (like a soft period at end of sentence)
+      // Under 0.5 seconds, barely noticeable, no celebration
       if (!this.audioContext) {
         this.initAudioContext();
       }
@@ -98,31 +99,26 @@ class SoundManager {
 
       const ctx = this.audioContext;
       const now = ctx.currentTime;
+      const duration = 0.25; // Very short - under 0.5s requirement
 
-      // Create three ascending notes for a cheerful effect
-      const notes = [
-        { freq: 800, start: 0, duration: 0.1 },
-        { freq: 1000, start: 0.08, duration: 0.12 },
-        { freq: 1200, start: 0.16, duration: 0.15 }
-      ];
+      // Single, simple sine wave - quiet confirmation tone
+      const osc = ctx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(600, now); // Mid-range frequency
+      osc.frequency.exponentialRampToValueAtTime(550, now + duration); // Slight downward glide
 
-      notes.forEach(note => {
-        const osc = ctx.createOscillator();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(note.freq, now + note.start);
-        osc.frequency.exponentialRampToValueAtTime(note.freq * 1.2, now + note.start + note.duration * 0.7);
+      // Very subtle volume - barely audible
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.08, now); // Very quiet
+      gain.gain.exponentialRampToValueAtTime(0.01, now + duration); // Fade out
 
-        const gain = ctx.createGain();
-        gain.gain.setValueAtTime(0.15, now + note.start);
-        gain.gain.exponentialRampToValueAtTime(0.02, now + note.start + note.duration);
-
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start(now + note.start);
-        osc.stop(now + note.start + note.duration);
-      });
+      // Connect and play
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + duration);
     } catch (error) {
-      console.error('Error playing light cheer sound:', error);
+      console.error('Error playing subtle completion sound:', error);
     }
   }
 }

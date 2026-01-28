@@ -962,3 +962,13 @@
 - [x] Replace heavy ding sound with lighter "oing" sound (bow twang effect)
 - [x] Reduce sound volume and duration for less intrusive feedback
 - [x] Verify animation loops smoothly with new sound
+
+## Beta Polish for Same-Day Release - Completed
+- [x] Create subtle completion tone (under 0.5s, quiet confirmation, no celebration)
+- [x] Add completion sound toggle to Settings (default OFF)
+- [x] Implement approved completion feedback copy rotation (4 calm messages)
+- [x] Add default task auto-population for new dashes (8 quick tasks)
+- [x] Clean up Settings to show only essential toggles
+- [x] Test for 20+ minute extended use without annoyance (26 passing tests)
+- [x] Verify tone is calm, reassuring, and adult-friendly
+- [x] Preserve account system (user preference)

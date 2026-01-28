@@ -109,6 +109,7 @@ interface AppState {
   houseworkTasksCompleted: number; // Track housework tasks for outfit collector
   selfCareTasksCompleted: number; // Track self-care tasks for outfit collector
   perfectWeekDates: string[]; // Track consecutive days for perfect week badge
+  completionSoundEnabled: boolean; // Toggle for subtle completion tone (default OFF)
 
   // Actions
   startApp: () => void;
@@ -180,6 +181,7 @@ interface AppState {
   setDailyCheckIn: (energy: 'low' | 'medium' | 'high', vibe: 'anxious' | 'bored' | 'overwhelmed' | 'energized', need: 'quick-wins' | 'deep-focus' | 'movement' | 'rest') => void;
   getDashieGreeting: () => string;
   getDashieEncouragement: () => string;
+  toggleCompletionSound: () => void;
 }
 
 const BADGES_LIBRARY: Badge[] = [
@@ -231,6 +233,21 @@ const TASK_PACKS: Record<Context, Omit<MicroAction, 'completed'>[]> = {
 };
 
 const DEFAULT_ACTIONS = TASK_PACKS.self;
+
+const DEFAULT_TASK_SUGGESTIONS = [
+  "Stand up and stretch for 30 seconds",
+  "Put one item away",
+  "Open the document you are avoiding",
+  "Pick up 3 items from the floor",
+  "Take three deep breaths",
+  "Drink a glass of water",
+  "Close one tab",
+  "Write one sentence",
+];
+
+const getRandomDefaultTask = () => {
+  return DEFAULT_TASK_SUGGESTIONS[Math.floor(Math.random() * DEFAULT_TASK_SUGGESTIONS.length)];
+};
 
 // Initialize state from onboarding selections
 const getInitialState = () => {
@@ -343,6 +360,7 @@ export const useStore = create<AppState>()(
       houseworkTasksCompleted: 0,
       selfCareTasksCompleted: 0,
       perfectWeekDates: [],
+      completionSoundEnabled: false, // OFF by default
 
       startApp: () => set({ hasStarted: true }),
       completeTutorial: () => set({ hasSeenTutorial: true }),
@@ -353,7 +371,15 @@ export const useStore = create<AppState>()(
         const pack = TASK_PACKS[context];
         const shuffled = [...pack].sort(() => 0.5 - Math.random());
         const selected = shuffled.slice(0, 3).map(a => ({ ...a, completed: false }));
-        set({ context, todaysActions: selected });
+        
+        const defaultTask: MicroAction = {
+          id: 'default-' + Date.now(),
+          text: getRandomDefaultTask(),
+          category: 'momentum',
+          completed: false,
+        };
+        
+        set({ context, todaysActions: [defaultTask, ...selected] });
       },
       setZenMode: (zenMode: boolean) => set({ zenMode }),
       setSoundTheme: (soundTheme: 'default' | 'arcade' | 'nature') => set({ soundTheme }),
@@ -885,6 +911,11 @@ checkBadges: () => {
 
       getDashieEncouragement: () => {
         return "You're doing great!";
+      },
+
+      toggleCompletionSound: () => {
+        const { completionSoundEnabled } = get();
+        set({ completionSoundEnabled: !completionSoundEnabled });
       }
     }),
     {

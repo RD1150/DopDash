@@ -33,6 +33,8 @@ export default function SettingsPage() {
   const setZenMode = useStore((state) => state.setZenMode);
   const soundTheme = useStore((state) => state.soundTheme);
   const setSoundTheme = useStore((state) => state.setSoundTheme);
+  const completionSoundEnabled = useStore((state) => state.completionSoundEnabled);
+  const toggleCompletionSound = useStore((state) => state.toggleCompletionSound);
   const [showWallpaperGen, setShowWallpaperGen] = useState(false);
   const [showChangeVibe, setShowChangeVibe] = useState(false);
   const vacationMode = useStore((state) => state.vacationMode);
@@ -237,6 +239,25 @@ export default function SettingsPage() {
                       {t}
                     </button>
                   ))}
+                </div>
+              </div>
+
+              {/* Completion Sound Toggle */}
+              <div className="p-4 space-y-3 border-t">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-primary/10 rounded-lg text-primary">
+                      <Volume2 className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="font-medium">Completion Sound</p>
+                      <p className="text-sm text-muted-foreground">Quiet confirmation tone</p>
+                    </div>
+                  </div>
+                  <Switch
+                    checked={completionSoundEnabled}
+                    onCheckedChange={() => toggleCompletionSound()}
+                  />
                 </div>
               </div>
 
