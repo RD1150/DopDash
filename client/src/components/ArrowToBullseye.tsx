@@ -1,20 +1,11 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import { soundManager } from "@/lib/soundManager";
 
 export default function ArrowToBullseye() {
   const [isAnimating, setIsAnimating] = useState(true);
   const [isHovering, setIsHovering] = useState(false);
 
-  // Play wake-up sound when arrow hits target
-  useEffect(() => {
-    if (!isAnimating) {
-      const soundTimer = setTimeout(() => {
-        soundManager.playSuccess();
-      }, 100);
-      return () => clearTimeout(soundTimer);
-    }
-  }, [isAnimating]);
+  // Sound removed - animation is engaging enough without audio
 
   // Reset animation every 4 seconds
   useEffect(() => {
