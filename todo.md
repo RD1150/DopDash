@@ -989,3 +989,11 @@
 - [x] Collect feedback in-app (mood check, surveys)
 - [x] Test account flow with 32 passing vitest tests
 - [x] Hybrid funnel: free trial → account creation → retention
+
+## Demo Mode Features - Completed
+- [x] Add demo mode state and 5-task limit to store (demoMode, demoTasksCompleted, demoStartTime)
+- [x] Create demo mode gate after 5 tasks (DemoModeGate.tsx with benefits display)
+- [x] Add conversion tracking (DemoAnalytics.ts with 6 event types)
+- [x] Create 3-step demo onboarding tutorial overlay (DemoOnboarding.tsx)
+- [x] Test demo flow end-to-end (35 passing vitest tests)
+- [x] Verify analytics tracking works (session tracking, conversion rate calculation)

@@ -110,6 +110,10 @@ interface AppState {
   selfCareTasksCompleted: number; // Track self-care tasks for outfit collector
   perfectWeekDates: string[]; // Track consecutive days for perfect week badge
   completionSoundEnabled: boolean; // Toggle for subtle completion tone (default OFF)
+  demoMode: boolean; // Track if user is in demo mode
+  demoTasksCompleted: number; // Track tasks completed in demo (limit 5)
+  demoStartTime: number | null; // Track when demo started
+  showDemoTutorial: boolean; // Show 3-step tutorial on first demo load
 
   // Actions
   startApp: () => void;
@@ -182,6 +186,9 @@ interface AppState {
   getDashieGreeting: () => string;
   getDashieEncouragement: () => string;
   toggleCompletionSound: () => void;
+  setDemoMode: (enabled: boolean) => void;
+  incrementDemoTasksCompleted: () => void;
+  setShowDemoTutorial: (show: boolean) => void;
 }
 
 const BADGES_LIBRARY: Badge[] = [
@@ -361,6 +368,10 @@ export const useStore = create<AppState>()(
       selfCareTasksCompleted: 0,
       perfectWeekDates: [],
       completionSoundEnabled: false, // OFF by default
+      demoMode: false, // Track if user is in demo mode
+      demoTasksCompleted: 0, // Track tasks completed in demo (limit 5)
+      demoStartTime: null, // Track when demo started
+      showDemoTutorial: false, // Show 3-step tutorial on first demo load
 
       startApp: () => set({ hasStarted: true }),
       completeTutorial: () => set({ hasSeenTutorial: true }),
@@ -916,6 +927,21 @@ checkBadges: () => {
       toggleCompletionSound: () => {
         const { completionSoundEnabled } = get();
         set({ completionSoundEnabled: !completionSoundEnabled });
+      },
+      setDemoMode: (enabled: boolean) => {
+        set({ 
+          demoMode: enabled,
+          demoStartTime: enabled ? Date.now() : null,
+          demoTasksCompleted: 0,
+          showDemoTutorial: enabled,
+        });
+      },
+      incrementDemoTasksCompleted: () => {
+        const { demoTasksCompleted } = get();
+        set({ demoTasksCompleted: demoTasksCompleted + 1 });
+      },
+      setShowDemoTutorial: (show: boolean) => {
+        set({ showDemoTutorial: show });
       }
     }),
     {
