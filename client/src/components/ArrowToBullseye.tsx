@@ -113,7 +113,7 @@ export default function ArrowToBullseye() {
           className="w-20 h-20 md:w-24 md:h-24 object-contain"
           animate={{
             y: isAnimating ? [0, -5, 0] : 0,
-            rotate: isAnimating ? [-2, 2, -2] : [0, 360],
+            rotate: isAnimating ? [-2, 2, -2] : 360,
           }}
           transition={{
             y: {
@@ -143,19 +143,19 @@ export default function ArrowToBullseye() {
         >
           Pull!
         </motion.p>
-        <motion.p
-          className="text-sm font-semibold text-green-500 mt-2 whitespace-nowrap"
-          initial={{ opacity: 0 }}
-          animate={{
-            opacity: !isAnimating ? 1 : 0
-          }}
-          transition={{
-            delay: 1.5,
-            duration: 0.3
-          }}
-        >
-          Yes!
-        </motion.p>
+        {!isAnimating && (
+          <motion.p
+            className="text-sm font-semibold text-green-500 mt-2 whitespace-nowrap"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{
+              delay: 0.2,
+              duration: 0.3
+            }}
+          >
+            Yes!
+          </motion.p>
+        )}
         {isHovering && (
           <motion.p
             className="text-xs text-muted-foreground mt-1 whitespace-nowrap"
