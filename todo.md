@@ -997,3 +997,11 @@
 - [x] Create 3-step demo onboarding tutorial overlay (DemoOnboarding.tsx)
 - [x] Test demo flow end-to-end (35 passing vitest tests)
 - [x] Verify analytics tracking works (session tracking, conversion rate calculation)
+
+## Demo Funnel Integration - Completed
+- [x] Integrate DemoModeGate and DemoOnboarding into Dash.tsx (components + state)
+- [x] Wire up task counter and analytics event tracking (demoTasksCompleted, demoAnalytics.trackTaskCompleted)
+- [x] Create A/B test variants for gate messaging (3 variants with different CTA copy)
+- [x] Implement referral incentive system (500 coins referrer, 250 coins referee)
+- [x] Test full demo funnel end-to-end (44 passing vitest tests)
+- [x] Verify analytics tracking captures all events (session tracking, conversion rates)

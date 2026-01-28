@@ -41,6 +41,9 @@ import { Timer, CircleDashed, StickyNote, Volume2, Map, Wand2 } from 'lucide-rea
 import ClarityMessage from '@/components/ClarityMessage';
 import AffirmationFeedback from '@/components/AffirmationFeedback';
 import BetaAccountGate from '@/components/BetaAccountGate';
+import DemoModeGate from '@/components/DemoModeGate';
+import DemoOnboarding from '@/components/DemoOnboarding';
+import { demoAnalytics } from '@/lib/demoAnalytics';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -118,6 +121,15 @@ export default function Dash() {
   const [brainDumpInput, setBrainDumpInput] = useState('');
   const [brainDumpCategory, setBrainDumpCategory] = useState<'focus' | 'energy' | 'momentum'>('focus');
   const [showMoodSelector, setShowMoodSelector] = useState(false);
+  const [demoTasksCompleted, setDemoTasksCompleted] = useState(0);
+  const [showDemoOnboarding, setShowDemoOnboarding] = useState(false);
+  const [showDemoGate, setShowDemoGate] = useState(false);
+  const [dismissedDemoGate, setDismissedDemoGate] = useState(false);
+  const demoMode = useStore((state) => state.demoMode);
+  const setDemoMode = useStore((state) => state.setDemoMode);
+  const incrementDemoTasksCompleted = useStore((state) => state.incrementDemoTasksCompleted);
+  const showDemoTutorial = useStore((state) => state.showDemoTutorial);
+  const setShowDemoTutorial = useStore((state) => state.setShowDemoTutorial);
   const [selectedMood, setSelectedMood] = useState<'anxious' | 'bored' | 'overwhelmed' | 'energized' | null>(null);
   const setEmotionalState = useStore((state) => state.setEmotionalState);
   const currentEmotionalState = useStore((state) => state.currentEmotionalState);
@@ -391,6 +403,18 @@ export default function Dash() {
       setTasksCompletedInSession(newCompletedCount);
       if (newCompletedCount === 1) {
         setTimeout(() => setShowBetaGate(true), 2500);
+      }
+      
+      // Demo mode tracking
+      if (demoMode) {
+        const newDemoCount = demoTasksCompleted + 1;
+        setDemoTasksCompleted(newDemoCount);
+        demoAnalytics.trackTaskCompleted(newDemoCount);
+        
+        // Show demo gate after 5 tasks
+        if (newDemoCount === 5 && !dismissedDemoGate) {
+          setTimeout(() => setShowDemoGate(true), 2500);
+        }
       }
     }
     
@@ -1427,6 +1451,20 @@ export default function Dash() {
           </div>
         </div>
       )}
+      
+      {/* Demo Mode Components */}
+      <DemoOnboarding 
+        isOpen={showDemoOnboarding && demoMode} 
+        onComplete={() => {
+          setShowDemoOnboarding(false);
+          setShowDemoTutorial(false);
+        }}
+      />
+      
+      <DemoModeGate
+        tasksCompleted={demoTasksCompleted}
+        onDismiss={() => setDismissedDemoGate(true)}
+      />
     </Layout>
   );
 }
