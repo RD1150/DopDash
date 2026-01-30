@@ -1141,3 +1141,66 @@ export async function getEffectiveTechniquesForUser(
     return [];
   }
 }
+
+
+// ============ COIN PURCHASE FUNCTIONS ============
+
+/**
+ * Add coins to user account after successful payment
+ */
+export async function addCoinsToUser(userId: number, coins: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  try {
+    const { eq } = await import("drizzle-orm");
+    
+    // Get current profile
+    const profile = await db.select().from(userProfiles)
+      .where(eq(userProfiles.userId, userId))
+      .limit(1);
+
+    if (!profile.length) {
+      throw new Error("User profile not found");
+    }
+
+    const currentCoins = profile[0].coins || 0;
+    const newCoins = currentCoins + coins;
+
+    // Update coins
+    await db.update(userProfiles)
+      .set({ coins: newCoins })
+      .where(eq(userProfiles.userId, userId));
+
+    // Return updated profile
+    const updated = await db.select().from(userProfiles)
+      .where(eq(userProfiles.userId, userId))
+      .limit(1);
+
+    return updated[0];
+  } catch (error) {
+    console.error("[Database] Error adding coins to user:", error);
+    throw error;
+  }
+}
+
+/**
+ * Get user's coin balance
+ */
+export async function getUserCoins(userId: number) {
+  const db = await getDb();
+  if (!db) return 0;
+
+  try {
+    const { eq } = await import("drizzle-orm");
+    
+    const profile = await db.select().from(userProfiles)
+      .where(eq(userProfiles.userId, userId))
+      .limit(1);
+
+    return profile.length > 0 ? (profile[0].coins || 0) : 0;
+  } catch (error) {
+    console.error("[Database] Error getting user coins:", error);
+    return 0;
+  }
+}

@@ -1,9 +1,0 @@
-{
-  "query": "SELECT id, email, name, createdAt FROM users ORDER BY createdAt DESC LIMIT 20;",
-  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4EPJgiEgR66ZdqB.85d346e9976d --database KeSi6Ejr7uHPV3mimmzDSf --execute SELECT id, email, name, createdAt FROM users ORDER BY createdAt DESC LIMIT 20;",
-  "rows": [],
-  "messages": [],
-  "stdout": "",
-  "stderr": "",
-  "execution_time_ms": 163
-}

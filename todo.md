@@ -1005,3 +1005,23 @@
 - [x] Implement referral incentive system (500 coins referrer, 250 coins referee)
 - [x] Test full demo funnel end-to-end (44 passing vitest tests)
 - [x] Verify analytics tracking captures all events (session tracking, conversion rates)
+
+
+## Buy Coins Payment System - In Progress
+- [ ] Create coin packages and pricing (100, 500, 1000, 5000 coins)
+- [ ] Build Buy Coins shop UI component
+- [ ] Integrate Stripe Checkout (Apple Pay, PayPal, Card)
+- [ ] Add webhook handler for payment confirmation
+- [ ] Add coins to user account after payment
+- [ ] Test payment flow end-to-end
+- [ ] Verify no card data stored locally
+
+
+## Payment System Implementation - Current Sprint
+- [x] Create coin packages and pricing structure (Starter, Boost, Pro, Elite)
+- [x] Build Buy Coins shop UI component with package cards
+- [x] Integrate Stripe payment processing (Apple Pay, PayPal, Card)
+- [ ] Add webhook handler for payment confirmation
+- [x] Add coins to user account after successful payment (via verifyPayment mutation)
+- [ ] Test payment flow end-to-end
+- [x] Verify no local credit card storage (Stripe handles all sensitive data)

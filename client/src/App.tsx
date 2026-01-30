@@ -12,6 +12,7 @@ import SettingsPage from "./pages/Settings";
 import Streak from "./pages/Streak";
 import Welcome from "./pages/Welcome";
 import Shop from "./pages/Shop";
+import BuyCoins from "./pages/BuyCoins";
 import JournalPage from "./pages/Journal";
 import Stats from "./pages/Stats";
 import Someday from "./pages/Someday";
@@ -39,10 +40,11 @@ function Router() {
       <Route path="/flavor" component={FlavorSelector} />
       <Route path="/dash" component={Dash} />
       <Route path="/reward" component={Reward} />
-      <Route path={"/streak"} component={Streak} />
-      <Route path={"/shop"} component={Shop} />
-      <Route path={"/journal"} component={JournalPage} />
-      <Route path={"/stats"} component={Stats} />
+      <Route path="/streak" component={Streak} />
+      <Route path="/shop" component={Shop} />
+      <Route path="/buy-coins" component={BuyCoins} />
+      <Route path="/journal" component={JournalPage} />
+      <Route path="/stats" component={Stats} />
       <Route path="/someday" component={Someday} />
       <Route path="/leaderboard" component={Leaderboard} />
       <Route path="/rewards-shop" component={RewardsShop} />
