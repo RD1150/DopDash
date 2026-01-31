@@ -125,6 +125,27 @@ export default function Home() {
         </motion.div>
       </div>
 
+      {/* Video Demo Section */}
+      <div className="container max-w-4xl mx-auto px-4 py-16">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.8 }}
+          className="rounded-3xl overflow-hidden shadow-2xl border-2 border-border"
+        >
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="w-full h-auto"
+          >
+            <source src="/videos/task-demo.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </motion.div>
+      </div>
+
       {/* Features Grid */}
       <div className="container max-w-6xl mx-auto px-4 py-16">
         <motion.div
