@@ -650,3 +650,59 @@ export const techniqueRatings = mysqlTable("techniqueRatings", {
 
 export type TechniqueRating = typeof techniqueRatings.$inferSelect;
 export type InsertTechniqueRating = typeof techniqueRatings.$inferInsert;
+
+
+/**
+ * Payment History - Track all coin purchases
+ */
+export const coinPurchases = mysqlTable("coinPurchases", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  
+  // Purchase details
+  packageId: varchar("packageId", { length: 50 }).notNull(), // "starter", "boost", "pro", "elite"
+  coinsAmount: int("coinsAmount").notNull(), // Total coins including bonus
+  priceInCents: int("priceInCents").notNull(), // Price in cents
+  
+  // Stripe tracking
+  stripePaymentIntentId: varchar("stripePaymentIntentId", { length: 255 }).notNull().unique(),
+  stripeSessionId: varchar("stripeSessionId", { length: 255 }),
+  
+  // Payment status
+  status: mysqlEnum("status", ["pending", "completed", "failed", "refunded"]).notNull().default("pending"),
+  
+  // Timestamps
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  completedAt: timestamp("completedAt"), // When payment was confirmed
+});
+
+export type CoinPurchase = typeof coinPurchases.$inferSelect;
+export type InsertCoinPurchase = typeof coinPurchases.$inferInsert;
+
+/**
+ * Referral System - Track user referrals and bonus coins
+ */
+export const referrals = mysqlTable("referrals", {
+  id: int("id").autoincrement().primaryKey(),
+  referrerId: int("referrerId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  referredUserId: int("referredUserId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  
+  // Referral code
+  referralCode: varchar("referralCode", { length: 50 }).notNull().unique(),
+  
+  // Bonus tracking
+  bonusCoinsAwarded: int("bonusCoinsAwarded").notNull().default(0),
+  referrerBonusCoins: int("referrerBonusCoins").notNull().default(50), // Bonus for referrer
+  referredBonusCoins: int("referredBonusCoins").notNull().default(25), // Bonus for referred user
+  
+  // Status
+  isActive: int("isActive").notNull().default(1), // 0 or 1
+  
+  // Timestamps
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  claimedAt: timestamp("claimedAt"), // When referred user signed up
+  bonusAwardedAt: timestamp("bonusAwardedAt"), // When bonus was given
+});
+
+export type Referral = typeof referrals.$inferSelect;
+export type InsertReferral = typeof referrals.$inferInsert;

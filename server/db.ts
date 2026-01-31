@@ -1204,3 +1204,233 @@ export async function getUserCoins(userId: number) {
     return 0;
   }
 }
+
+
+// ============ PAYMENT HISTORY FUNCTIONS ============
+
+/**
+ * Create a coin purchase record
+ */
+export async function createCoinPurchase(
+  userId: number,
+  packageId: string,
+  coinsAmount: number,
+  priceInCents: number,
+  stripePaymentIntentId: string,
+  stripeSessionId?: string
+) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  try {
+    const { coinPurchases } = await import("../drizzle/schema.js");
+    
+    const result = await db.insert(coinPurchases).values({
+      userId,
+      packageId,
+      coinsAmount,
+      priceInCents,
+      stripePaymentIntentId,
+      stripeSessionId,
+      status: "pending",
+    });
+
+    return result;
+  } catch (error) {
+    console.error("[Database] Error creating coin purchase:", error);
+    throw error;
+  }
+}
+
+/**
+ * Update coin purchase status
+ */
+export async function updateCoinPurchaseStatus(
+  stripePaymentIntentId: string,
+  status: "pending" | "completed" | "failed" | "refunded"
+) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  try {
+    const { coinPurchases } = await import("../drizzle/schema.js");
+    const { eq } = await import("drizzle-orm");
+
+    const completedAt = status === "completed" ? new Date() : null;
+
+    await db
+      .update(coinPurchases)
+      .set({
+        status,
+        completedAt,
+      })
+      .where(eq(coinPurchases.stripePaymentIntentId, stripePaymentIntentId));
+  } catch (error) {
+    console.error("[Database] Error updating coin purchase status:", error);
+    throw error;
+  }
+}
+
+/**
+ * Get user's payment history
+ */
+export async function getUserPaymentHistory(userId: number, limit = 20) {
+  const db = await getDb();
+  if (!db) return [];
+
+  try {
+    const { coinPurchases } = await import("../drizzle/schema.js");
+    const { eq, desc } = await import("drizzle-orm");
+
+    const history = await db
+      .select()
+      .from(coinPurchases)
+      .where(eq(coinPurchases.userId, userId))
+      .orderBy(desc(coinPurchases.createdAt))
+      .limit(limit);
+
+    return history;
+  } catch (error) {
+    console.error("[Database] Error getting payment history:", error);
+    return [];
+  }
+}
+
+// ============ REFERRAL FUNCTIONS ============
+
+/**
+ * Create a referral code for a user
+ */
+export async function createReferralCode(referrerId: number, referralCode: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  try {
+    const { referrals } = await import("../drizzle/schema.js");
+
+    const result = await db.insert(referrals).values({
+      referrerId,
+      referredUserId: referrerId, // Placeholder, will be updated when referred user signs up
+      referralCode,
+      isActive: 1,
+    });
+
+    return result;
+  } catch (error) {
+    console.error("[Database] Error creating referral code:", error);
+    throw error;
+  }
+}
+
+/**
+ * Get referral code by code string
+ */
+export async function getReferralByCode(referralCode: string) {
+  const db = await getDb();
+  if (!db) return null;
+
+  try {
+    const { referrals } = await import("../drizzle/schema.js");
+    const { eq } = await import("drizzle-orm");
+
+    const referral = await db
+      .select()
+      .from(referrals)
+      .where(eq(referrals.referralCode, referralCode))
+      .limit(1);
+
+    return referral.length > 0 ? referral[0] : null;
+  } catch (error) {
+    console.error("[Database] Error getting referral by code:", error);
+    return null;
+  }
+}
+
+/**
+ * Award referral bonus coins
+ */
+export async function awardReferralBonus(referrerId: number, referredUserId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  try {
+    const { referrals, userProfiles } = await import("../drizzle/schema.js");
+    const { eq } = await import("drizzle-orm");
+
+    // Award coins to both referrer and referred user
+    const referrerProfile = await db
+      .select()
+      .from(userProfiles)
+      .where(eq(userProfiles.userId, referrerId))
+      .limit(1);
+
+    const referredProfile = await db
+      .select()
+      .from(userProfiles)
+      .where(eq(userProfiles.userId, referredUserId))
+      .limit(1);
+
+    if (referrerProfile.length > 0) {
+      await db
+        .update(userProfiles)
+        .set({
+          coins: (referrerProfile[0].coins || 0) + 50, // Referrer gets 50 coins
+        })
+        .where(eq(userProfiles.userId, referrerId));
+    }
+
+    if (referredProfile.length > 0) {
+      await db
+        .update(userProfiles)
+        .set({
+          coins: (referredProfile[0].coins || 0) + 25, // Referred user gets 25 coins
+        })
+        .where(eq(userProfiles.userId, referredUserId));
+    }
+
+    // Update referral record
+    await db
+      .update(referrals)
+      .set({
+        referredUserId,
+        bonusCoinsAwarded: 75, // Total awarded
+        claimedAt: new Date(),
+        bonusAwardedAt: new Date(),
+      })
+      .where(eq(referrals.referrerId, referrerId));
+  } catch (error) {
+    console.error("[Database] Error awarding referral bonus:", error);
+    throw error;
+  }
+}
+
+/**
+ * Get user's referral statistics
+ */
+export async function getUserReferralStats(userId: number) {
+  const db = await getDb();
+  if (!db) return null;
+
+  try {
+    const { referrals } = await import("../drizzle/schema.js");
+    const { eq } = await import("drizzle-orm");
+
+    const userReferrals = await db
+      .select()
+      .from(referrals)
+      .where(eq(referrals.referrerId, userId));
+
+    const successfulReferrals = userReferrals.filter((r) => r.claimedAt !== null);
+    const totalBonusCoins = userReferrals.reduce((sum, r) => sum + (r.bonusCoinsAwarded || 0), 0);
+
+    return {
+      totalReferrals: userReferrals.length,
+      successfulReferrals: successfulReferrals.length,
+      totalBonusCoins,
+      referrals: userReferrals,
+    };
+  } catch (error) {
+    console.error("[Database] Error getting referral stats:", error);
+    return null;
+  }
+}

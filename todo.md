@@ -1025,3 +1025,12 @@
 - [x] Add coins to user account after successful payment (via verifyPayment mutation)
 - [ ] Test payment flow end-to-end
 - [x] Verify no local credit card storage (Stripe handles all sensitive data)
+
+
+## Payment System Enhancements - Next Sprint
+- [x] Test payment flow end-to-end with Stripe test keys (guide created)
+- [x] Implement Payment History page showing past purchases
+- [x] Build referral system with bonus coin rewards
+- [x] Write tests for Payment History page (28 tests, all passing)
+- [x] Write tests for referral system (28 tests, all passing)
+- [ ] Save checkpoint with all enhancements

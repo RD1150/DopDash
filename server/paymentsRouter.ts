@@ -1,4 +1,5 @@
 import { protectedProcedure, router } from "./_core/trpc";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import Stripe from "stripe";
 import { COIN_PACKAGES } from "../shared/coinPackages";
@@ -116,5 +117,63 @@ export const paymentsRouter = router({
       return {
         coins: profile?.coins || 0,
       };
+    }),
+
+  /**
+   * Get user's payment history
+   */
+  getPaymentHistory: protectedProcedure
+    .input(z.object({ limit: z.number().default(20) }))
+    .query(async ({ ctx, input }) => {
+      return await db.getUserPaymentHistory(ctx.user.id, input.limit);
+    }),
+
+  /**
+   * Generate referral code for user
+   */
+  generateReferralCode: protectedProcedure
+    .mutation(async ({ ctx }) => {
+      // Generate unique referral code
+      const code = `REF${ctx.user.id}${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+      
+      await db.createReferralCode(ctx.user.id, code);
+      
+      return { referralCode: code };
+    }),
+
+  /**
+   * Get user's referral statistics
+   */
+  getReferralStats: protectedProcedure
+    .query(async ({ ctx }) => {
+      return await db.getUserReferralStats(ctx.user.id);
+    }),
+
+  /**
+   * Claim referral bonus when new user signs up with code
+   */
+  claimReferralBonus: protectedProcedure
+    .input(z.object({ referralCode: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const referral = await db.getReferralByCode(input.referralCode);
+      
+      if (!referral) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Invalid referral code",
+        });
+      }
+
+      if (referral.claimedAt) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "This referral code has already been claimed",
+        });
+      }
+
+      // Award bonus coins to both users
+      await db.awardReferralBonus(referral.referrerId, ctx.user.id);
+
+      return { success: true, bonusCoins: 25 };
     }),
 });

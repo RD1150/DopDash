@@ -13,6 +13,8 @@ import Streak from "./pages/Streak";
 import Welcome from "./pages/Welcome";
 import Shop from "./pages/Shop";
 import BuyCoins from "./pages/BuyCoins";
+import PaymentHistory from "./pages/PaymentHistory";
+import Referrals from "./pages/Referrals";
 import JournalPage from "./pages/Journal";
 import Stats from "./pages/Stats";
 import Someday from "./pages/Someday";
@@ -43,6 +45,8 @@ function Router() {
       <Route path="/streak" component={Streak} />
       <Route path="/shop" component={Shop} />
       <Route path="/buy-coins" component={BuyCoins} />
+      <Route path="/payment-history" component={PaymentHistory} />
+      <Route path="/referrals" component={Referrals} />
       <Route path="/journal" component={JournalPage} />
       <Route path="/stats" component={Stats} />
       <Route path="/someday" component={Someday} />

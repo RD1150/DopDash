@@ -14,6 +14,7 @@ __export(schema_exports, {
   abTestVariants: () => abTestVariants,
   characterPicks: () => characterPicks,
   coachConversations: () => coachConversations,
+  coinPurchases: () => coinPurchases,
   contestParticipation: () => contestParticipation,
   contests: () => contests,
   dailyAffirmations: () => dailyAffirmations,
@@ -27,6 +28,7 @@ __export(schema_exports, {
   leaderboardEntries: () => leaderboardEntries,
   moodEntries: () => moodEntries,
   nervousSystemStates: () => nervousSystemStates,
+  referrals: () => referrals,
   retentionMetrics: () => retentionMetrics,
   rewards: () => rewards,
   tasks: () => tasks,
@@ -41,7 +43,7 @@ __export(schema_exports, {
   weeklyCharacterPicks: () => weeklyCharacterPicks
 });
 import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, json, decimal } from "drizzle-orm/mysql-core";
-var users, userProfiles, tasks, journalEntries, dailyAffirmations, habits, habitCompletions, moodEntries, userStats, leaderboardEntries, contests, contestParticipation, rewards, userRewards, dailyCheckIns, termsVersions, userTermsAcceptance, emailVerificationCodes, nervousSystemStates, decisionTreeSessions, characterPicks, weeklyCharacterPicks, feedbacks, coachConversations, userTechniqueEffectiveness, abTestVariants, retentionMetrics, techniqueRatings;
+var users, userProfiles, tasks, journalEntries, dailyAffirmations, habits, habitCompletions, moodEntries, userStats, leaderboardEntries, contests, contestParticipation, rewards, userRewards, dailyCheckIns, termsVersions, userTermsAcceptance, emailVerificationCodes, nervousSystemStates, decisionTreeSessions, characterPicks, weeklyCharacterPicks, feedbacks, coachConversations, userTechniqueEffectiveness, abTestVariants, retentionMetrics, techniqueRatings, coinPurchases, referrals;
 var init_schema = __esm({
   "drizzle/schema.ts"() {
     "use strict";
@@ -458,6 +460,48 @@ var init_schema = __esm({
       // Optional user comment
       createdAt: timestamp("createdAt").defaultNow().notNull()
     });
+    coinPurchases = mysqlTable("coinPurchases", {
+      id: int("id").autoincrement().primaryKey(),
+      userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+      // Purchase details
+      packageId: varchar("packageId", { length: 50 }).notNull(),
+      // "starter", "boost", "pro", "elite"
+      coinsAmount: int("coinsAmount").notNull(),
+      // Total coins including bonus
+      priceInCents: int("priceInCents").notNull(),
+      // Price in cents
+      // Stripe tracking
+      stripePaymentIntentId: varchar("stripePaymentIntentId", { length: 255 }).notNull().unique(),
+      stripeSessionId: varchar("stripeSessionId", { length: 255 }),
+      // Payment status
+      status: mysqlEnum("status", ["pending", "completed", "failed", "refunded"]).notNull().default("pending"),
+      // Timestamps
+      createdAt: timestamp("createdAt").defaultNow().notNull(),
+      completedAt: timestamp("completedAt")
+      // When payment was confirmed
+    });
+    referrals = mysqlTable("referrals", {
+      id: int("id").autoincrement().primaryKey(),
+      referrerId: int("referrerId").notNull().references(() => users.id, { onDelete: "cascade" }),
+      referredUserId: int("referredUserId").notNull().references(() => users.id, { onDelete: "cascade" }),
+      // Referral code
+      referralCode: varchar("referralCode", { length: 50 }).notNull().unique(),
+      // Bonus tracking
+      bonusCoinsAwarded: int("bonusCoinsAwarded").notNull().default(0),
+      referrerBonusCoins: int("referrerBonusCoins").notNull().default(50),
+      // Bonus for referrer
+      referredBonusCoins: int("referredBonusCoins").notNull().default(25),
+      // Bonus for referred user
+      // Status
+      isActive: int("isActive").notNull().default(1),
+      // 0 or 1
+      // Timestamps
+      createdAt: timestamp("createdAt").defaultNow().notNull(),
+      claimedAt: timestamp("claimedAt"),
+      // When referred user signed up
+      bonusAwardedAt: timestamp("bonusAwardedAt")
+      // When bonus was given
+    });
   }
 });
 
@@ -483,8 +527,10 @@ var init_env = __esm({
 var db_exports = {};
 __export(db_exports, {
   addCoinsToUser: () => addCoinsToUser,
+  awardReferralBonus: () => awardReferralBonus,
   completeHabit: () => completeHabit,
   createCharacterPick: () => createCharacterPick,
+  createCoinPurchase: () => createCoinPurchase,
   createContest: () => createContest,
   createDailyAffirmation: () => createDailyAffirmation,
   createDailyCheckIn: () => createDailyCheckIn,
@@ -493,6 +539,7 @@ __export(db_exports, {
   createHabit: () => createHabit,
   createJournalEntry: () => createJournalEntry,
   createMoodEntry: () => createMoodEntry,
+  createReferralCode: () => createReferralCode,
   createTask: () => createTask,
   createTermsVersion: () => createTermsVersion,
   createUserProfile: () => createUserProfile,
@@ -516,6 +563,7 @@ __export(db_exports, {
   getLatestTermsVersion: () => getLatestTermsVersion,
   getLatestVerifiedEmail: () => getLatestVerifiedEmail,
   getMoodHistory: () => getMoodHistory,
+  getReferralByCode: () => getReferralByCode,
   getRetentionCohort: () => getRetentionCohort,
   getStatsHistory: () => getStatsHistory,
   getTasksByActivationEnergy: () => getTasksByActivationEnergy,
@@ -532,7 +580,9 @@ __export(db_exports, {
   getUserJournalEntries: () => getUserJournalEntries,
   getUserLatestTermsAcceptance: () => getUserLatestTermsAcceptance,
   getUserLeaderboardRank: () => getUserLeaderboardRank,
+  getUserPaymentHistory: () => getUserPaymentHistory,
   getUserProfile: () => getUserProfile,
+  getUserReferralStats: () => getUserReferralStats,
   getUserRetentionMetrics: () => getUserRetentionMetrics,
   getUserRewards: () => getUserRewards,
   getUserStats: () => getUserStats,
@@ -546,6 +596,7 @@ __export(db_exports, {
   recordUserSession: () => recordUserSession,
   storeCoachConversation: () => storeCoachConversation,
   submitFeedback: () => submitFeedback,
+  updateCoinPurchaseStatus: () => updateCoinPurchaseStatus,
   updateContestProgress: () => updateContestProgress,
   updateHabit: () => updateHabit,
   updateLeaderboardEntry: () => updateLeaderboardEntry,
@@ -1322,6 +1373,138 @@ async function getUserCoins(userId) {
   } catch (error) {
     console.error("[Database] Error getting user coins:", error);
     return 0;
+  }
+}
+async function createCoinPurchase(userId, packageId, coinsAmount, priceInCents, stripePaymentIntentId, stripeSessionId) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  try {
+    const { coinPurchases: coinPurchases2 } = await Promise.resolve().then(() => (init_schema(), schema_exports));
+    const result = await db.insert(coinPurchases2).values({
+      userId,
+      packageId,
+      coinsAmount,
+      priceInCents,
+      stripePaymentIntentId,
+      stripeSessionId,
+      status: "pending"
+    });
+    return result;
+  } catch (error) {
+    console.error("[Database] Error creating coin purchase:", error);
+    throw error;
+  }
+}
+async function updateCoinPurchaseStatus(stripePaymentIntentId, status) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  try {
+    const { coinPurchases: coinPurchases2 } = await Promise.resolve().then(() => (init_schema(), schema_exports));
+    const { eq: eq3 } = await import("drizzle-orm");
+    const completedAt = status === "completed" ? /* @__PURE__ */ new Date() : null;
+    await db.update(coinPurchases2).set({
+      status,
+      completedAt
+    }).where(eq3(coinPurchases2.stripePaymentIntentId, stripePaymentIntentId));
+  } catch (error) {
+    console.error("[Database] Error updating coin purchase status:", error);
+    throw error;
+  }
+}
+async function getUserPaymentHistory(userId, limit = 20) {
+  const db = await getDb();
+  if (!db) return [];
+  try {
+    const { coinPurchases: coinPurchases2 } = await Promise.resolve().then(() => (init_schema(), schema_exports));
+    const { eq: eq3, desc: desc2 } = await import("drizzle-orm");
+    const history = await db.select().from(coinPurchases2).where(eq3(coinPurchases2.userId, userId)).orderBy(desc2(coinPurchases2.createdAt)).limit(limit);
+    return history;
+  } catch (error) {
+    console.error("[Database] Error getting payment history:", error);
+    return [];
+  }
+}
+async function createReferralCode(referrerId, referralCode) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  try {
+    const { referrals: referrals2 } = await Promise.resolve().then(() => (init_schema(), schema_exports));
+    const result = await db.insert(referrals2).values({
+      referrerId,
+      referredUserId: referrerId,
+      // Placeholder, will be updated when referred user signs up
+      referralCode,
+      isActive: 1
+    });
+    return result;
+  } catch (error) {
+    console.error("[Database] Error creating referral code:", error);
+    throw error;
+  }
+}
+async function getReferralByCode(referralCode) {
+  const db = await getDb();
+  if (!db) return null;
+  try {
+    const { referrals: referrals2 } = await Promise.resolve().then(() => (init_schema(), schema_exports));
+    const { eq: eq3 } = await import("drizzle-orm");
+    const referral = await db.select().from(referrals2).where(eq3(referrals2.referralCode, referralCode)).limit(1);
+    return referral.length > 0 ? referral[0] : null;
+  } catch (error) {
+    console.error("[Database] Error getting referral by code:", error);
+    return null;
+  }
+}
+async function awardReferralBonus(referrerId, referredUserId) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  try {
+    const { referrals: referrals2, userProfiles: userProfiles2 } = await Promise.resolve().then(() => (init_schema(), schema_exports));
+    const { eq: eq3 } = await import("drizzle-orm");
+    const referrerProfile = await db.select().from(userProfiles2).where(eq3(userProfiles2.userId, referrerId)).limit(1);
+    const referredProfile = await db.select().from(userProfiles2).where(eq3(userProfiles2.userId, referredUserId)).limit(1);
+    if (referrerProfile.length > 0) {
+      await db.update(userProfiles2).set({
+        coins: (referrerProfile[0].coins || 0) + 50
+        // Referrer gets 50 coins
+      }).where(eq3(userProfiles2.userId, referrerId));
+    }
+    if (referredProfile.length > 0) {
+      await db.update(userProfiles2).set({
+        coins: (referredProfile[0].coins || 0) + 25
+        // Referred user gets 25 coins
+      }).where(eq3(userProfiles2.userId, referredUserId));
+    }
+    await db.update(referrals2).set({
+      referredUserId,
+      bonusCoinsAwarded: 75,
+      // Total awarded
+      claimedAt: /* @__PURE__ */ new Date(),
+      bonusAwardedAt: /* @__PURE__ */ new Date()
+    }).where(eq3(referrals2.referrerId, referrerId));
+  } catch (error) {
+    console.error("[Database] Error awarding referral bonus:", error);
+    throw error;
+  }
+}
+async function getUserReferralStats(userId) {
+  const db = await getDb();
+  if (!db) return null;
+  try {
+    const { referrals: referrals2 } = await Promise.resolve().then(() => (init_schema(), schema_exports));
+    const { eq: eq3 } = await import("drizzle-orm");
+    const userReferrals = await db.select().from(referrals2).where(eq3(referrals2.referrerId, userId));
+    const successfulReferrals = userReferrals.filter((r) => r.claimedAt !== null);
+    const totalBonusCoins = userReferrals.reduce((sum, r) => sum + (r.bonusCoinsAwarded || 0), 0);
+    return {
+      totalReferrals: userReferrals.length,
+      successfulReferrals: successfulReferrals.length,
+      totalBonusCoins,
+      referrals: userReferrals
+    };
+  } catch (error) {
+    console.error("[Database] Error getting referral stats:", error);
+    return null;
   }
 }
 var _db;
@@ -3008,6 +3191,7 @@ var coachRouter = router({
 });
 
 // server/paymentsRouter.ts
+import { TRPCError as TRPCError3 } from "@trpc/server";
 import { z as z7 } from "zod";
 import Stripe from "stripe";
 
@@ -3154,6 +3338,46 @@ var paymentsRouter = router({
     return {
       coins: profile?.coins || 0
     };
+  }),
+  /**
+   * Get user's payment history
+   */
+  getPaymentHistory: protectedProcedure.input(z7.object({ limit: z7.number().default(20) })).query(async ({ ctx, input }) => {
+    return await getUserPaymentHistory(ctx.user.id, input.limit);
+  }),
+  /**
+   * Generate referral code for user
+   */
+  generateReferralCode: protectedProcedure.mutation(async ({ ctx }) => {
+    const code = `REF${ctx.user.id}${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+    await createReferralCode(ctx.user.id, code);
+    return { referralCode: code };
+  }),
+  /**
+   * Get user's referral statistics
+   */
+  getReferralStats: protectedProcedure.query(async ({ ctx }) => {
+    return await getUserReferralStats(ctx.user.id);
+  }),
+  /**
+   * Claim referral bonus when new user signs up with code
+   */
+  claimReferralBonus: protectedProcedure.input(z7.object({ referralCode: z7.string() })).mutation(async ({ ctx, input }) => {
+    const referral = await getReferralByCode(input.referralCode);
+    if (!referral) {
+      throw new TRPCError3({
+        code: "NOT_FOUND",
+        message: "Invalid referral code"
+      });
+    }
+    if (referral.claimedAt) {
+      throw new TRPCError3({
+        code: "BAD_REQUEST",
+        message: "This referral code has already been claimed"
+      });
+    }
+    await awardReferralBonus(referral.referrerId, ctx.user.id);
+    return { success: true, bonusCoins: 25 };
   })
 });
 
