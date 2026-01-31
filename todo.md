@@ -1034,3 +1034,7 @@
 - [x] Write tests for Payment History page (28 tests, all passing)
 - [x] Write tests for referral system (28 tests, all passing)
 - [ ] Save checkpoint with all enhancements
+
+
+## Bug Fixes
+- [x] Fix demo page 404 error - Changed landing page demo buttons to point to /brain-check instead of /dash
