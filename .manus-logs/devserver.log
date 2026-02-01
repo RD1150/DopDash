@@ -411,3 +411,67 @@
 [2026-01-29T07:37:08.789Z] }
 [2026-01-29T07:37:08.790Z] 
 [2026-01-29T07:37:08.790Z] Node.js v22.13.0
+[2026-01-31T07:14:30.177Z] Dev server process group stopped
+[2026-01-31T07:14:30.178Z] ELIFECYCLE  Command failed.
+[2026-01-31T07:14:30.313Z] Dev server exited with code -15
+[2026-01-31T07:14:33.183Z] Starting dev server with command: pnpm run dev
+[2026-01-31T07:14:34.058Z] 
+[2026-01-31T07:14:34.059Z] > dopamine_dasher@1.0.0 dev /home/ubuntu/dopamine_dasher
+[2026-01-31T07:14:34.060Z] > NODE_ENV=development tsx watch server/_core/index.ts
+[2026-01-31T07:14:34.060Z] 
+[2026-01-31T07:14:34.547Z] 
+[2026-01-31T07:14:34.548Z] node:internal/modules/run_main:122
+[2026-01-31T07:14:34.549Z] triggerUncaughtException(
+[2026-01-31T07:14:34.549Z] ^
+[2026-01-31T07:14:34.549Z] Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'stripe' imported from /home/ubuntu/dopamine_dasher/server/routers.ts
+[2026-01-31T07:14:34.550Z] at packageResolve (node:internal/modules/esm/resolve:857:9)
+[2026-01-31T07:14:34.550Z] at moduleResolve (node:internal/modules/esm/resolve:926:18)
+[2026-01-31T07:14:34.550Z] at defaultResolve (node:internal/modules/esm/resolve:1056:11)
+[2026-01-31T07:14:34.550Z] at nextResolve (node:internal/modules/esm/hooks:748:28)
+[2026-01-31T07:14:34.551Z] at resolveBase (file:///home/ubuntu/dopamine_dasher/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1769843674372:2:3744)
+[2026-01-31T07:14:34.551Z] at resolveDirectory (file:///home/ubuntu/dopamine_dasher/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1769843674372:2:4243)
+[2026-01-31T07:14:34.551Z] at resolveTsPaths (file:///home/ubuntu/dopamine_dasher/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1769843674372:2:4984)
+[2026-01-31T07:14:34.552Z] at async resolve (file:///home/ubuntu/dopamine_dasher/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1769843674372:2:5355)
+[2026-01-31T07:14:34.552Z] at async nextResolve (node:internal/modules/esm/hooks:748:22)
+[2026-01-31T07:14:34.552Z] at async Hooks.resolve (node:internal/modules/esm/hooks:240:24) {
+[2026-01-31T07:14:34.552Z] code: 'ERR_MODULE_NOT_FOUND'
+[2026-01-31T07:14:34.553Z] }
+[2026-01-31T07:14:34.553Z] 
+[2026-01-31T07:14:34.553Z] Node.js v22.13.0
+[2026-01-31T07:18:46.332Z] Dev server process group stopped
+[2026-01-31T07:18:46.335Z] ELIFECYCLE  Command failed.
+[2026-01-31T07:18:46.352Z] Dev server exited with code -15
+[2026-01-31T07:18:49.337Z] Starting dev server with command: pnpm run dev
+[2026-01-31T07:18:50.108Z] 
+[2026-01-31T07:18:50.109Z] > dopamine_dasher@1.0.0 dev /home/ubuntu/dopamine_dasher
+[2026-01-31T07:18:50.109Z] > NODE_ENV=development tsx watch server/_core/index.ts
+[2026-01-31T07:18:50.109Z] 
+[2026-01-31T07:18:50.590Z] 
+[2026-01-31T07:18:50.591Z] node:internal/modules/run_main:122
+[2026-01-31T07:18:50.592Z] triggerUncaughtException(
+[2026-01-31T07:18:50.592Z] ^
+[2026-01-31T07:18:50.592Z] Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'stripe' imported from /home/ubuntu/dopamine_dasher/server/routers.ts
+[2026-01-31T07:18:50.592Z] at packageResolve (node:internal/modules/esm/resolve:857:9)
+[2026-01-31T07:18:50.593Z] at moduleResolve (node:internal/modules/esm/resolve:926:18)
+[2026-01-31T07:18:50.593Z] at defaultResolve (node:internal/modules/esm/resolve:1056:11)
+[2026-01-31T07:18:50.593Z] at nextResolve (node:internal/modules/esm/hooks:748:28)
+[2026-01-31T07:18:50.594Z] at resolveBase (file:///home/ubuntu/dopamine_dasher/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1769843930414:2:3744)
+[2026-01-31T07:18:50.594Z] at resolveDirectory (file:///home/ubuntu/dopamine_dasher/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1769843930414:2:4243)
+[2026-01-31T07:18:50.594Z] at resolveTsPaths (file:///home/ubuntu/dopamine_dasher/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1769843930414:2:4984)
+[2026-01-31T07:18:50.595Z] at async resolve (file:///home/ubuntu/dopamine_dasher/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1769843930414:2:5355)
+[2026-01-31T07:18:50.595Z] at async nextResolve (node:internal/modules/esm/hooks:748:22)
+[2026-01-31T07:18:50.595Z] at async Hooks.resolve (node:internal/modules/esm/hooks:240:24) {
+[2026-01-31T07:18:50.596Z] code: 'ERR_MODULE_NOT_FOUND'
+[2026-01-31T07:18:50.596Z] }
+[2026-01-31T07:18:50.596Z] 
+[2026-01-31T07:18:50.597Z] Node.js v22.13.0
+[2026-02-01T22:29:14.797Z] Dev server process group stopped
+[2026-02-01T22:29:14.823Z] ELIFECYCLE  Command failed.
+[2026-02-01T22:29:14.837Z] Dev server exited with code -15
+[2026-02-01T22:29:17.806Z] Starting dev server with command: pnpm run dev
+[2026-02-01T22:29:18.836Z] 
+[2026-02-01T22:29:18.837Z] > dopamine_dasher@1.0.0 dev /home/ubuntu/dopamine_dasher
+[2026-02-01T22:29:18.837Z] > NODE_ENV=development tsx watch server/_core/index.ts
+[2026-02-01T22:29:18.838Z] 
+[2026-02-01T22:29:21.868Z] [OAuth] Initialized with baseURL: https://api.manus.im
+[2026-02-01T22:29:22.222Z] Server running on http://localhost:3000/
