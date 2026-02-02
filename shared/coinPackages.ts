@@ -1,4 +1,63 @@
 /**
+ * Coin and subscription tier definitions for Dopamine Dasher
+ */
+
+/**
+ * Old coin package format for backward compatibility
+ */
+export interface CoinPackage {
+  id: string;
+  name: string;
+  price: number; // in cents
+  priceUSD: string;
+  coins: number;
+  bonus?: number;
+  popular?: boolean;
+}
+
+export const COIN_PACKAGES: CoinPackage[] = [
+  {
+    id: "starter",
+    name: "Starter",
+    price: 99,
+    priceUSD: "$0.99",
+    coins: 100,
+  },
+  {
+    id: "boost",
+    name: "Boost",
+    price: 399,
+    priceUSD: "$3.99",
+    coins: 500,
+    popular: true,
+  },
+  {
+    id: "pro",
+    name: "Pro",
+    price: 699,
+    priceUSD: "$6.99",
+    coins: 1000,
+    bonus: 100,
+  },
+  {
+    id: "elite",
+    name: "Elite",
+    price: 2999,
+    priceUSD: "$29.99",
+    coins: 5000,
+    bonus: 500,
+  },
+];
+
+export function getCoinPackage(id: string): CoinPackage | undefined {
+  return COIN_PACKAGES.find((pkg) => pkg.id === id);
+}
+
+export function getTotalCoins(pkg: CoinPackage): number {
+  return pkg.coins + (pkg.bonus || 0);
+}
+
+/**
  * Subscription tier definitions for Dopamine Dasher
  * Monthly recurring billing with Stripe
  */

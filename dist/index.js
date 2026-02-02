@@ -12,6 +12,7 @@ var __export = (target, all) => {
 var schema_exports = {};
 __export(schema_exports, {
   abTestVariants: () => abTestVariants,
+  autoDashSuggestions: () => autoDashSuggestions,
   characterPicks: () => characterPicks,
   coachConversations: () => coachConversations,
   coinPurchases: () => coinPurchases,
@@ -28,12 +29,15 @@ __export(schema_exports, {
   leaderboardEntries: () => leaderboardEntries,
   moodEntries: () => moodEntries,
   nervousSystemStates: () => nervousSystemStates,
+  premiumPreferences: () => premiumPreferences,
   referrals: () => referrals,
   retentionMetrics: () => retentionMetrics,
   rewards: () => rewards,
+  subscriptions: () => subscriptions,
   tasks: () => tasks,
   techniqueRatings: () => techniqueRatings,
   termsVersions: () => termsVersions,
+  upsellPrompts: () => upsellPrompts,
   userProfiles: () => userProfiles,
   userRewards: () => userRewards,
   userStats: () => userStats,
@@ -43,7 +47,7 @@ __export(schema_exports, {
   weeklyCharacterPicks: () => weeklyCharacterPicks
 });
 import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, json, decimal } from "drizzle-orm/mysql-core";
-var users, userProfiles, tasks, journalEntries, dailyAffirmations, habits, habitCompletions, moodEntries, userStats, leaderboardEntries, contests, contestParticipation, rewards, userRewards, dailyCheckIns, termsVersions, userTermsAcceptance, emailVerificationCodes, nervousSystemStates, decisionTreeSessions, characterPicks, weeklyCharacterPicks, feedbacks, coachConversations, userTechniqueEffectiveness, abTestVariants, retentionMetrics, techniqueRatings, coinPurchases, referrals;
+var users, userProfiles, tasks, journalEntries, dailyAffirmations, habits, habitCompletions, moodEntries, userStats, leaderboardEntries, contests, contestParticipation, rewards, userRewards, dailyCheckIns, termsVersions, userTermsAcceptance, emailVerificationCodes, nervousSystemStates, decisionTreeSessions, characterPicks, weeklyCharacterPicks, feedbacks, coachConversations, userTechniqueEffectiveness, abTestVariants, retentionMetrics, techniqueRatings, coinPurchases, referrals, subscriptions, premiumPreferences, autoDashSuggestions, upsellPrompts;
 var init_schema = __esm({
   "drizzle/schema.ts"() {
     "use strict";
@@ -501,6 +505,85 @@ var init_schema = __esm({
       // When referred user signed up
       bonusAwardedAt: timestamp("bonusAwardedAt")
       // When bonus was given
+    });
+    subscriptions = mysqlTable("subscriptions", {
+      id: int("id").autoincrement().primaryKey(),
+      userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+      // Subscription details
+      tier: mysqlEnum("tier", ["free", "premium"]).notNull().default("free"),
+      stripeSubscriptionId: varchar("stripeSubscriptionId", { length: 255 }),
+      // Billing
+      status: mysqlEnum("status", ["active", "paused", "canceled"]).notNull().default("active"),
+      currentPeriodStart: timestamp("currentPeriodStart"),
+      currentPeriodEnd: timestamp("currentPeriodEnd"),
+      canceledAt: timestamp("canceledAt"),
+      // Premium features
+      autoDashEnabled: int("autoDashEnabled").notNull().default(0),
+      lowEnergyModeEnabled: int("lowEnergyModeEnabled").notNull().default(0),
+      streakForgivenessEnabled: int("streakForgivenessEnabled").notNull().default(0),
+      rewardCustomizationEnabled: int("rewardCustomizationEnabled").notNull().default(0),
+      gentleInsightsEnabled: int("gentleInsightsEnabled").notNull().default(0),
+      createdAt: timestamp("createdAt").defaultNow().notNull(),
+      updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull()
+    });
+    premiumPreferences = mysqlTable("premiumPreferences", {
+      id: int("id").autoincrement().primaryKey(),
+      userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+      // Low-Energy Mode settings
+      lowEnergyTaskLength: int("lowEnergyTaskLength").notNull().default(5),
+      // minutes
+      lowEnergyLanguageTone: mysqlEnum("lowEnergyLanguageTone", ["gentle", "supportive", "celebratory"]).notNull().default("gentle"),
+      // Reward customization
+      affirmationTone: mysqlEnum("affirmationTone", ["gentle", "enthusiastic", "playful"]).notNull().default("gentle"),
+      feedbackIntensity: mysqlEnum("feedbackIntensity", ["minimal", "moderate", "full"]).notNull().default("moderate"),
+      soundEnabled: int("soundEnabled").notNull().default(1),
+      // Streak Forgiveness
+      streakForgivenessUsesRemaining: int("streakForgivenessUsesRemaining").notNull().default(3),
+      // 3 per month
+      lastStreakForgiveness: timestamp("lastStreakForgiveness"),
+      // Gentle Insights preferences
+      showProductivityMetrics: int("showProductivityMetrics").notNull().default(0),
+      // 0 = off, 1 = on
+      showMoodPatterns: int("showMoodPatterns").notNull().default(1),
+      showEnergyPatterns: int("showEnergyPatterns").notNull().default(1),
+      createdAt: timestamp("createdAt").defaultNow().notNull(),
+      updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull()
+    });
+    autoDashSuggestions = mysqlTable("autoDashSuggestions", {
+      id: int("id").autoincrement().primaryKey(),
+      userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+      // Suggestion details
+      suggestedTaskId: int("suggestedTaskId").references(() => tasks.id, { onDelete: "set null" }),
+      suggestedTaskTitle: text("suggestedTaskTitle"),
+      suggestedTaskDescription: text("suggestedTaskDescription"),
+      // Context
+      energyLevel: mysqlEnum("energyLevel", ["low", "medium", "high"]),
+      moodLevel: int("moodLevel"),
+      // 1-5
+      timeAvailable: varchar("timeAvailable", { length: 20 }),
+      // "2min", "5min", "15min"
+      // Interaction
+      accepted: int("accepted").notNull().default(0),
+      rejected: int("rejected").notNull().default(0),
+      completed: int("completed").notNull().default(0),
+      createdAt: timestamp("createdAt").defaultNow().notNull(),
+      expiresAt: timestamp("expiresAt")
+      // Suggestion expires after 1 hour
+    });
+    upsellPrompts = mysqlTable("upsellPrompts", {
+      id: int("id").autoincrement().primaryKey(),
+      userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+      // Trigger context
+      triggerType: mysqlEnum("triggerType", ["decision_fatigue", "low_energy", "streak_broken", "no_progress", "stuck_task"]).notNull(),
+      triggerDescription: text("triggerDescription"),
+      // Prompt interaction
+      shown: int("shown").notNull().default(0),
+      clicked: int("clicked").notNull().default(0),
+      dismissed: int("dismissed").notNull().default(0),
+      // Feature promoted
+      featurePromoted: mysqlEnum("featurePromoted", ["auto_dash", "low_energy_mode", "streak_forgiveness", "reward_customization", "gentle_insights"]).notNull(),
+      createdAt: timestamp("createdAt").defaultNow().notNull(),
+      updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull()
     });
   }
 });

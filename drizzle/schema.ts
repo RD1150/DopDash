@@ -706,3 +706,122 @@ export const referrals = mysqlTable("referrals", {
 
 export type Referral = typeof referrals.$inferSelect;
 export type InsertReferral = typeof referrals.$inferInsert;
+
+
+/**
+ * User subscriptions - tracks active subscriptions
+ */
+export const subscriptions = mysqlTable("subscriptions", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  
+  // Subscription details
+  tier: mysqlEnum("tier", ["free", "premium"]).notNull().default("free"),
+  stripeSubscriptionId: varchar("stripeSubscriptionId", { length: 255 }),
+  
+  // Billing
+  status: mysqlEnum("status", ["active", "paused", "canceled"]).notNull().default("active"),
+  currentPeriodStart: timestamp("currentPeriodStart"),
+  currentPeriodEnd: timestamp("currentPeriodEnd"),
+  canceledAt: timestamp("canceledAt"),
+  
+  // Premium features
+  autoDashEnabled: int("autoDashEnabled").notNull().default(0),
+  lowEnergyModeEnabled: int("lowEnergyModeEnabled").notNull().default(0),
+  streakForgivenessEnabled: int("streakForgivenessEnabled").notNull().default(0),
+  rewardCustomizationEnabled: int("rewardCustomizationEnabled").notNull().default(0),
+  gentleInsightsEnabled: int("gentleInsightsEnabled").notNull().default(0),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Subscription = typeof subscriptions.$inferSelect;
+export type InsertSubscription = typeof subscriptions.$inferInsert;
+
+/**
+ * Premium feature preferences - user customization for premium features
+ */
+export const premiumPreferences = mysqlTable("premiumPreferences", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  
+  // Low-Energy Mode settings
+  lowEnergyTaskLength: int("lowEnergyTaskLength").notNull().default(5), // minutes
+  lowEnergyLanguageTone: mysqlEnum("lowEnergyLanguageTone", ["gentle", "supportive", "celebratory"]).notNull().default("gentle"),
+  
+  // Reward customization
+  affirmationTone: mysqlEnum("affirmationTone", ["gentle", "enthusiastic", "playful"]).notNull().default("gentle"),
+  feedbackIntensity: mysqlEnum("feedbackIntensity", ["minimal", "moderate", "full"]).notNull().default("moderate"),
+  soundEnabled: int("soundEnabled").notNull().default(1),
+  
+  // Streak Forgiveness
+  streakForgivenessUsesRemaining: int("streakForgivenessUsesRemaining").notNull().default(3), // 3 per month
+  lastStreakForgiveness: timestamp("lastStreakForgiveness"),
+  
+  // Gentle Insights preferences
+  showProductivityMetrics: int("showProductivityMetrics").notNull().default(0), // 0 = off, 1 = on
+  showMoodPatterns: int("showMoodPatterns").notNull().default(1),
+  showEnergyPatterns: int("showEnergyPatterns").notNull().default(1),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type PremiumPreferences = typeof premiumPreferences.$inferSelect;
+export type InsertPremiumPreferences = typeof premiumPreferences.$inferInsert;
+
+/**
+ * Auto-Dash suggestions - AI-generated task suggestions for premium users
+ */
+export const autoDashSuggestions = mysqlTable("autoDashSuggestions", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  
+  // Suggestion details
+  suggestedTaskId: int("suggestedTaskId").references(() => tasks.id, { onDelete: "set null" }),
+  suggestedTaskTitle: text("suggestedTaskTitle"),
+  suggestedTaskDescription: text("suggestedTaskDescription"),
+  
+  // Context
+  energyLevel: mysqlEnum("energyLevel", ["low", "medium", "high"]),
+  moodLevel: int("moodLevel"), // 1-5
+  timeAvailable: varchar("timeAvailable", { length: 20 }), // "2min", "5min", "15min"
+  
+  // Interaction
+  accepted: int("accepted").notNull().default(0),
+  rejected: int("rejected").notNull().default(0),
+  completed: int("completed").notNull().default(0),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  expiresAt: timestamp("expiresAt"), // Suggestion expires after 1 hour
+});
+
+export type AutoDashSuggestion = typeof autoDashSuggestions.$inferSelect;
+export type InsertAutoDashSuggestion = typeof autoDashSuggestions.$inferInsert;
+
+/**
+ * Contextual upsell prompts - tracks when/where to show premium upsells
+ */
+export const upsellPrompts = mysqlTable("upsellPrompts", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  
+  // Trigger context
+  triggerType: mysqlEnum("triggerType", ["decision_fatigue", "low_energy", "streak_broken", "no_progress", "stuck_task"]).notNull(),
+  triggerDescription: text("triggerDescription"),
+  
+  // Prompt interaction
+  shown: int("shown").notNull().default(0),
+  clicked: int("clicked").notNull().default(0),
+  dismissed: int("dismissed").notNull().default(0),
+  
+  // Feature promoted
+  featurePromoted: mysqlEnum("featurePromoted", ["auto_dash", "low_energy_mode", "streak_forgiveness", "reward_customization", "gentle_insights"]).notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type UpsellPrompt = typeof upsellPrompts.$inferSelect;
+export type InsertUpsellPrompt = typeof upsellPrompts.$inferInsert;

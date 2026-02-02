@@ -542,3 +542,20 @@
 [2026-02-02T05:36:26.571Z] 
 [2026-02-02T05:36:28.452Z] [OAuth] Initialized with baseURL: https://api.manus.im
 [2026-02-02T05:36:28.763Z] Server running on http://localhost:3000/
+[2026-02-02T06:21:33.956Z] 1:21:33 AM [tsx] change in ./drizzle/schema.ts Restarting...
+[2026-02-02T06:21:36.352Z] c[OAuth] Initialized with baseURL: https://api.manus.im
+[2026-02-02T06:21:36.755Z] Server running on http://localhost:3000/
+[2026-02-02T06:22:25.572Z] 1:22:25 AM [vite] (client) hmr update /src/pages/BuyCoins.tsx
+[2026-02-02T06:22:25.647Z] 1:22:25 AM [tsx] change in ./shared/coinPackages.ts Restarting...
+[2026-02-02T06:22:27.397Z] c[OAuth] Initialized with baseURL: https://api.manus.im
+[2026-02-02T06:22:27.695Z] Server running on http://localhost:3000/
+[2026-02-02T06:22:29.624Z] Dev server process group stopped
+[2026-02-02T06:22:29.628Z] ELIFECYCLE  Command failed.
+[2026-02-02T06:22:29.707Z] Dev server exited with code -15
+[2026-02-02T06:22:32.653Z] Starting dev server with command: pnpm run dev
+[2026-02-02T06:22:33.501Z] 
+[2026-02-02T06:22:33.502Z] > dopamine_dasher@1.0.0 dev /home/ubuntu/dopamine_dasher
+[2026-02-02T06:22:33.503Z] > NODE_ENV=development tsx watch server/_core/index.ts
+[2026-02-02T06:22:33.503Z] 
+[2026-02-02T06:22:35.487Z] [OAuth] Initialized with baseURL: https://api.manus.im
+[2026-02-02T06:22:35.766Z] Server running on http://localhost:3000/

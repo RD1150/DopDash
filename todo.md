@@ -1038,3 +1038,16 @@
 
 ## Bug Fixes
 - [x] Fix demo page 404 error - Changed landing page demo buttons to point to /brain-check instead of /dash
+
+
+## Freemium Model Implementation (ChatGPT Spec)
+- [x] Update database schema for subscription tiers and premium features
+- [x] Implement subscription tier system ($5.99/mo Premium)
+- [ ] Build Auto-Dash feature (task suggestions to remove decision paralysis)
+- [ ] Build Low-Energy Mode (softer language, shorter tasks, no streak pressure)
+- [ ] Build Streak Forgiveness (pause streaks instead of breaking them)
+- [ ] Build Reward Customization (affirmation tone, feedback intensity)
+- [ ] Build Gentle Insights (self-understanding, not productivity metrics)
+- [ ] Implement contextual upsell prompts (only at moments of friction)
+- [ ] Write comprehensive tests for freemium features
+- [ ] Save checkpoint with complete freemium model
