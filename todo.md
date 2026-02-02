@@ -1043,7 +1043,7 @@
 ## Freemium Model Implementation (ChatGPT Spec)
 - [x] Update database schema for subscription tiers and premium features
 - [x] Implement subscription tier system ($5.99/mo Premium)
-- [ ] Build Auto-Dash feature (task suggestions to remove decision paralysis)
+- [x] Build Auto-Dash feature (task suggestions to remove decision paralysis) - Backend + API + Component
 - [ ] Build Low-Energy Mode (softer language, shorter tasks, no streak pressure)
 - [ ] Build Streak Forgiveness (pause streaks instead of breaking them)
 - [ ] Build Reward Customization (affirmation tone, feedback intensity)

@@ -8,7 +8,9 @@
 export interface CoinPackage {
   id: string;
   name: string;
-  price: number; // in cents
+  label?: string;
+  description?: string;
+  price: number;
   priceUSD: string;
   coins: number;
   bonus?: number;
@@ -19,6 +21,8 @@ export const COIN_PACKAGES: CoinPackage[] = [
   {
     id: "starter",
     name: "Starter",
+    label: "Starter Pack",
+    description: "Get started with 100 coins",
     price: 99,
     priceUSD: "$0.99",
     coins: 100,
@@ -26,6 +30,8 @@ export const COIN_PACKAGES: CoinPackage[] = [
   {
     id: "boost",
     name: "Boost",
+    label: "Boost Pack",
+    description: "Popular choice - 500 coins",
     price: 399,
     priceUSD: "$3.99",
     coins: 500,
@@ -34,6 +40,8 @@ export const COIN_PACKAGES: CoinPackage[] = [
   {
     id: "pro",
     name: "Pro",
+    label: "Pro Pack",
+    description: "1,000 coins + 100 bonus",
     price: 699,
     priceUSD: "$6.99",
     coins: 1000,
@@ -42,6 +50,8 @@ export const COIN_PACKAGES: CoinPackage[] = [
   {
     id: "elite",
     name: "Elite",
+    label: "Elite Pack",
+    description: "5,000 coins + 500 bonus",
     price: 2999,
     priceUSD: "$29.99",
     coins: 5000,
