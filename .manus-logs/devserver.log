@@ -596,3 +596,74 @@
 [2026-02-02T07:16:09.938Z] 
 [2026-02-02T07:16:12.000Z] [OAuth] Initialized with baseURL: https://api.manus.im
 [2026-02-02T07:16:12.327Z] Server running on http://localhost:3000/
+[2026-02-02T07:35:48.681Z] 2:35:48 AM [tsx] change in ./server/routers.ts Restarting...
+[2026-02-02T07:35:50.561Z] c/home/ubuntu/dopamine_dasher/server/autoDash.ts:7
+[2026-02-02T07:35:50.562Z] import { db } from "./db";
+[2026-02-02T07:35:50.562Z] ^
+[2026-02-02T07:35:50.563Z] 
+[2026-02-02T07:35:50.563Z] SyntaxError: The requested module './db' does not provide an export named 'db'
+[2026-02-02T07:35:50.563Z] at ModuleJob._instantiate (node:internal/modules/esm/module_job:180:21)
+[2026-02-02T07:35:50.564Z] at async ModuleJob.run (node:internal/modules/esm/module_job:263:5)
+[2026-02-02T07:35:50.564Z] at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:547:26)
+[2026-02-02T07:35:50.564Z] at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)
+[2026-02-02T07:35:50.565Z] 
+[2026-02-02T07:35:50.565Z] Node.js v22.13.0
+[2026-02-02T07:35:54.727Z] Dev server process group stopped
+[2026-02-02T07:35:54.731Z] ELIFECYCLE  Command failed.
+[2026-02-02T07:35:54.748Z] Dev server exited with code -15
+[2026-02-02T07:35:57.758Z] Starting dev server with command: pnpm run dev
+[2026-02-02T07:35:58.583Z] 
+[2026-02-02T07:35:58.584Z] > dopamine_dasher@1.0.0 dev /home/ubuntu/dopamine_dasher
+[2026-02-02T07:35:58.584Z] > NODE_ENV=development tsx watch server/_core/index.ts
+[2026-02-02T07:35:58.584Z] 
+[2026-02-02T07:36:00.321Z] /home/ubuntu/dopamine_dasher/server/autoDash.ts:7
+[2026-02-02T07:36:00.322Z] import { db } from "./db";
+[2026-02-02T07:36:00.323Z] ^
+[2026-02-02T07:36:00.323Z] 
+[2026-02-02T07:36:00.323Z] SyntaxError: The requested module './db' does not provide an export named 'db'
+[2026-02-02T07:36:00.324Z] at ModuleJob._instantiate (node:internal/modules/esm/module_job:180:21)
+[2026-02-02T07:36:00.324Z] at async ModuleJob.run (node:internal/modules/esm/module_job:263:5)
+[2026-02-02T07:36:00.324Z] at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:547:26)
+[2026-02-02T07:36:00.325Z] at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)
+[2026-02-02T07:36:00.325Z] 
+[2026-02-02T07:36:00.325Z] Node.js v22.13.0
+[2026-02-02T07:37:22.203Z] 2:37:22 AM [tsx] unlink in ./server/autoDashRouter.ts Rerunning...
+[2026-02-02T07:37:22.478Z] c
+[2026-02-02T07:37:22.479Z] node:internal/modules/run_main:122
+[2026-02-02T07:37:22.479Z] triggerUncaughtException(
+[2026-02-02T07:37:22.479Z] ^
+[2026-02-02T07:37:22.480Z] Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/home/ubuntu/dopamine_dasher/server/autoDashRouter' imported from /home/ubuntu/dopamine_dasher/server/routers.ts
+[2026-02-02T07:37:22.480Z] at finalizeResolution (node:internal/modules/esm/resolve:275:11)
+[2026-02-02T07:37:22.480Z] at moduleResolve (node:internal/modules/esm/resolve:932:10)
+[2026-02-02T07:37:22.481Z] at defaultResolve (node:internal/modules/esm/resolve:1056:11)
+[2026-02-02T07:37:22.481Z] at nextResolve (node:internal/modules/esm/hooks:748:28)
+[2026-02-02T07:37:22.481Z] at resolveBase (file:///home/ubuntu/dopamine_dasher/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1770017842309:2:3744)
+[2026-02-02T07:37:22.482Z] at async resolveDirectory (file:///home/ubuntu/dopamine_dasher/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1770017842309:2:4237)
+[2026-02-02T07:37:22.482Z] at async resolve (file:///home/ubuntu/dopamine_dasher/node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/esm/index.mjs?1770017842309:2:5355)
+[2026-02-02T07:37:22.482Z] at async nextResolve (node:internal/modules/esm/hooks:748:22)
+[2026-02-02T07:37:22.482Z] at async Hooks.resolve (node:internal/modules/esm/hooks:240:24)
+[2026-02-02T07:37:22.483Z] at async handleMessage (node:internal/modules/esm/worker:199:18) {
+[2026-02-02T07:37:22.483Z] code: 'ERR_MODULE_NOT_FOUND',
+[2026-02-02T07:37:22.483Z] url: 'file:///home/ubuntu/dopamine_dasher/server/autoDashRouter'
+[2026-02-02T07:37:22.483Z] }
+[2026-02-02T07:37:22.484Z] 
+[2026-02-02T07:37:22.484Z] Node.js v22.13.0
+[2026-02-02T07:37:26.343Z] 2:37:26 AM [tsx] change in ./server/routers.ts Rerunning...
+[2026-02-02T07:37:28.301Z] c[OAuth] Initialized with baseURL: https://api.manus.im
+[2026-02-02T07:37:28.621Z] Server running on http://localhost:3000/
+[2026-02-02T07:37:29.644Z] Dev server process group stopped
+[2026-02-02T07:37:29.648Z] ELIFECYCLE  Command failed.
+[2026-02-02T07:37:30.593Z] 2:37:30 AM [vite] (client) Pre-transform error: The service was stopped: write EPIPE
+[2026-02-02T07:37:30.594Z] Plugin: vite:esbuild
+[2026-02-02T07:37:30.595Z] File: /home/ubuntu/dopamine_dasher/client/src/lib/store.ts
+[2026-02-02T07:37:30.606Z] 2:37:30 AM [vite] (client) Pre-transform error: The service is no longer running: write EPIPE
+[2026-02-02T07:37:30.607Z] Plugin: vite:esbuild
+[2026-02-02T07:37:30.607Z] File: /home/ubuntu/dopamine_dasher/client/src/lib/serviceWorker.ts
+[2026-02-02T07:37:30.959Z] Dev server exited with code -15
+[2026-02-02T07:37:32.649Z] Starting dev server with command: pnpm run dev
+[2026-02-02T07:37:33.455Z] 
+[2026-02-02T07:37:33.455Z] > dopamine_dasher@1.0.0 dev /home/ubuntu/dopamine_dasher
+[2026-02-02T07:37:33.456Z] > NODE_ENV=development tsx watch server/_core/index.ts
+[2026-02-02T07:37:33.456Z] 
+[2026-02-02T07:37:35.574Z] [OAuth] Initialized with baseURL: https://api.manus.im
+[2026-02-02T07:37:35.902Z] Server running on http://localhost:3000/
