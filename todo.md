@@ -1051,3 +1051,16 @@
 - [ ] Implement contextual upsell prompts (only at moments of friction)
 - [ ] Write comprehensive tests for freemium features
 - [ ] Save checkpoint with complete freemium model
+
+
+## Emotional Dopamine & Redirection Pass
+- [x] Update database schema for emotional state tracking
+- [x] Implement completion feedback with affirmations (rotate: "That counted", "You didn't have to do more", "This is how momentum starts", "Even small steps change things", "You showed up")
+- [x] Add micro-interactions for completion (fade, glow, checkmark, gentle lift - all < 1 second, calm not celebratory)
+- [x] Build hesitation detection (cancel, pause too long, exit mid-task, repeated opens without completion)
+- [x] Implement gentle redirection copy (rotate: "Want to make this smaller?", "It's okay to start lighter", "One step is enough", "Stopping doesn't erase effort")
+- [x] Implement state-aware language (small task, quick completion, abandoned, returning after inactivity)
+- [x] Add "You're not behind" anchor phrase at re-entry moments (after missed days, after inactivity, low-energy context)
+- [x] Ensure no new sounds added (keep visual dopamine only: fade, glow, motion)
+- [x] Write tests for emotional UX system (31 tests, all passing)
+- [ ] Save checkpoint with emotional pass complete
