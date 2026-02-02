@@ -76,6 +76,7 @@ function App() {
   const theme = useStore((state) => state.theme);
   const showOnboardingChecklist = useStore((state) => state.showOnboardingChecklist);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const { isAuthenticated } = useAuth();
   
   // Track retention silently
   useRetentionTracking();
