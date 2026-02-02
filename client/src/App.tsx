@@ -33,6 +33,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import BottomNav from "@/components/BottomNav";
 import QuickActionButton from "@/components/QuickActionButton";
 import { useRetentionTracking } from "@/hooks/useRetentionTracking";
+import { useAuth } from "@/_core/hooks/useAuth";
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
@@ -84,12 +85,12 @@ function App() {
     registerServiceWorker();
   }, []);
 
-  // Show onboarding on first visit
+  // Show onboarding on first visit (only for authenticated users)
   useEffect(() => {
-    if (showOnboardingChecklist) {
+    if (showOnboardingChecklist && isAuthenticated) {
       setShowOnboarding(true);
     }
-  }, [showOnboardingChecklist]);
+  }, [showOnboardingChecklist, isAuthenticated]);
 
   useEffect(() => {
     // Remove all theme classes

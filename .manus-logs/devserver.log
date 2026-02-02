@@ -475,3 +475,14 @@
 [2026-02-01T22:29:18.838Z] 
 [2026-02-01T22:29:21.868Z] [OAuth] Initialized with baseURL: https://api.manus.im
 [2026-02-01T22:29:22.222Z] Server running on http://localhost:3000/
+[2026-02-02T01:14:52.954Z] 8:14:52 PM [vite] (client) hmr update /src/App.tsx, /src/index.css
+[2026-02-02T01:14:56.584Z] Dev server process group stopped
+[2026-02-02T01:14:56.685Z] ELIFECYCLE  Command failed.
+[2026-02-02T01:14:56.913Z] Dev server exited with code -15
+[2026-02-02T01:14:59.591Z] Starting dev server with command: pnpm run dev
+[2026-02-02T01:15:00.397Z] 
+[2026-02-02T01:15:00.398Z] > dopamine_dasher@1.0.0 dev /home/ubuntu/dopamine_dasher
+[2026-02-02T01:15:00.399Z] > NODE_ENV=development tsx watch server/_core/index.ts
+[2026-02-02T01:15:00.399Z] 
+[2026-02-02T01:15:02.826Z] [OAuth] Initialized with baseURL: https://api.manus.im
+[2026-02-02T01:15:03.172Z] Server running on http://localhost:3000/
