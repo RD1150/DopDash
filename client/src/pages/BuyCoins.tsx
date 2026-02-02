@@ -1,216 +1,189 @@
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { useStore } from '@/lib/store';
-import { ChevronLeft, Zap, Sparkles, Crown, Gem } from 'lucide-react';
-import { useLocation } from 'wouter';
-import { motion } from 'framer-motion';
-import { useState } from 'react';
-import { COIN_PACKAGES, getTotalCoins } from '@shared/coinPackages';
-import { trpc } from '@/lib/trpc';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { trpc } from "@/lib/trpc";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { getLoginUrl } from "@/const";
+import { SUBSCRIPTION_TIERS, calculateAnnualSavings } from "@shared/coinPackages";
+import { toast } from "sonner";
+import { ChevronLeft } from "lucide-react";
+import { useLocation } from "wouter";
 
 export default function BuyCoins() {
+  const { isAuthenticated } = useAuth();
   const [, setLocation] = useLocation();
-  const coins = useStore((state) => state.coins);
-  const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [billingPeriod, setBillingPeriod] = useState<"monthly" | "annual">("monthly");
+  const [selectedTier, setSelectedTier] = useState<string | null>(null);
 
-  // Create checkout session mutation
-  const createCheckout = trpc.payments.createCheckoutSession.useMutation({
-    onSuccess: (data) => {
-      if (data.url) {
-        // Redirect to Stripe Checkout
-        window.location.href = data.url;
-      }
-    },
-    onError: (err) => {
-      setError(err.message || 'Failed to create checkout session');
-      setIsLoading(false);
-    },
-  });
+  const createCheckoutMutation = trpc.payments.createCheckoutSession.useMutation();
 
-  const handleBuyCoins = async (packageId: string) => {
-    setSelectedPackage(packageId);
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      await createCheckout.mutateAsync({ packageId });
-    } catch (err) {
-      setError('Failed to process payment. Please try again.');
-      setIsLoading(false);
+  const handleSubscribe = async (tierId: string) => {
+    if (!isAuthenticated) {
+      window.location.href = getLoginUrl();
+      return;
     }
-  };
 
-  const getPackageIcon = (packageId: string) => {
-    switch (packageId) {
-      case 'starter':
-        return <Zap className="w-8 h-8" />;
-      case 'boost':
-        return <Sparkles className="w-8 h-8" />;
-      case 'pro':
-        return <Crown className="w-8 h-8" />;
-      case 'elite':
-        return <Gem className="w-8 h-8" />;
-      default:
-        return <Zap className="w-8 h-8" />;
+    setSelectedTier(tierId);
+    try {
+      const result = await createCheckoutMutation.mutateAsync({
+        tierId,
+        billingPeriod,
+      });
+
+      if (result.checkoutUrl) {
+        window.open(result.checkoutUrl, "_blank");
+        toast.success("Opening checkout in a new tab...");
+      }
+    } catch (error) {
+      toast.error("Failed to create checkout session");
+      console.error(error);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-secondary pb-24">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/5">
       {/* Header */}
       <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-sm border-b">
-        <div className="max-w-2xl mx-auto px-4 py-4 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <button
-            onClick={() => setLocation('/shop')}
+            onClick={() => setLocation("/")}
             className="p-2 hover:bg-secondary rounded-lg transition-colors"
           >
             <ChevronLeft className="w-6 h-6" />
           </button>
-          <h1 className="text-xl font-bold">Buy Coins</h1>
-          <div className="text-sm font-semibold text-primary">
-            {coins} coins
-          </div>
+          <h1 className="text-xl font-bold">Subscribe to Momentum</h1>
+          <div className="w-10" />
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="max-w-2xl mx-auto px-4 py-8">
-        {/* Info Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8 text-center"
-        >
-          <h2 className="text-2xl font-bold mb-2">Get More Coins</h2>
-          <p className="text-muted-foreground">
-            Unlock premium items and rewards for Dashie
+      <div className="max-w-6xl mx-auto px-4 py-12">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4">Unlock Your Momentum</h2>
+          <p className="text-lg text-muted-foreground mb-8">
+            Choose a subscription that fits your productivity goals
           </p>
-        </motion.div>
 
-        {/* Error Message */}
-        {error && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-6 p-4 bg-destructive/10 border border-destructive/20 rounded-lg text-destructive text-sm"
-          >
-            {error}
-          </motion.div>
-        )}
+          {/* Billing Toggle */}
+          <div className="flex justify-center gap-4 mb-12">
+            <Button
+              variant={billingPeriod === "monthly" ? "default" : "outline"}
+              onClick={() => setBillingPeriod("monthly")}
+              className="px-6"
+            >
+              Monthly
+            </Button>
+            <Button
+              variant={billingPeriod === "annual" ? "default" : "outline"}
+              onClick={() => setBillingPeriod("annual")}
+              className="px-6"
+            >
+              Annual
+              <Badge className="ml-2 bg-green-500">Save 17%</Badge>
+            </Button>
+          </div>
+        </div>
 
-        {/* Coin Packages Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-          {COIN_PACKAGES.map((pkg, index) => {
-            const totalCoins = getTotalCoins(pkg);
-            const isPopular = pkg.popular;
-            const isSelected = selectedPackage === pkg.id;
+        {/* Pricing Cards */}
+        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-16">
+          {SUBSCRIPTION_TIERS.map((tier) => {
+            const price = billingPeriod === "monthly" ? tier.monthlyPrice : tier.annualPrice;
+            const priceDisplay = billingPeriod === "monthly" ? tier.monthlyPriceUSD : tier.annualPriceUSD;
+            const period = billingPeriod === "monthly" ? "/month" : "/year";
 
             return (
-              <motion.div
-                key={pkg.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
+              <Card
+                key={tier.id}
+                className={`relative p-8 transition-all ${
+                  tier.popular
+                    ? "ring-2 ring-accent scale-105 shadow-lg"
+                    : "hover:shadow-lg"
+                }`}
               >
-                <Card
-                  className={`relative overflow-hidden cursor-pointer transition-all ${
-                    isPopular ? 'ring-2 ring-primary md:col-span-2' : ''
-                  } ${isSelected ? 'ring-2 ring-accent' : ''}`}
-                  onClick={() => setSelectedPackage(pkg.id)}
-                >
-                  {/* Popular Badge */}
-                  {isPopular && (
-                    <div className="absolute top-0 right-0 bg-primary text-primary-foreground px-3 py-1 text-xs font-semibold rounded-bl-lg">
-                      Most Popular
-                    </div>
+                {tier.popular && (
+                  <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-accent">
+                    Most Popular
+                  </Badge>
+                )}
+
+                {/* Tier Name */}
+                <h3 className="text-2xl font-bold mb-2">{tier.name}</h3>
+
+                {/* Price */}
+                <div className="mb-6">
+                  <div className="text-4xl font-bold mb-1">
+                    {priceDisplay}
+                    <span className="text-lg text-muted-foreground font-normal">{period}</span>
+                  </div>
+                  {billingPeriod === "annual" && (
+                    <p className="text-sm text-green-600 font-medium">
+                      {calculateAnnualSavings(tier)}
+                    </p>
                   )}
+                </div>
 
-                  <CardHeader className="pb-3">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <CardTitle className="text-lg">{pkg.label}</CardTitle>
-                        <CardDescription>{pkg.description}</CardDescription>
-                      </div>
-                      <div className="text-primary">
-                        {getPackageIcon(pkg.id)}
-                      </div>
-                    </div>
-                  </CardHeader>
+                {/* Coins Info */}
+                <div className="bg-accent/10 rounded-lg p-4 mb-6">
+                  <p className="text-sm text-muted-foreground mb-1">Monthly Coins</p>
+                  <p className="text-2xl font-bold">{tier.monthlyCoins.toLocaleString()}</p>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    + {tier.dailyBonus} bonus coins daily
+                  </p>
+                </div>
 
-                  <CardContent className="space-y-4">
-                    {/* Coin Display */}
-                    <div className="bg-secondary/50 rounded-lg p-4">
-                      <div className="text-sm text-muted-foreground mb-1">
-                        Total Coins
-                      </div>
-                      <div className="text-3xl font-bold text-primary">
-                        {totalCoins.toLocaleString()}
-                      </div>
-                      {pkg.bonus && (
-                        <div className="text-xs text-green-600 dark:text-green-400 mt-2">
-                          +{pkg.bonus} bonus coins ({Math.round((pkg.bonus / pkg.coins) * 100)}% extra)
-                        </div>
-                      )}
-                    </div>
+                {/* Features */}
+                <ul className="space-y-3 mb-8">
+                  {tier.features.map((feature, idx) => (
+                    <li key={idx} className="flex items-start gap-3">
+                      <span className="text-accent mt-1">✓</span>
+                      <span className="text-sm">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
 
-                    {/* Price and Button */}
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Price</span>
-                        <span className="text-2xl font-bold">{pkg.priceUSD}</span>
-                      </div>
-
-                      <Button
-                        onClick={() => handleBuyCoins(pkg.id)}
-                        disabled={isLoading && isSelected}
-                        className="w-full"
-                        variant={isPopular ? 'default' : 'outline'}
-                      >
-                        {isLoading && isSelected ? (
-                          <span className="flex items-center gap-2">
-                            <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                            Processing...
-                          </span>
-                        ) : (
-                          `Buy ${pkg.label}`
-                        )}
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
+                {/* CTA Button */}
+                <Button
+                  onClick={() => handleSubscribe(tier.id)}
+                  disabled={selectedTier === tier.id && createCheckoutMutation.isPending}
+                  className="w-full"
+                  variant={tier.popular ? "default" : "outline"}
+                  size="lg"
+                >
+                  {createCheckoutMutation.isPending && selectedTier === tier.id
+                    ? "Processing..."
+                    : "Subscribe Now"}
+                </Button>
+              </Card>
             );
           })}
         </div>
 
-        {/* Payment Methods Info */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="bg-secondary/30 border border-secondary rounded-lg p-6 text-center"
-        >
-          <h3 className="font-semibold mb-3">Secure Payment Methods</h3>
-          <div className="flex flex-wrap justify-center gap-4 text-sm text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-primary rounded-full" />
-              Apple Pay
+        {/* FAQ Section */}
+        <div className="max-w-2xl mx-auto">
+          <h2 className="text-2xl font-bold mb-8 text-center">Questions?</h2>
+          <div className="space-y-4">
+            <div className="bg-card p-6 rounded-lg border">
+              <h4 className="font-semibold mb-2">Can I cancel anytime?</h4>
+              <p className="text-sm text-muted-foreground">
+                Yes! Cancel your subscription at any time. You'll keep your coins through the end of your billing period.
+              </p>
             </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-primary rounded-full" />
-              PayPal
+            <div className="bg-card p-6 rounded-lg border">
+              <h4 className="font-semibold mb-2">Do unused coins expire?</h4>
+              <p className="text-sm text-muted-foreground">
+                No, your coins never expire. Use them whenever you want.
+              </p>
             </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-primary rounded-full" />
-              Credit/Debit Card
+            <div className="bg-card p-6 rounded-lg border">
+              <h4 className="font-semibold mb-2">What payment methods do you accept?</h4>
+              <p className="text-sm text-muted-foreground">
+                We accept all major credit cards, Apple Pay, and PayPal through Stripe.
+              </p>
             </div>
           </div>
-          <p className="text-xs text-muted-foreground mt-4">
-            All payments are processed securely by Stripe. Your card information is never stored locally.
-          </p>
-        </motion.div>
+        </div>
       </div>
     </div>
   );

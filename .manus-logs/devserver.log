@@ -497,3 +497,48 @@
 [2026-02-02T04:09:33.675Z] 
 [2026-02-02T04:09:39.627Z] [OAuth] Initialized with baseURL: https://api.manus.im
 [2026-02-02T04:09:40.967Z] Server running on http://localhost:3000/
+[2026-02-02T05:35:19.729Z] 12:35:19 AM [vite] (client) hmr update /src/pages/BuyCoins.tsx
+[2026-02-02T05:35:19.741Z] 12:35:19 AM [vite] (client) hmr update /src/pages/BuyCoins.tsx
+[2026-02-02T05:35:19.983Z] 12:35:19 AM [tsx] change in ./shared/coinPackages.ts Restarting...
+[2026-02-02T05:35:21.771Z] c/home/ubuntu/dopamine_dasher/server/paymentsRouter.ts:5
+[2026-02-02T05:35:21.772Z] import { COIN_PACKAGES } from "../shared/coinPackages";
+[2026-02-02T05:35:21.773Z] ^
+[2026-02-02T05:35:21.773Z] 
+[2026-02-02T05:35:21.773Z] SyntaxError: The requested module '../shared/coinPackages' does not provide an export named 'COIN_PACKAGES'
+[2026-02-02T05:35:21.773Z] at ModuleJob._instantiate (node:internal/modules/esm/module_job:180:21)
+[2026-02-02T05:35:21.774Z] at async ModuleJob.run (node:internal/modules/esm/module_job:263:5)
+[2026-02-02T05:35:21.774Z] at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:547:26)
+[2026-02-02T05:35:21.774Z] at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)
+[2026-02-02T05:35:21.775Z] 
+[2026-02-02T05:35:21.775Z] Node.js v22.13.0
+[2026-02-02T05:36:18.671Z] 12:36:18 AM [tsx] change in ./server/paymentsRouter.ts Rerunning...
+[2026-02-02T05:36:20.435Z] c[OAuth] Initialized with baseURL: https://api.manus.im
+[2026-02-02T05:36:20.763Z] Server running on http://localhost:3000/
+[2026-02-02T05:36:22.758Z] Dev server process group stopped
+[2026-02-02T05:36:23.084Z] ELIFECYCLE  Command failed.
+[2026-02-02T05:36:23.120Z] 12:36:23 AM [vite] (client) Pre-transform error: The service was stopped: write EPIPE
+[2026-02-02T05:36:23.121Z] Plugin: vite:esbuild
+[2026-02-02T05:36:23.121Z] File: /home/ubuntu/dopamine_dasher/client/src/lib/store.ts
+[2026-02-02T05:36:23.124Z] /home/ubuntu/dopamine_dasher/node_modules/.pnpm/esbuild@0.27.2/node_modules/esbuild/lib/main.js:974
+[2026-02-02T05:36:23.124Z] reject(new Error(error2));
+[2026-02-02T05:36:23.125Z] ^
+[2026-02-02T05:36:23.125Z] 
+[2026-02-02T05:36:23.125Z] Error: Error during dependency optimization:
+[2026-02-02T05:36:23.125Z] 
+[2026-02-02T05:36:23.126Z] The service was stopped: write EPIPE
+[2026-02-02T05:36:23.126Z] at /home/ubuntu/dopamine_dasher/node_modules/.pnpm/esbuild@0.27.2/node_modules/esbuild/lib/main.js:974:26
+[2026-02-02T05:36:23.126Z] at responseCallbacks.<computed> (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/esbuild@0.27.2/node_modules/esbuild/lib/main.js:603:9)
+[2026-02-02T05:36:23.126Z] at afterClose (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/esbuild@0.27.2/node_modules/esbuild/lib/main.js:594:28)
+[2026-02-02T05:36:23.127Z] at /home/ubuntu/dopamine_dasher/node_modules/.pnpm/esbuild@0.27.2/node_modules/esbuild/lib/main.js:1986:18
+[2026-02-02T05:36:23.127Z] at onwriteError (node:internal/streams/writable:605:3)
+[2026-02-02T05:36:23.127Z] at process.processTicksAndRejections (node:internal/process/task_queues:92:21)
+[2026-02-02T05:36:23.128Z] 
+[2026-02-02T05:36:23.128Z] Node.js v22.13.0
+[2026-02-02T05:36:23.318Z] Dev server exited with code -15
+[2026-02-02T05:36:25.787Z] Starting dev server with command: pnpm run dev
+[2026-02-02T05:36:26.570Z] 
+[2026-02-02T05:36:26.570Z] > dopamine_dasher@1.0.0 dev /home/ubuntu/dopamine_dasher
+[2026-02-02T05:36:26.571Z] > NODE_ENV=development tsx watch server/_core/index.ts
+[2026-02-02T05:36:26.571Z] 
+[2026-02-02T05:36:28.452Z] [OAuth] Initialized with baseURL: https://api.manus.im
+[2026-02-02T05:36:28.763Z] Server running on http://localhost:3000/

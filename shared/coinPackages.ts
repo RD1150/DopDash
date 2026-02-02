@@ -1,69 +1,67 @@
 /**
- * Coin package definitions for the Buy Coins shop
- * Each package includes coins, price, and display info
+ * Subscription tier definitions for Dopamine Dasher
+ * Monthly recurring billing with Stripe
  */
 
-export interface CoinPackage {
+export interface SubscriptionTier {
   id: string;
-  coins: number;
-  price: number; // in cents (e.g., 999 = $9.99)
-  priceUSD: string; // formatted price for display
-  label: string;
-  description: string;
-  popular?: boolean; // highlight as popular
-  bonus?: number; // bonus coins
+  name: string;
+  monthlyPrice: number; // in cents (e.g., 599 = $5.99)
+  monthlyPriceUSD: string;
+  annualPrice: number; // in cents (e.g., 7188 = $71.88 = 10 months worth, 2 months free)
+  annualPriceUSD: string;
+  monthlyCoins: number; // coins earned per month
+  dailyBonus: number; // bonus coins per day
+  features: string[];
+  popular?: boolean;
+  stripePriceId?: string; // Stripe price ID for monthly
+  stripeAnnualPriceId?: string; // Stripe price ID for annual
 }
 
-export const COIN_PACKAGES: CoinPackage[] = [
+export const SUBSCRIPTION_TIERS: SubscriptionTier[] = [
   {
     id: "starter",
-    coins: 100,
-    price: 99, // $0.99
-    priceUSD: "$0.99",
-    label: "Starter",
-    description: "100 coins",
-  },
-  {
-    id: "boost",
-    coins: 500,
-    price: 399, // $3.99
-    priceUSD: "$3.99",
-    label: "Boost",
-    description: "500 coins",
-    popular: true,
+    name: "Focus",
+    monthlyPrice: 599, // $5.99
+    monthlyPriceUSD: "$5.99",
+    annualPrice: 7188, // $71.88 (10 months, 2 free)
+    annualPriceUSD: "$71.88",
+    monthlyCoins: 1000,
+    dailyBonus: 50,
+    features: [
+      "1,000 coins per month",
+      "50 bonus coins daily",
+      "Basic task insights",
+      "Standard support",
+    ],
+    popular: false,
   },
   {
     id: "pro",
-    coins: 1000,
-    price: 699, // $6.99
-    priceUSD: "$6.99",
-    label: "Pro",
-    description: "1000 coins",
-    bonus: 100, // 10% bonus
-  },
-  {
-    id: "elite",
-    coins: 5000,
-    price: 2999, // $29.99
-    priceUSD: "$29.99",
-    label: "Elite",
-    description: "5000 coins",
-    bonus: 500, // 10% bonus
+    name: "Momentum",
+    monthlyPrice: 1499, // $14.99
+    monthlyPriceUSD: "$14.99",
+    annualPrice: 17988, // $179.88 (10 months, 2 free)
+    annualPriceUSD: "$179.88",
+    monthlyCoins: 3000,
+    dailyBonus: 150,
+    features: [
+      "3,000 coins per month",
+      "150 bonus coins daily",
+      "Advanced analytics",
+      "Priority support",
+      "Exclusive rewards",
+      "Early access to features",
+    ],
+    popular: true,
   },
 ];
 
 /**
- * Get a coin package by ID
+ * Get a subscription tier by ID
  */
-export function getCoinPackage(id: string): CoinPackage | undefined {
-  return COIN_PACKAGES.find((pkg) => pkg.id === id);
-}
-
-/**
- * Get total coins including bonus
- */
-export function getTotalCoins(pkg: CoinPackage): number {
-  return pkg.coins + (pkg.bonus || 0);
+export function getSubscriptionTier(id: string): SubscriptionTier | undefined {
+  return SUBSCRIPTION_TIERS.find((tier) => tier.id === id);
 }
 
 /**
@@ -71,4 +69,14 @@ export function getTotalCoins(pkg: CoinPackage): number {
  */
 export function formatPrice(priceInCents: number): string {
   return `$${(priceInCents / 100).toFixed(2)}`;
+}
+
+/**
+ * Calculate annual savings
+ */
+export function calculateAnnualSavings(tier: SubscriptionTier): string {
+  const monthlyTotal = tier.monthlyPrice * 12;
+  const savings = monthlyTotal - tier.annualPrice;
+  const savingsPercent = Math.round((savings / monthlyTotal) * 100);
+  return `Save ${savingsPercent}% with annual`;
 }

@@ -3196,49 +3196,51 @@ import { z as z7 } from "zod";
 import Stripe from "stripe";
 
 // shared/coinPackages.ts
-var COIN_PACKAGES = [
+var SUBSCRIPTION_TIERS = [
   {
     id: "starter",
-    coins: 100,
-    price: 99,
-    // $0.99
-    priceUSD: "$0.99",
-    label: "Starter",
-    description: "100 coins"
-  },
-  {
-    id: "boost",
-    coins: 500,
-    price: 399,
-    // $3.99
-    priceUSD: "$3.99",
-    label: "Boost",
-    description: "500 coins",
-    popular: true
+    name: "Focus",
+    monthlyPrice: 599,
+    // $5.99
+    monthlyPriceUSD: "$5.99",
+    annualPrice: 7188,
+    // $71.88 (10 months, 2 free)
+    annualPriceUSD: "$71.88",
+    monthlyCoins: 1e3,
+    dailyBonus: 50,
+    features: [
+      "1,000 coins per month",
+      "50 bonus coins daily",
+      "Basic task insights",
+      "Standard support"
+    ],
+    popular: false
   },
   {
     id: "pro",
-    coins: 1e3,
-    price: 699,
-    // $6.99
-    priceUSD: "$6.99",
-    label: "Pro",
-    description: "1000 coins",
-    bonus: 100
-    // 10% bonus
-  },
-  {
-    id: "elite",
-    coins: 5e3,
-    price: 2999,
-    // $29.99
-    priceUSD: "$29.99",
-    label: "Elite",
-    description: "5000 coins",
-    bonus: 500
-    // 10% bonus
+    name: "Momentum",
+    monthlyPrice: 1499,
+    // $14.99
+    monthlyPriceUSD: "$14.99",
+    annualPrice: 17988,
+    // $179.88 (10 months, 2 free)
+    annualPriceUSD: "$179.88",
+    monthlyCoins: 3e3,
+    dailyBonus: 150,
+    features: [
+      "3,000 coins per month",
+      "150 bonus coins daily",
+      "Advanced analytics",
+      "Priority support",
+      "Exclusive rewards",
+      "Early access to features"
+    ],
+    popular: true
   }
 ];
+function getSubscriptionTier(id) {
+  return SUBSCRIPTION_TIERS.find((tier) => tier.id === id);
+}
 
 // server/paymentsRouter.ts
 init_db();
@@ -3247,61 +3249,74 @@ var stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 });
 var paymentsRouter = router({
   /**
-   * Create a Stripe Checkout session for coin purchases
-   * Supports Apple Pay, PayPal, and Card payments
+   * Create a Stripe Checkout session for subscription
+   * Supports monthly and annual billing periods
+   * Payment methods: Apple Pay, PayPal, Card
    */
   createCheckoutSession: protectedProcedure.input(z7.object({
-    packageId: z7.string()
+    tierId: z7.string(),
+    billingPeriod: z7.enum(["monthly", "annual"])
   })).mutation(async ({ ctx, input }) => {
     const origin = ctx.req.headers.origin || `http://localhost:${process.env.PORT || 3e3}`;
-    const coinPackage = COIN_PACKAGES.find((pkg) => pkg.id === input.packageId);
-    if (!coinPackage) {
-      throw new Error("Invalid coin package");
+    const tier = getSubscriptionTier(input.tierId);
+    if (!tier) {
+      throw new TRPCError3({
+        code: "BAD_REQUEST",
+        message: "Invalid subscription tier"
+      });
     }
     try {
+      const price = input.billingPeriod === "monthly" ? tier.monthlyPrice : tier.annualPrice;
+      const interval = input.billingPeriod === "monthly" ? "month" : "year";
       const session = await stripe.checkout.sessions.create({
-        mode: "payment",
-        // Support multiple payment methods: Apple Pay, PayPal, Card
+        mode: "subscription",
         payment_method_types: ["card", "apple_pay", "paypal"],
         line_items: [
           {
             price_data: {
               currency: "usd",
               product_data: {
-                name: `${coinPackage.label} - ${coinPackage.coins} Coins`,
-                description: coinPackage.description
+                name: `${tier.name} Subscription`,
+                description: `${tier.monthlyCoins} coins/month + ${tier.dailyBonus} daily bonus`
               },
-              unit_amount: coinPackage.price
-              // Already in cents
+              unit_amount: price,
+              recurring: {
+                interval,
+                interval_count: 1
+              }
             },
             quantity: 1
           }
         ],
-        success_url: `${origin}/buy-coins?success=true&packageId=${coinPackage.id}`,
+        success_url: `${origin}/buy-coins?success=true&tierId=${tier.id}`,
         cancel_url: `${origin}/buy-coins?cancelled=true`,
         customer_email: ctx.user.email || void 0,
         client_reference_id: ctx.user.id.toString(),
         metadata: {
           user_id: ctx.user.id.toString(),
-          package_id: coinPackage.id,
-          coins: coinPackage.coins.toString(),
-          bonus_coins: (coinPackage.bonus || 0).toString(),
+          tier_id: tier.id,
+          billing_period: input.billingPeriod,
+          monthly_coins: tier.monthlyCoins.toString(),
+          daily_bonus: tier.dailyBonus.toString(),
           customer_email: ctx.user.email || "",
           customer_name: ctx.user.name || ""
         },
         allow_promotion_codes: true
       });
       return {
-        url: session.url,
+        checkoutUrl: session.url,
         sessionId: session.id
       };
     } catch (error) {
       console.error("[Stripe] Error creating checkout session:", error);
-      throw new Error(`Failed to create checkout session: ${error.message}`);
+      throw new TRPCError3({
+        code: "INTERNAL_SERVER_ERROR",
+        message: `Failed to create checkout session: ${error.message}`
+      });
     }
   }),
   /**
-   * Verify payment and add coins to user account
+   * Verify subscription payment and activate subscription
    * Called after successful Stripe payment
    */
   verifyPayment: protectedProcedure.input(z7.object({
@@ -3310,24 +3325,31 @@ var paymentsRouter = router({
     try {
       const session = await stripe.checkout.sessions.retrieve(input.sessionId);
       if (session.payment_status !== "paid") {
-        throw new Error("Payment not completed");
+        throw new TRPCError3({
+          code: "BAD_REQUEST",
+          message: "Payment not completed"
+        });
       }
       const metadata = session.metadata;
       if (!metadata || metadata.user_id !== ctx.user.id.toString()) {
-        throw new Error("Invalid payment session");
+        throw new TRPCError3({
+          code: "FORBIDDEN",
+          message: "Invalid payment session"
+        });
       }
-      const coins = parseInt(metadata.coins || "0");
-      const bonusCoins = parseInt(metadata.bonus_coins || "0");
-      const totalCoins = coins + bonusCoins;
-      const updatedProfile = await addCoinsToUser(ctx.user.id, totalCoins);
+      const monthlyCoins = parseInt(metadata.monthly_coins || "0");
+      const updatedProfile = await addCoinsToUser(ctx.user.id, monthlyCoins);
       return {
         success: true,
-        coinsAdded: totalCoins,
+        coinsAdded: monthlyCoins,
         newBalance: updatedProfile.coins
       };
     } catch (error) {
       console.error("[Stripe] Error verifying payment:", error);
-      throw new Error(`Failed to verify payment: ${error.message}`);
+      throw new TRPCError3({
+        code: "INTERNAL_SERVER_ERROR",
+        message: `Failed to verify payment: ${error.message}`
+      });
     }
   }),
   /**
