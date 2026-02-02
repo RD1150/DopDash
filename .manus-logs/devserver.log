@@ -586,3 +586,13 @@
 [2026-02-02T07:12:31.186Z] 2:12:31 AM [tsx] change in ./shared/coinPackages.ts Restarting...
 [2026-02-02T07:12:34.142Z] c[OAuth] Initialized with baseURL: https://api.manus.im
 [2026-02-02T07:12:34.448Z] Server running on http://localhost:3000/
+[2026-02-02T07:16:06.062Z] Dev server process group stopped
+[2026-02-02T07:16:06.066Z] ELIFECYCLE  Command failed.
+[2026-02-02T07:16:06.138Z] Dev server exited with code -15
+[2026-02-02T07:16:09.100Z] Starting dev server with command: pnpm run dev
+[2026-02-02T07:16:09.937Z] 
+[2026-02-02T07:16:09.938Z] > dopamine_dasher@1.0.0 dev /home/ubuntu/dopamine_dasher
+[2026-02-02T07:16:09.938Z] > NODE_ENV=development tsx watch server/_core/index.ts
+[2026-02-02T07:16:09.938Z] 
+[2026-02-02T07:16:12.000Z] [OAuth] Initialized with baseURL: https://api.manus.im
+[2026-02-02T07:16:12.327Z] Server running on http://localhost:3000/
