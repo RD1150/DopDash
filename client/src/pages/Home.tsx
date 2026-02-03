@@ -126,21 +126,23 @@ export default function Home() {
       </div>
 
       {/* Video Demo Section */}
-      <div className="container max-w-4xl mx-auto px-4 py-16">
+      <div className="w-full py-16">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.8 }}
-          className="rounded-3xl overflow-hidden shadow-2xl border-2 border-border"
+          className="w-full overflow-hidden shadow-2xl"
         >
           <video
             autoPlay
-            muted
+            muted={false}
             loop
             playsInline
-            className="w-full h-auto"
+            controls
+            className="w-full h-auto block"
+            style={{ maxHeight: '70vh', objectFit: 'cover' }}
           >
-            <source src="/videos/task-demo.mp4" type="video/mp4" />
+            <source src="/hero-video.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
         </motion.div>
