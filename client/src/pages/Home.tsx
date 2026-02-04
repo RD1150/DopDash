@@ -1,3 +1,4 @@
+import React from "react";
 import { useLocation } from "wouter";
 import { Zap, Target, Trophy, Sparkles, Heart, Brain, LogIn, Wand2 } from "lucide-react";
 import { motion } from "framer-motion";
@@ -10,6 +11,14 @@ import { Button } from "@/components/ui/button";
 export default function Home() {
   const [, setLocation] = useLocation();
   const { isAuthenticated } = useAuth();
+  const videoRef = React.useRef<HTMLVideoElement>(null);
+
+  const handlePlayAgain = () => {
+    if (videoRef.current) {
+      videoRef.current.currentTime = 0;
+      videoRef.current.play();
+    }
+  };
 
   const features = [
     {
@@ -133,19 +142,31 @@ export default function Home() {
           transition={{ duration: 0.6, delay: 0.8 }}
           className="w-full overflow-hidden shadow-2xl"
         >
-          <video
-            autoPlay
-            muted={false}
-            loop
-            playsInline
-            controls
-            className="w-full h-auto block"
-            style={{ maxHeight: '70vh', objectFit: 'cover' }}
-          >
-            <source src="/hero-video.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
+          <div className="relative">
+            <video
+              ref={videoRef}
+              autoPlay
+              muted={false}
+              playsInline
+              controls
+              className="w-full h-auto block"
+              style={{ maxHeight: '70vh', objectFit: 'cover' }}
+            >
+              <source src="/dopamine-dasher-hero.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
         </motion.div>
+        <div className="flex justify-center mt-6">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handlePlayAgain}
+            className="gap-2"
+          >
+            ▶ Play Again
+          </Button>
+        </div>
       </div>
 
       {/* Features Grid */}

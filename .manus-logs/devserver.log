@@ -668,3 +668,204 @@
 [2026-02-02T07:37:35.574Z] [OAuth] Initialized with baseURL: https://api.manus.im
 [2026-02-02T07:37:35.902Z] Server running on http://localhost:3000/
 [2026-02-02T09:11:59.120Z] 4:11:59 AM [vite] (client) hmr update /src/pages/Home.tsx, /src/index.css
+[2026-02-03T21:33:19.545Z] Starting dev server with command: pnpm run dev
+[2026-02-03T21:33:20.383Z] 
+[2026-02-03T21:33:20.384Z] > dopamine_dasher@1.0.0 dev /home/ubuntu/dopamine_dasher
+[2026-02-03T21:33:20.384Z] > NODE_ENV=development tsx watch server/_core/index.ts
+[2026-02-03T21:33:20.385Z] 
+[2026-02-03T21:33:22.344Z] [OAuth] Initialized with baseURL: https://api.manus.im
+[2026-02-03T21:33:22.616Z] Server running on http://localhost:3000/
+[2026-02-04T07:40:07.555Z] 2:40:07 AM [vite] (client) hmr update /src/pages/Home.tsx, /src/index.css
+[2026-02-04T07:40:08.069Z] 2:40:07 AM [vite] Internal server error: /home/ubuntu/dopamine_dasher/client/src/pages/Home.tsx: Identifier 'useLocation' has already been declared. (3:9)
+[2026-02-04T07:40:08.071Z] 
+[2026-02-04T07:40:08.072Z] 1 | import { useLocation } from "wouter";
+[2026-02-04T07:40:08.072Z] 2 | import React from "react";
+[2026-02-04T07:40:08.073Z] > 3 | import { useLocation } from "wouter";
+[2026-02-04T07:40:08.074Z] |          ^
+[2026-02-04T07:40:08.075Z] 4 | import { Zap, Target, Trophy, Sparkles, Heart, Brain, LogIn, Wand2 } from "lucide-react";
+[2026-02-04T07:40:08.075Z] 5 | import { motion } from "framer-motion";
+[2026-02-04T07:40:08.075Z] 6 | import { getLoginUrl } from "@/const";
+[2026-02-04T07:40:08.075Z] Plugin: vite:react-babel
+[2026-02-04T07:40:08.076Z] File: /home/ubuntu/dopamine_dasher/client/src/pages/Home.tsx:3:9
+[2026-02-04T07:40:08.076Z] 1  |  import { useLocation } from "wouter";
+[2026-02-04T07:40:08.076Z] 2  |  import React from "react";
+[2026-02-04T07:40:08.077Z] 3  |  import { useLocation } from "wouter";
+[2026-02-04T07:40:08.077Z] |           ^
+[2026-02-04T07:40:08.077Z] 4  |  import { Zap, Target, Trophy, Sparkles, Heart, Brain, LogIn, Wand2 } from "lucide-react";
+[2026-02-04T07:40:08.078Z] 5  |  import { motion } from "framer-motion";
+[2026-02-04T07:40:08.078Z] at toParseError (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parse-error.ts:95:45)
+[2026-02-04T07:40:08.078Z] at raise (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/tokenizer/index.ts:1504:19)
+[2026-02-04T07:40:08.079Z] at declareName (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/plugins/typescript/scope.ts:72:21)
+[2026-02-04T07:40:08.079Z] at declareNameFromIdentifier (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/lval.ts:876:16)
+[2026-02-04T07:40:08.079Z] at checkIdentifier (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/lval.ts:871:12)
+[2026-02-04T07:40:08.079Z] at checkLVal (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/lval.ts:763:12)
+[2026-02-04T07:40:08.080Z] at finishImportSpecifier (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/statement.ts:3229:10)
+[2026-02-04T07:40:08.080Z] at parseImportSpecifier (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/statement.ts:3490:17)
+[2026-02-04T07:40:08.080Z] at parseImportSpecifier (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/plugins/typescript/index.ts:4383:20)
+[2026-02-04T07:40:08.081Z] at parseNamedImportSpecifiers (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/statement.ts:3451:36)
+[2026-02-04T07:40:08.081Z] at parseImportSpecifiersAndAfter (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/statement.ts:3179:37)
+[2026-02-04T07:40:08.081Z] at parseImport (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/statement.ts:3148:17)
+[2026-02-04T07:40:08.082Z] at parseImport (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/plugins/typescript/index.ts:2969:28)
+[2026-02-04T07:40:08.082Z] at parseStatementContent (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/statement.ts:647:25)
+[2026-02-04T07:40:08.082Z] at parseStatementContent (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/plugins/typescript/index.ts:3219:20)
+[2026-02-04T07:40:08.082Z] at parseStatementLike (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/statement.ts:482:17)
+[2026-02-04T07:40:08.083Z] at parseModuleItem (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/statement.ts:419:17)
+[2026-02-04T07:40:08.083Z] at parseBlockOrModuleBlockBody (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/statement.ts:1443:16)
+[2026-02-04T07:40:08.084Z] at parseBlockBody (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/statement.ts:1417:10)
+[2026-02-04T07:40:08.084Z] at parseProgram (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/statement.ts:229:10)
+[2026-02-04T07:40:08.085Z] at parseTopLevel (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/statement.ts:203:25)
+[2026-02-04T07:40:08.085Z] at parse (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/index.ts:83:25)
+[2026-02-04T07:40:08.085Z] at parse (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/plugins/typescript/index.ts:4333:20)
+[2026-02-04T07:40:08.086Z] at parse (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/index.ts:86:38)
+[2026-02-04T07:40:08.086Z] at parser (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+core@7.28.6/node_modules/@babel/core/src/parser/index.ts:29:19)
+[2026-02-04T07:40:08.086Z] at parser.next (<anonymous>)
+[2026-02-04T07:40:08.086Z] at normalizeFile (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+core@7.28.6/node_modules/@babel/core/src/transformation/normalize-file.ts:50:24)
+[2026-02-04T07:40:08.087Z] at normalizeFile.next (<anonymous>)
+[2026-02-04T07:40:08.087Z] at run (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+core@7.28.6/node_modules/@babel/core/src/transformation/index.ts:41:36)
+[2026-02-04T07:40:08.087Z] at run.next (<anonymous>)
+[2026-02-04T07:40:08.087Z] at transform (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+core@7.28.6/node_modules/@babel/core/src/transform.ts:29:20)
+[2026-02-04T07:40:08.088Z] at transform.next (<anonymous>)
+[2026-02-04T07:40:08.088Z] at step (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:261:32)
+[2026-02-04T07:40:08.088Z] at /home/ubuntu/dopamine_dasher/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:273:13
+[2026-02-04T07:40:08.089Z] at async.call.result.err.err (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:223:11)
+[2026-02-04T07:40:08.090Z] at /home/ubuntu/dopamine_dasher/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:189:28
+[2026-02-04T07:40:08.090Z] at <anonymous> (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+core@7.28.6/node_modules/@babel/core/src/gensync-utils/async.ts:90:7)
+[2026-02-04T07:40:08.091Z] at /home/ubuntu/dopamine_dasher/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:113:33
+[2026-02-04T07:40:08.091Z] at step (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:287:14)
+[2026-02-04T07:40:08.091Z] at /home/ubuntu/dopamine_dasher/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:273:13
+[2026-02-04T07:40:08.092Z] at async.call.result.err.err (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:223:11)
+[2026-02-04T07:40:08.092Z] 2:40:07 AM [vite] (client) Pre-transform error: /home/ubuntu/dopamine_dasher/client/src/pages/Home.tsx: Identifier 'useLocation' has already been declared. (3:9)
+[2026-02-04T07:40:08.092Z] 
+[2026-02-04T07:40:08.092Z] 1 | import { useLocation } from "wouter";
+[2026-02-04T07:40:08.093Z] 2 | import React from "react";
+[2026-02-04T07:40:08.093Z] > 3 | import { useLocation } from "wouter";
+[2026-02-04T07:40:08.093Z] |          ^
+[2026-02-04T07:40:08.094Z] 4 | import { Zap, Target, Trophy, Sparkles, Heart, Brain, LogIn, Wand2 } from "lucide-react";
+[2026-02-04T07:40:08.094Z] 5 | import { motion } from "framer-motion";
+[2026-02-04T07:40:08.094Z] 6 | import { getLoginUrl } from "@/const";
+[2026-02-04T07:40:08.095Z] Plugin: vite:react-babel
+[2026-02-04T07:40:08.095Z] File: /home/ubuntu/dopamine_dasher/client/src/pages/Home.tsx:3:9
+[2026-02-04T07:40:08.096Z] 1  |  import { useLocation } from "wouter";
+[2026-02-04T07:40:08.096Z] 2  |  import React from "react";
+[2026-02-04T07:40:08.096Z] 3  |  import { useLocation } from "wouter";
+[2026-02-04T07:40:08.096Z] |           ^
+[2026-02-04T07:40:08.097Z] 4  |  import { Zap, Target, Trophy, Sparkles, Heart, Brain, LogIn, Wand2 } from "lucide-react";
+[2026-02-04T07:40:08.097Z] 5  |  import { motion } from "framer-motion";
+[2026-02-04T07:40:08.230Z] 2:40:08 AM [vite] Internal server error: /home/ubuntu/dopamine_dasher/client/src/pages/Home.tsx: Identifier 'useLocation' has already been declared. (3:9)
+[2026-02-04T07:40:08.231Z] 
+[2026-02-04T07:40:08.231Z] 1 | import { useLocation } from "wouter";
+[2026-02-04T07:40:08.231Z] 2 | import React from "react";
+[2026-02-04T07:40:08.231Z] > 3 | import { useLocation } from "wouter";
+[2026-02-04T07:40:08.232Z] |          ^
+[2026-02-04T07:40:08.232Z] 4 | import { Zap, Target, Trophy, Sparkles, Heart, Brain, LogIn, Wand2 } from "lucide-react";
+[2026-02-04T07:40:08.232Z] 5 | import { motion } from "framer-motion";
+[2026-02-04T07:40:08.233Z] 6 | import { getLoginUrl } from "@/const";
+[2026-02-04T07:40:08.233Z] Plugin: vite:react-babel
+[2026-02-04T07:40:08.233Z] File: /home/ubuntu/dopamine_dasher/client/src/pages/Home.tsx:3:9
+[2026-02-04T07:40:08.233Z] 1  |  import { useLocation } from "wouter";
+[2026-02-04T07:40:08.233Z] 2  |  import React from "react";
+[2026-02-04T07:40:08.234Z] 3  |  import { useLocation } from "wouter";
+[2026-02-04T07:40:08.234Z] |           ^
+[2026-02-04T07:40:08.234Z] 4  |  import { Zap, Target, Trophy, Sparkles, Heart, Brain, LogIn, Wand2 } from "lucide-react";
+[2026-02-04T07:40:08.235Z] 5  |  import { motion } from "framer-motion";
+[2026-02-04T07:40:08.235Z] at toParseError (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parse-error.ts:95:45)
+[2026-02-04T07:40:08.236Z] at raise (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/tokenizer/index.ts:1504:19)
+[2026-02-04T07:40:08.236Z] at declareName (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/plugins/typescript/scope.ts:72:21)
+[2026-02-04T07:40:08.236Z] at declareNameFromIdentifier (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/lval.ts:876:16)
+[2026-02-04T07:40:08.237Z] at checkIdentifier (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/lval.ts:871:12)
+[2026-02-04T07:40:08.237Z] at checkLVal (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/lval.ts:763:12)
+[2026-02-04T07:40:08.237Z] at finishImportSpecifier (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/statement.ts:3229:10)
+[2026-02-04T07:40:08.237Z] at parseImportSpecifier (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/statement.ts:3490:17)
+[2026-02-04T07:40:08.238Z] at parseImportSpecifier (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/plugins/typescript/index.ts:4383:20)
+[2026-02-04T07:40:08.238Z] at parseNamedImportSpecifiers (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/statement.ts:3451:36)
+[2026-02-04T07:40:08.238Z] at parseImportSpecifiersAndAfter (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/statement.ts:3179:37)
+[2026-02-04T07:40:08.239Z] at parseImport (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/statement.ts:3148:17)
+[2026-02-04T07:40:08.239Z] at parseImport (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/plugins/typescript/index.ts:2969:28)
+[2026-02-04T07:40:08.240Z] at parseStatementContent (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/statement.ts:647:25)
+[2026-02-04T07:40:08.240Z] at parseStatementContent (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/plugins/typescript/index.ts:3219:20)
+[2026-02-04T07:40:08.240Z] at parseStatementLike (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/statement.ts:482:17)
+[2026-02-04T07:40:08.241Z] at parseModuleItem (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/statement.ts:419:17)
+[2026-02-04T07:40:08.241Z] at parseBlockOrModuleBlockBody (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/statement.ts:1443:16)
+[2026-02-04T07:40:08.242Z] at parseBlockBody (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/statement.ts:1417:10)
+[2026-02-04T07:40:08.242Z] at parseProgram (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/statement.ts:229:10)
+[2026-02-04T07:40:08.242Z] at parseTopLevel (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/statement.ts:203:25)
+[2026-02-04T07:40:08.243Z] at parse (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/index.ts:83:25)
+[2026-02-04T07:40:08.243Z] at parse (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/plugins/typescript/index.ts:4333:20)
+[2026-02-04T07:40:08.244Z] at parse (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/index.ts:86:38)
+[2026-02-04T07:40:08.244Z] at parser (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+core@7.28.6/node_modules/@babel/core/src/parser/index.ts:29:19)
+[2026-02-04T07:40:08.244Z] at parser.next (<anonymous>)
+[2026-02-04T07:40:08.245Z] at normalizeFile (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+core@7.28.6/node_modules/@babel/core/src/transformation/normalize-file.ts:50:24)
+[2026-02-04T07:40:08.245Z] at normalizeFile.next (<anonymous>)
+[2026-02-04T07:40:08.246Z] at run (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+core@7.28.6/node_modules/@babel/core/src/transformation/index.ts:41:36)
+[2026-02-04T07:40:08.246Z] at run.next (<anonymous>)
+[2026-02-04T07:40:08.247Z] at transform (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+core@7.28.6/node_modules/@babel/core/src/transform.ts:29:20)
+[2026-02-04T07:40:08.247Z] at transform.next (<anonymous>)
+[2026-02-04T07:40:08.247Z] at step (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:261:32)
+[2026-02-04T07:40:08.248Z] at /home/ubuntu/dopamine_dasher/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:273:13
+[2026-02-04T07:40:08.248Z] at async.call.result.err.err (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:223:11)
+[2026-02-04T07:40:08.249Z] at /home/ubuntu/dopamine_dasher/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:189:28
+[2026-02-04T07:40:08.249Z] at <anonymous> (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+core@7.28.6/node_modules/@babel/core/src/gensync-utils/async.ts:90:7)
+[2026-02-04T07:40:08.250Z] at /home/ubuntu/dopamine_dasher/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:113:33
+[2026-02-04T07:40:08.250Z] at step (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:287:14)
+[2026-02-04T07:40:08.250Z] at /home/ubuntu/dopamine_dasher/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:273:13
+[2026-02-04T07:40:08.251Z] at async.call.result.err.err (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:223:11)
+[2026-02-04T07:40:10.664Z] 2:40:10 AM [vite] Internal server error: /home/ubuntu/dopamine_dasher/client/src/pages/Home.tsx: Identifier 'useLocation' has already been declared. (3:9)
+[2026-02-04T07:40:10.665Z] 
+[2026-02-04T07:40:10.665Z] 1 | import { useLocation } from "wouter";
+[2026-02-04T07:40:10.666Z] 2 | import React from "react";
+[2026-02-04T07:40:10.666Z] > 3 | import { useLocation } from "wouter";
+[2026-02-04T07:40:10.667Z] |          ^
+[2026-02-04T07:40:10.667Z] 4 | import { Zap, Target, Trophy, Sparkles, Heart, Brain, LogIn, Wand2 } from "lucide-react";
+[2026-02-04T07:40:10.667Z] 5 | import { motion } from "framer-motion";
+[2026-02-04T07:40:10.668Z] 6 | import { getLoginUrl } from "@/const";
+[2026-02-04T07:40:10.668Z] Plugin: vite:react-babel
+[2026-02-04T07:40:10.669Z] File: /home/ubuntu/dopamine_dasher/client/src/pages/Home.tsx:3:9
+[2026-02-04T07:40:10.669Z] 1  |  import { useLocation } from "wouter";
+[2026-02-04T07:40:10.669Z] 2  |  import React from "react";
+[2026-02-04T07:40:10.670Z] 3  |  import { useLocation } from "wouter";
+[2026-02-04T07:40:10.670Z] |           ^
+[2026-02-04T07:40:10.670Z] 4  |  import { Zap, Target, Trophy, Sparkles, Heart, Brain, LogIn, Wand2 } from "lucide-react";
+[2026-02-04T07:40:10.670Z] 5  |  import { motion } from "framer-motion";
+[2026-02-04T07:40:10.671Z] at toParseError (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parse-error.ts:95:45)
+[2026-02-04T07:40:10.671Z] at raise (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/tokenizer/index.ts:1504:19)
+[2026-02-04T07:40:10.671Z] at declareName (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/plugins/typescript/scope.ts:72:21)
+[2026-02-04T07:40:10.672Z] at declareNameFromIdentifier (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/lval.ts:876:16)
+[2026-02-04T07:40:10.672Z] at checkIdentifier (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/lval.ts:871:12)
+[2026-02-04T07:40:10.672Z] at checkLVal (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/lval.ts:763:12)
+[2026-02-04T07:40:10.673Z] at finishImportSpecifier (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/statement.ts:3229:10)
+[2026-02-04T07:40:10.673Z] at parseImportSpecifier (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/statement.ts:3490:17)
+[2026-02-04T07:40:10.673Z] at parseImportSpecifier (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/plugins/typescript/index.ts:4383:20)
+[2026-02-04T07:40:10.674Z] at parseNamedImportSpecifiers (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/statement.ts:3451:36)
+[2026-02-04T07:40:10.674Z] at parseImportSpecifiersAndAfter (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/statement.ts:3179:37)
+[2026-02-04T07:40:10.674Z] at parseImport (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/statement.ts:3148:17)
+[2026-02-04T07:40:10.674Z] at parseImport (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/plugins/typescript/index.ts:2969:28)
+[2026-02-04T07:40:10.675Z] at parseStatementContent (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/statement.ts:647:25)
+[2026-02-04T07:40:10.675Z] at parseStatementContent (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/plugins/typescript/index.ts:3219:20)
+[2026-02-04T07:40:10.675Z] at parseStatementLike (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/statement.ts:482:17)
+[2026-02-04T07:40:10.676Z] at parseModuleItem (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/statement.ts:419:17)
+[2026-02-04T07:40:10.676Z] at parseBlockOrModuleBlockBody (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/statement.ts:1443:16)
+[2026-02-04T07:40:10.676Z] at parseBlockBody (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/statement.ts:1417:10)
+[2026-02-04T07:40:10.677Z] at parseProgram (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/statement.ts:229:10)
+[2026-02-04T07:40:10.677Z] at parseTopLevel (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/statement.ts:203:25)
+[2026-02-04T07:40:10.677Z] at parse (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/parser/index.ts:83:25)
+[2026-02-04T07:40:10.678Z] at parse (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/plugins/typescript/index.ts:4333:20)
+[2026-02-04T07:40:10.678Z] at parse (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+parser@7.28.6/node_modules/@babel/parser/src/index.ts:86:38)
+[2026-02-04T07:40:10.678Z] at parser (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+core@7.28.6/node_modules/@babel/core/src/parser/index.ts:29:19)
+[2026-02-04T07:40:10.678Z] at parser.next (<anonymous>)
+[2026-02-04T07:40:10.679Z] at normalizeFile (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+core@7.28.6/node_modules/@babel/core/src/transformation/normalize-file.ts:50:24)
+[2026-02-04T07:40:10.679Z] at normalizeFile.next (<anonymous>)
+[2026-02-04T07:40:10.679Z] at run (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+core@7.28.6/node_modules/@babel/core/src/transformation/index.ts:41:36)
+[2026-02-04T07:40:10.680Z] at run.next (<anonymous>)
+[2026-02-04T07:40:10.680Z] at transform (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+core@7.28.6/node_modules/@babel/core/src/transform.ts:29:20)
+[2026-02-04T07:40:10.680Z] at transform.next (<anonymous>)
+[2026-02-04T07:40:10.680Z] at step (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:261:32)
+[2026-02-04T07:40:10.681Z] at /home/ubuntu/dopamine_dasher/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:273:13
+[2026-02-04T07:40:10.681Z] at async.call.result.err.err (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:223:11)
+[2026-02-04T07:40:10.681Z] at /home/ubuntu/dopamine_dasher/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:189:28
+[2026-02-04T07:40:10.682Z] at <anonymous> (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/@babel+core@7.28.6/node_modules/@babel/core/src/gensync-utils/async.ts:90:7)
+[2026-02-04T07:40:10.682Z] at /home/ubuntu/dopamine_dasher/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:113:33
+[2026-02-04T07:40:10.683Z] at step (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:287:14)
+[2026-02-04T07:40:10.683Z] at /home/ubuntu/dopamine_dasher/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:273:13
+[2026-02-04T07:40:10.683Z] at async.call.result.err.err (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:223:11)
+[2026-02-04T07:40:12.684Z] 2:40:12 AM [vite] (client) hmr update /src/pages/Home.tsx, /src/index.css
+[2026-02-04T07:40:26.116Z] 2:40:26 AM [vite] (client) hmr update /src/pages/Home.tsx, /src/index.css
