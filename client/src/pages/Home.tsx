@@ -136,6 +136,7 @@ export default function Home() {
 
       {/* Video Demo Section */}
       <div className="w-full py-16">
+        <div className="container max-w-6xl mx-auto px-4 space-y-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -157,15 +158,16 @@ export default function Home() {
             </video>
           </div>
         </motion.div>
-        <div className="flex justify-center mt-6">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handlePlayAgain}
-            className="gap-2"
-          >
-            ▶ Play Again
-          </Button>
+          <div className="flex justify-center">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handlePlayAgain}
+              className="gap-2"
+            >
+              ▶ Play Again
+            </Button>
+          </div>
         </div>
       </div>
 
