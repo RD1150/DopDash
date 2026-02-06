@@ -169,7 +169,7 @@ export default function Mascot({ pose, className, animate = true }: MascotProps)
 
       <motion.img
         src={
-          displayPose === 'jumping' ? '/images/mascot/hero.png' : 
+          displayPose === 'jumping' ? 'https://files.manuscdn.com/user_upload_by_module/session_file/310419663026756998/CDMtnPQINZzjRYnQ.png' : 
           displayPose === 'working' ? '/images/mascot/zen.png' : 
           displayPose === 'sleepy' ? '/images/mascot/zen.png' : // Reuse zen for sleepy for now
           displayPose === 'excited' ? '/images/mascot/happy.png' : // Reuse happy for excited

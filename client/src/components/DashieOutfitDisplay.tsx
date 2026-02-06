@@ -11,9 +11,9 @@ interface DashieOutfitDisplayProps {
 }
 
 const outfitImages: Record<TaskType, string> = {
-  grind: '/dashie-grind-mode.png',
-  housework: '/dashie-housework-hero.png',
-  'self-care': '/dashie-selfcare-spa.png',
+  grind: 'https://files.manuscdn.com/user_upload_by_module/session_file/310419663026756998/TsbgRVUjpEqLJbkj.png',
+  housework: 'https://files.manuscdn.com/user_upload_by_module/session_file/310419663026756998/qpbpHPRRVGrsAMSD.png',
+  'self-care': 'https://files.manuscdn.com/user_upload_by_module/session_file/310419663026756998/pYYZotmgorSkYGWg.png',
 };
 
 const outfitLabels: Record<TaskType, string> = {

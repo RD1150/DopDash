@@ -60,9 +60,9 @@ export function detectTaskType(taskText: string): TaskType {
 
 export function getOutfitForTaskType(taskType: TaskType): string {
   const outfits = {
-    'grind': '/dashie-grind-mode.png',
-    'housework': '/dashie-housework-hero.png',
-    'self-care': '/dashie-selfcare-spa.png'
+    'grind': 'https://files.manuscdn.com/user_upload_by_module/session_file/310419663026756998/TsbgRVUjpEqLJbkj.png',
+    'housework': 'https://files.manuscdn.com/user_upload_by_module/session_file/310419663026756998/qpbpHPRRVGrsAMSD.png',
+    'self-care': 'https://files.manuscdn.com/user_upload_by_module/session_file/310419663026756998/pYYZotmgorSkYGWg.png'
   };
   return outfits[taskType];
 }

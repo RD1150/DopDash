@@ -67,7 +67,7 @@ export class NotificationScheduler {
       this.showNotification(
         'Time to Dash! 🎯',
         'Your future self will thank you for starting now.',
-        '/pwa-192x192.png'
+        'https://files.manuscdn.com/user_upload_by_module/session_file/310419663026756998/UtisFcIFIvNTgjAT.png'
       );
 
       // Reschedule for next day
@@ -103,7 +103,7 @@ export class NotificationScheduler {
         this.showNotification(
           `Don't Break Your ${streakDays}-Day Streak! 🔥`,
           'Just one quick win to keep it going!',
-          '/pwa-192x192.png'
+          'https://files.manuscdn.com/user_upload_by_module/session_file/310419663026756998/UtisFcIFIvNTgjAT.png'
         );
       }
     }, timeUntilReminder);
@@ -116,8 +116,8 @@ export class NotificationScheduler {
     if (Notification.permission === 'granted') {
       const notification = new Notification(title, {
         body,
-        icon: icon || '/pwa-192x192.png',
-        badge: '/pwa-192x192.png',
+        icon: icon || 'https://files.manuscdn.com/user_upload_by_module/session_file/310419663026756998/UtisFcIFIvNTgjAT.png',
+        badge: 'https://files.manuscdn.com/user_upload_by_module/session_file/310419663026756998/UtisFcIFIvNTgjAT.png',
         tag: 'dopamine-dasher',
         requireInteraction: false,
         silent: false,

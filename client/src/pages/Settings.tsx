@@ -57,7 +57,7 @@ export default function SettingsPage() {
         notificationScheduler.showNotification(
           'Notifications Enabled! 🎯',
           'We\'ll send you gentle reminders to keep your streak alive.',
-          '/pwa-192x192.png'
+          'https://files.manuscdn.com/user_upload_by_module/session_file/310419663026756998/UtisFcIFIvNTgjAT.png'
         );
       }
     } else {

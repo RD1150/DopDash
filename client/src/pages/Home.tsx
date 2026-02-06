@@ -152,7 +152,7 @@ export default function Home() {
               className="w-full h-auto block"
               style={{ maxHeight: '70vh', objectFit: 'cover' }}
             >
-              <source src="/dopamine-dasher-hero.mp4" type="video/mp4" />
+              <source src="https://files.manuscdn.com/user_upload_by_module/session_file/310419663026756998/WwnoyLTdAdlpXOUM.mp4" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           </div>
