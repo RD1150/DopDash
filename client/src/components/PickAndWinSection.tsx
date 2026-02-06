@@ -19,28 +19,28 @@ const characters: Character[] = [
     name: 'Focused',
     description: 'Sharp, concentrated energy',
     benefit: '25% off premium',
-    image: '/images/mascot/dashie-focused.png',
+    image: '/images/mascot/proud.png',
   },
   {
     id: 'energized',
     name: 'Energized',
     description: 'Celebratory win vibes',
     benefit: '20% off premium',
-    image: '/images/mascot/dashie-energized.png',
+    image: '/images/mascot/sparkle.png',
   },
   {
     id: 'creative',
     name: 'Creative',
     description: 'Colorful inspiration',
     benefit: '15% off premium',
-    image: '/images/mascot/dashie-creative.png',
+    image: '/images/mascot/happy.png',
   },
   {
     id: 'chill',
     name: 'Chill',
     description: 'Peaceful relaxation',
     benefit: 'Free 1-week trial',
-    image: '/images/mascot/dashie-chill.png',
+    image: '/images/mascot/zen.png',
   },
 ];
 
