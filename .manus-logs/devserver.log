@@ -919,3 +919,21 @@
 [2026-02-06T17:34:23.200Z] c[OAuth] Initialized with baseURL: https://api.manus.im
 [2026-02-06T17:34:23.421Z] Server running on http://localhost:3000/
 [2026-02-06T18:19:33.783Z] 1:19:33 PM [vite] (client) page reload index.html
+[2026-02-06T18:27:59.968Z] [Auth] Missing session cookie
+[2026-02-06T18:28:02.547Z] [Auth] Missing session cookie
+[2026-02-06T18:28:05.120Z] [Auth] Missing session cookie
+[2026-02-06T18:28:07.809Z] [Auth] Missing session cookie
+[2026-02-06T18:28:10.610Z] [Auth] Missing session cookie
+[2026-02-06T18:28:13.341Z] [Auth] Missing session cookie
+[2026-02-06T18:28:16.153Z] [Auth] Missing session cookie
+[2026-02-06T18:28:18.912Z] [Auth] Missing session cookie
+[2026-02-06T18:28:21.586Z] [Auth] Missing session cookie
+[2026-02-06T18:28:24.225Z] [Auth] Missing session cookie
+[2026-02-06T18:28:26.906Z] [Auth] Missing session cookie
+[2026-02-06T18:28:29.518Z] [Auth] Missing session cookie
+[2026-02-06T18:28:32.160Z] [Auth] Missing session cookie
+[2026-02-06T18:28:34.802Z] [Auth] Missing session cookie
+[2026-02-06T18:28:37.483Z] [Auth] Missing session cookie
+[2026-02-06T18:28:40.132Z] [Auth] Missing session cookie
+[2026-02-06T18:28:42.775Z] [Auth] Missing session cookie
+[2026-02-06T19:02:27.051Z] 2:02:27 PM [vite] (client) hmr update /src/index.css
