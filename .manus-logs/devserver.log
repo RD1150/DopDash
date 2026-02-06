@@ -869,3 +869,52 @@
 [2026-02-04T07:40:10.683Z] at async.call.result.err.err (/home/ubuntu/dopamine_dasher/node_modules/.pnpm/gensync@1.0.0-beta.2/node_modules/gensync/index.js:223:11)
 [2026-02-04T07:40:12.684Z] 2:40:12 AM [vite] (client) hmr update /src/pages/Home.tsx, /src/index.css
 [2026-02-04T07:40:26.116Z] 2:40:26 AM [vite] (client) hmr update /src/pages/Home.tsx, /src/index.css
+[2026-02-06T07:49:14.234Z] Starting dev server with command: pnpm run dev
+[2026-02-06T07:49:14.739Z] 
+[2026-02-06T07:49:14.739Z] > dopamine_dasher@1.0.0 dev /home/ubuntu/dopamine_dasher
+[2026-02-06T07:49:14.740Z] > NODE_ENV=development tsx watch server/_core/index.ts
+[2026-02-06T07:49:14.740Z] 
+[2026-02-06T07:49:16.301Z] [OAuth] Initialized with baseURL: https://api.manus.im
+[2026-02-06T07:49:16.527Z] Server running on http://localhost:3000/
+[2026-02-06T07:49:20.844Z] [Auth] Missing session cookie
+[2026-02-06T07:49:23.479Z] [Auth] Missing session cookie
+[2026-02-06T07:49:26.099Z] [Auth] Missing session cookie
+[2026-02-06T07:49:29.133Z] [Auth] Missing session cookie
+[2026-02-06T07:49:32.470Z] [Auth] Missing session cookie
+[2026-02-06T07:49:35.085Z] [Auth] Missing session cookie
+[2026-02-06T07:49:37.747Z] [Auth] Missing session cookie
+[2026-02-06T07:49:40.379Z] [Auth] Missing session cookie
+[2026-02-06T07:49:43.021Z] [Auth] Missing session cookie
+[2026-02-06T07:49:45.638Z] [Auth] Missing session cookie
+[2026-02-06T07:49:48.265Z] [Auth] Missing session cookie
+[2026-02-06T07:49:50.935Z] [Auth] Missing session cookie
+[2026-02-06T07:49:53.561Z] [Auth] Missing session cookie
+[2026-02-06T07:49:56.166Z] [Auth] Missing session cookie
+[2026-02-06T07:49:58.787Z] [Auth] Missing session cookie
+[2026-02-06T07:50:01.448Z] [Auth] Missing session cookie
+[2026-02-06T07:50:04.088Z] [Auth] Missing session cookie
+[2026-02-06T08:29:20.226Z] [Auth] Missing session cookie
+[2026-02-06T08:29:22.836Z] [Auth] Missing session cookie
+[2026-02-06T08:29:25.461Z] [Auth] Missing session cookie
+[2026-02-06T08:29:28.075Z] [Auth] Missing session cookie
+[2026-02-06T08:29:34.589Z] [Auth] Missing session cookie
+[2026-02-06T09:26:59.565Z] [Auth] Missing session cookie
+[2026-02-06T09:27:02.171Z] [Auth] Missing session cookie
+[2026-02-06T09:27:04.798Z] [Auth] Missing session cookie
+[2026-02-06T09:27:07.437Z] [Auth] Missing session cookie
+[2026-02-06T09:27:10.046Z] [Auth] Missing session cookie
+[2026-02-06T09:27:12.647Z] [Auth] Missing session cookie
+[2026-02-06T09:27:19.629Z] [Auth] Missing session cookie
+[2026-02-06T17:31:44.396Z] Starting dev server with command: pnpm run dev
+[2026-02-06T17:31:45.044Z] 
+[2026-02-06T17:31:45.044Z] > dopamine_dasher@1.0.0 dev /home/ubuntu/dopamine_dasher
+[2026-02-06T17:31:45.045Z] > NODE_ENV=development tsx watch server/_core/index.ts
+[2026-02-06T17:31:45.045Z] 
+[2026-02-06T17:31:48.929Z] [OAuth] Initialized with baseURL: https://api.manus.im
+[2026-02-06T17:31:50.050Z] Server running on http://localhost:3000/
+[2026-02-06T17:33:11.748Z] 12:33:11 PM [tsx] change in ./server/_core/vite.ts Restarting...
+[2026-02-06T17:33:13.241Z] c[OAuth] Initialized with baseURL: https://api.manus.im
+[2026-02-06T17:33:13.472Z] Server running on http://localhost:3000/
+[2026-02-06T17:34:21.791Z] 12:34:21 PM [tsx] change in ./server/_core/vite.ts Restarting...
+[2026-02-06T17:34:23.200Z] c[OAuth] Initialized with baseURL: https://api.manus.im
+[2026-02-06T17:34:23.421Z] Server running on http://localhost:3000/
